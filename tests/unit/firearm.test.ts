@@ -1,0 +1,37 @@
+import { describe, expect, it } from 'vitest';
+import { Firearm } from '../../src/game/firearm';
+import { CONFIG } from '../../src/game/config';
+
+describe('射击与装填', () => {
+  it('每次有效开火消耗一发，冷却中拒绝重复射击', () => {
+    const gun = new Firearm();
+    expect(gun.fire()).toBe(true);
+    expect(gun.fire()).toBe(false);
+    expect(gun.ammo).toBe(29);
+    expect(gun.shots).toBe(1);
+    gun.update(CONFIG.weapon.interval);
+    expect(gun.fire()).toBe(true);
+  });
+  it('空弹匣不会产生额外射击，换弹期间禁止开火', () => {
+    const gun = new Firearm();
+    for (let i = 0; i < 30; i++) { expect(gun.fire()).toBe(true); gun.update(0.12); }
+    expect(gun.fire()).toBe(false);
+    expect(gun.ammo).toBe(0);
+    expect(gun.reload()).toBe(true);
+    expect(gun.reload()).toBe(false);
+    gun.update(1);
+    expect(gun.fire()).toBe(false);
+    gun.update(0.56);
+    expect(gun.ammo).toBe(30);
+    expect(gun.fire()).toBe(true);
+  });
+  it('满弹匣不换弹，重置清除冷却与装填状态', () => {
+    const gun = new Firearm();
+    expect(gun.reload()).toBe(false);
+    gun.fire(); gun.reload(); gun.reset();
+    expect(gun.ammo).toBe(30);
+    expect(gun.reloading).toBe(false);
+    expect(gun.shots).toBe(0);
+    expect(gun.fire()).toBe(true);
+  });
+});

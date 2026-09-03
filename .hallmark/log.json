@@ -1,0 +1,13 @@
+[
+  {
+    "date": "2026-09-03",
+    "macrostructure": "Photographic (live game canvas)",
+    "theme": "custom",
+    "theme_axes": "dark / display-condensed / amber",
+    "vibe": "forest watchtower field equipment",
+    "nav": "N9 Edge-aligned minimal",
+    "footer": "Ft2 Inline single line",
+    "enrichment": "interactive Three.js game scene",
+    "brief": "Undead Tower 固定哨位第一人称射击原型界面"
+  }
+]

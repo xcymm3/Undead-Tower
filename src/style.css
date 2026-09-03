@@ -1,0 +1,178 @@
+/* Hallmark · macrostructure: Photographic (live game canvas) · tone: field equipment · anchor hue: amber · nav: N9 · footer: Ft2 */
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 · audience: desktop players · use: first-person firing trial */
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow-x: clip; }
+body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-md); -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; }
+button { cursor: pointer; color: inherit; }
+button:disabled { cursor: wait; opacity: 0.45; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 5px; }
+button { -webkit-tap-highlight-color: var(--color-clear); }
+button:active:not(:disabled) { transform: translateY(1px); }
+button, h1, h2, p { margin: 0; }
+button { white-space: nowrap; }
+h1, h2 { font-style: normal; min-width: 0; overflow-wrap: anywhere; }
+svg { flex-shrink: 0; }
+small { display: block; }
+kbd { font: inherit; font-size: var(--text-xs); min-width: 20px; padding: 3px 5px; border: var(--rule-width) solid var(--color-rule); color: var(--color-ink); border-radius: var(--radius-sm); white-space: nowrap; }
+.game-shell { position: relative; width: 100%; height: 100svh; min-height: 480px; isolation: isolate; overflow: clip; }
+.viewport { position: absolute; inset: 0; --aim-x: 50%; --aim-y: 50%; }
+.viewport canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+.phase-playing .viewport canvas { cursor: none; }
+.pixelated canvas { image-rendering: pixelated; }
+.vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, var(--color-vignette), var(--color-clear) 20%, var(--color-clear) 70%, var(--color-vignette)), radial-gradient(ellipse at center, var(--color-clear) 40%, var(--color-vignette)); }
+.topbar { position: absolute; top: 0; left: 0; right: 0; padding: 28px 36px; display: flex; align-items: center; justify-content: space-between; z-index: 4; pointer-events: none; }
+.brand { display: flex; gap: 12px; align-items: center; font-family: var(--font-display); font-weight: 600; font-size: 24px; letter-spacing: 0.8px; text-shadow: 0 2px 12px var(--color-shadow); }
+.brand-mark { color: var(--color-accent); border: var(--rule-width) solid var(--color-rule); display: grid; place-items: center; width: 46px; height: 48px; }
+.brand small { font: 9px var(--font-body); letter-spacing: 1.1px; color: var(--color-muted); margin-top: 3px; }
+.top-actions { display: flex; align-items: center; gap: 8px; pointer-events: auto; }
+.build-label { font-size: 9px; letter-spacing: 1.8px; margin-right: 18px; color: var(--color-muted); }
+.build-label b { font-weight: 400; color: var(--color-ink); margin-left: 4px; }
+.icon-button { width: 40px; height: 40px; display: grid; place-items: center; background: var(--color-clear); border: var(--rule-width) solid var(--color-rule); border-radius: var(--radius-sm); }
+.icon-button:hover { background: var(--color-faint); color: var(--color-accent); }
+.intro { position: absolute; inset: 0; z-index: 2; background: linear-gradient(90deg, var(--color-overlay), var(--color-overlay) 17%, var(--color-clear) 78%); }
+.intro-copy { position: absolute; left: 8.3%; top: 22%; }
+.field-tag { color: var(--color-muted); letter-spacing: 2.4px; font-size: 10px; display: flex; gap: 9px; align-items: center; margin-bottom: 25px; }
+.field-tag > span { width: 6px; height: 6px; background: var(--color-accent); }
+h1 { font: 700 var(--text-display)/0.83 var(--font-display); letter-spacing: -0.6px; }
+h1 span { color: var(--color-accent); }
+h1 b { color: var(--color-accent); font-weight: inherit; }
+.intro-line { margin-top: 30px; letter-spacing: 4px; font-size: 15px; }
+.intro-description { font-size: 12px; line-height: 1.9; color: var(--color-muted); margin-top: 15px; }
+.start-button { border: 0; background: var(--color-accent); color: var(--color-accent-ink); display: flex; align-items: center; justify-content: space-between; gap: 32px; width: 268px; min-height: 64px; padding: 16px 22px; font-weight: 500; font-size: 16px; text-align: left; margin-top: 30px; }
+.start-button small { font-size: 8px; letter-spacing: 1.8px; margin-top: 5px; font-weight: 400; }
+.start-button:hover { background: var(--color-accent-hover); }
+.start-button svg { transition: transform var(--dur-fast) var(--ease-out); }
+.start-button:hover svg { transform: translateX(4px); }
+.intro-controls { display: flex; gap: 18px; margin-top: 20px; color: var(--color-muted); font-size: 10px; }
+.intro-controls span { display: flex; align-items: center; gap: 6px; }
+.scene-caption { position: absolute; right: 5%; bottom: 125px; display: flex; gap: 16px; align-items: center; text-shadow: 0 2px 12px var(--color-shadow); }
+.caption-rule { width: 35px; height: 2px; background: var(--color-accent); }
+.scene-caption p { font: 600 32px var(--font-display); letter-spacing: 1px; }
+.scene-caption small { font: 10px var(--font-body); color: var(--color-muted); letter-spacing: 1px; margin-top: 5px; }
+.caption-coordinates { border-left: var(--rule-width) solid var(--color-rule); padding-left: 18px; font-size: 8px; line-height: 2; letter-spacing: 1px; color: var(--color-muted); margin-left: 10px; }
+.intro-foot { position: absolute; bottom: 28px; left: 36px; right: 36px; display: flex; gap: 8px; align-items: center; font-size: 9px; color: var(--color-muted); letter-spacing: 0.8px; }
+.intro-foot-right { margin-left: auto; }
+.signal-dot { display: inline-block; flex-shrink: 0; width: 5px; height: 5px; background: var(--color-signal); }
+.compass { position: absolute; left: 50%; top: 25px; transform: translateX(-50%); width: 210px; height: 65px; overflow: clip; text-align: center; }
+.compass-ticks { height: 26px; display: flex; justify-content: center; align-items: center; gap: 22px; }
+.compass-ticks span { font-size: 9px; color: var(--color-muted); }
+.compass-ticks i { height: 8px; width: 1px; background: var(--color-muted); flex-shrink: 0; }
+.compass-ticks b { font-size: 14px; font-weight: 500; color: var(--color-accent); }
+.compass-notch { display: block; width: 1px; height: 5px; background: var(--color-accent); margin: 4px auto; }
+.compass small { font-size: 8px; letter-spacing: 2px; color: var(--color-muted); }
+.hud { position: absolute; inset: 0; pointer-events: none; z-index: 1; text-shadow: 0 2px 10px var(--color-shadow); }
+.objective { position: absolute; top: 146px; left: 36px; }
+.label { font-size: 9px; letter-spacing: 2px; color: var(--color-accent); }
+.objective h2 { font-size: 17px; letter-spacing: 1.6px; font-weight: 500; margin-top: 10px; }
+.objective p { font-size: 10px; color: var(--color-muted); margin-top: 12px; display: flex; align-items: center; gap: 7px; }
+.tiny-square { width: 5px; height: 5px; border: 1px solid var(--color-accent); display: inline-block; }
+.objective-score { margin-top: 20px; display: flex; gap: 20px; border-top: var(--rule-width) solid var(--color-rule); padding-top: 14px; }
+.objective-score span { font-size: 9px; color: var(--color-muted); }
+.objective-score b { font-size: 16px; font-weight: 400; color: var(--color-ink); margin-right: 3px; }
+.station { position: absolute; left: 36px; bottom: 102px; display: flex; align-items: center; gap: 14px; }
+.station > svg { color: var(--color-accent); }
+.station > div { font: 600 32px var(--font-display); }
+.station span { font: 12px var(--font-body); margin-left: 6px; letter-spacing: 2px; }
+.station small { font: 9px var(--font-body); color: var(--color-muted); margin-top: 6px; }
+.ammo-panel { position: absolute; right: 36px; bottom: 99px; min-width: 207px; }
+.weapon-label { display: flex; gap: 14px; align-items: center; }
+.rifle-icon { width: 84px; height: 29px; color: var(--color-muted); }
+.weapon-label span { font-size: 10px; letter-spacing: 1px; }
+.weapon-label small { font-size: 8px; color: var(--color-muted); margin-top: 4px; letter-spacing: 0; }
+.ammo-count { display: flex; justify-content: flex-end; gap: 10px; align-items: center; margin-top: 7px; }
+.ammo-count strong { font: 600 80px/1 var(--font-display); letter-spacing: 1px; }
+.ammo-count > span { font: 400 25px var(--font-display); color: var(--color-muted); margin-top: 12px; }
+.ammo-count small { font: 8px var(--font-body); margin-top: 4px; }
+.ammo-bars { display: flex; gap: 3px; justify-content: flex-end; margin-top: 6px; }
+.ammo-bars i { width: 4px; height: 10px; background: var(--color-faint); }
+.ammo-bars i.loaded { background: var(--color-accent); }
+.reload-hint { display: block; text-align: right; font-size: 10px; margin-top: 17px; color: var(--color-muted); }
+.empty .ammo-count strong, .empty .reload-hint { color: var(--color-danger); }
+.play-footer { position: absolute; bottom: 28px; left: 36px; right: 36px; display: flex; justify-content: space-between; gap: 20px; font-size: 9px; color: var(--color-muted); }
+.play-footer > div { display: flex; align-items: center; gap: 14px; }
+.play-footer kbd { font-size: 9px; }
+.footer-divider { height: 9px; width: 1px; background: var(--color-rule); }
+.crosshair { position: absolute; left: var(--aim-x); top: var(--aim-y); width: 28px; height: 28px; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; filter: drop-shadow(0 1px 2px var(--color-shadow)); color: var(--color-ink); }
+.crosshair i { position: absolute; background: currentColor; }
+.crosshair i:nth-child(1), .crosshair i:nth-child(2) { width: 1px; height: 6px; left: 13px; }
+.crosshair i:nth-child(1) { top: 1px; } .crosshair i:nth-child(2) { bottom: 1px; }
+.crosshair i:nth-child(3), .crosshair i:nth-child(4) { height: 1px; width: 6px; top: 13px; }
+.crosshair i:nth-child(3) { left: 1px; } .crosshair i:nth-child(4) { right: 1px; }
+.crosshair b { position: absolute; left: 13px; top: 13px; width: 2px; height: 2px; background: currentColor; }
+.crosshair.is-hit { color: var(--color-accent); }
+.crosshair.is-reloading { opacity: 0.35; }
+.hit-mark { position: absolute; font: 30px/28px var(--font-body); inset: 0; text-align: center; animation: hit-pulse 180ms var(--ease-out) both; }
+@keyframes hit-pulse { from { transform: scale(1.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.hit-feedback { position: absolute; top: 61%; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 3px; color: var(--color-ink); text-align: center; }
+.hit-feedback small { font-size: 8px; margin-top: 5px; letter-spacing: 2px; color: var(--color-muted); }
+.headshot, .headshot small { color: var(--color-accent); }
+.reload-progress { position: absolute; left: 50%; bottom: 24%; transform: translateX(-50%); width: 110px; color: var(--color-muted); font-size: 10px; text-align: center; }
+.reload-progress i { display: block; height: 2px; background: var(--color-accent); margin-top: 10px; transform-origin: left; animation: reload-fill 1.55s linear; }
+@keyframes reload-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.pause-screen { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; background: var(--color-overlay); }
+.pause-content { text-align: center; }
+.pause-content > svg { color: var(--color-accent); margin-bottom: 20px; }
+.pause-content .label { display: block; }
+.pause-content h2 { font-size: 30px; font-weight: 500; letter-spacing: 4px; margin: 18px 0; }
+.pause-content p { color: var(--color-muted); font-size: 12px; }
+.pause-content .start-button { margin: 30px auto 8px; }
+.text-button { border: 0; background: var(--color-clear); padding: 14px; font-size: 12px; color: var(--color-muted); }
+.text-button:hover { color: var(--color-accent); }
+.pause-content > small { color: var(--color-dim); font-size: 9px; margin-top: 20px; }
+.settings-dialog { border: 1px solid var(--color-rule); padding: 32px; width: min(440px, calc(100% - 32px)); max-height: calc(100svh - 32px); background: var(--color-panel); color: var(--color-ink); box-shadow: 0 20px 100px var(--color-shadow); }
+.settings-dialog::backdrop { background: var(--color-overlay); }
+.dialog-heading { display: flex; justify-content: space-between; align-items: center; }
+.dialog-heading h2 { font-size: 24px; font-weight: 500; margin-top: 10px; letter-spacing: 2px; }
+.settings-intro { font-size: 11px; color: var(--color-muted); line-height: 1.8; margin: 18px 0 28px; }
+.range-label { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.range-label small, .toggle-row small { font-size: 10px; color: var(--color-muted); margin-top: 7px; }
+.range-label b { font-size: 10px; color: var(--color-accent); font-weight: 400; }
+input[type='range'] { width: 100%; margin: 22px 0 7px; accent-color: var(--color-accent); cursor: pointer; }
+.range-ends { display: flex; justify-content: space-between; color: var(--color-dim); font-size: 9px; }
+.view-limits { display: flex; gap: 14px; align-items: center; padding: 17px; margin: 22px 0 8px; background: var(--color-panel-raised); }
+.view-limits svg { color: var(--color-accent); }
+.view-limits p { font-size: 11px; }
+.view-limits p span { margin-left: 18px; }
+.view-limits small { font-size: 9px; color: var(--color-muted); margin-top: 7px; }
+.toggle-row { display: flex; position: relative; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-rule); padding: 18px 0; cursor: pointer; font-size: 12px; }
+.toggle-row input { position: absolute; opacity: 0; right: 0; width: 36px; height: 36px; }
+.toggle-row i { width: 32px; height: 17px; border: 1px solid var(--color-rule); background: var(--color-panel-raised); flex-shrink: 0; padding: 3px; }
+.toggle-row i::after { content: ''; display: block; width: 9px; height: 9px; background: var(--color-dim); }
+.toggle-row input:checked + i { border-color: var(--color-accent); }
+.toggle-row input:checked + i::after { background: var(--color-accent); transform: translateX(15px); }
+.toggle-row input:focus-visible + i { outline: 2px solid var(--color-focus); outline-offset: 5px; }
+.settings-controls { display: flex; justify-content: space-between; gap: 8px; color: var(--color-muted); font-size: 9px; margin-top: 25px; }
+.dialog-done { width: 100%; min-height: 50px; font-size: 13px; margin-top: 24px; }
+.error-notice { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); z-index: 20; background: var(--color-panel); border: 1px solid var(--color-danger); padding: 24px; width: min(440px, 85%); line-height: 1.8; font-size: 13px; }
+.error-notice .text-button { padding-left: 0; color: var(--color-accent); }
+.mobile-notice { display: none; }
+@media (min-width: 1500px) { .intro-copy { top: 23%; } .intro-description { margin-top: 20px; } .start-button { margin-top: 36px; } }
+@media (max-height: 760px) and (min-width: 769px) { .intro-copy { top: 21%; } h1 { font-size: min(11vw, 106px); } .field-tag { margin-bottom: 20px; } .intro-line { margin-top: 23px; } .intro-description { margin-top: 12px; } .intro .start-button { margin-top: 22px; min-height: 58px; } .intro-controls { margin-top: 15px; } }
+@media (max-width: 1020px) { .topbar { padding: 24px; } .brand { font-size: 21px; } .brand-mark { width: 40px; height: 43px; } .build-label { display: none; } .scene-caption { right: 4%; bottom: 95px; } .caption-coordinates { display: none; } .objective { top: 130px; left: 24px; } .station { left: 24px; } .ammo-panel { right: 24px; } .play-footer { left: 24px; right: 24px; } .play-footer > div { gap: 8px; } }
+@media (max-width: 768px) {
+  .topbar { padding: 20px; } .brand { font-size: 20px; } .brand small { font-size: 8px; } .icon-button { width: 44px; height: 44px; }
+  .top-actions { gap: 6px; } .sound-button { display: none; } .intro-copy { left: 7%; top: 23%; } h1 { font-size: 112px; }
+  .intro-line { letter-spacing: 2px; font-size: 13px; } .scene-caption { bottom: 104px; right: 7%; } .scene-caption p { font-size: 27px; }
+  .intro-foot { left: 24px; right: 24px; bottom: 36px; } .intro-foot-right { display: none; }
+  .compass { top: 84px; width: 150px; } .compass-ticks { gap: 14px; } .objective { top: 157px; } .objective p { display: none; }
+  .objective-score { gap: 12px; } .objective-score span { font-size: 8px; } .play-footer > div:last-child { display: none; }
+  .play-footer { bottom: 36px; } .station { bottom: 94px; } .station small { max-width: 140px; line-height: 1.7; }
+  .ammo-panel { bottom: 92px; min-width: 170px; } .weapon-label { gap: 8px; } .rifle-icon { width: 55px; } .ammo-count strong { font-size: 66px; }
+  .ammo-bars { gap: 2px; } .ammo-bars i { width: 3px; } .mobile-notice { position: absolute; display: block; bottom: 8px; width: 100%; text-align: center; font-size: 9px; color: var(--color-muted); z-index: 5; pointer-events: none; }
+}
+@media (max-width: 480px) {
+  .topbar { padding: 16px; } .brand { gap: 8px; font-size: 18px; } .brand-mark { width: 34px; height: 40px; } .brand small { letter-spacing: 0; font-size: 7px; }
+  .top-actions { gap: 5px; } .top-actions .icon-button { width: 44px; } .top-actions .icon-button:has(svg) { border: 0; }
+  .phase-playing .top-actions button[aria-label='进入全屏'] { display: none; } .intro-copy { top: 21%; left: 7%; } h1 { font-size: clamp(76px, 23vw, 105px); }
+  .field-tag { font-size: 9px; letter-spacing: 1.5px; margin-bottom: 22px; } .intro-line { font-size: 12px; letter-spacing: 1px; margin-top: 26px; }
+  .intro-description { font-size: 11px; } .intro .start-button { width: 238px; min-height: 59px; margin-top: 25px; } .intro-controls { gap: 14px; font-size: 9px; }
+  .scene-caption { display: none; } .objective { left: 18px; top: 148px; } .objective h2 { font-size: 14px; } .objective .label { font-size: 8px; }
+  .objective-score { padding-top: 10px; margin-top: 13px; } .station { left: 18px; gap: 9px; bottom: 91px; } .station > svg { width: 18px; }
+  .station > div { font-size: 25px; } .station span { font-size: 10px; margin-left: 0; } .station small { font-size: 8px; max-width: 110px; }
+  .ammo-panel { right: 18px; min-width: 142px; } .weapon-label { justify-content: flex-end; } .weapon-label span { font-size: 9px; } .rifle-icon { display: none; }
+  .ammo-count strong { font-size: 62px; } .ammo-count > span { font-size: 21px; } .ammo-bars i { width: 2px; } .ammo-bars { gap: 2px; } .reload-hint { font-size: 9px; }
+  .play-footer { left: 18px; right: 18px; font-size: 8px; } .settings-dialog { padding: 22px; } .settings-controls { flex-wrap: wrap; gap: 14px; }
+}
+@media (max-height: 580px) { .game-shell { min-height: 420px; } .intro-copy { top: 22%; } .intro h1 { font-size: 72px; } .intro .field-tag { margin-bottom: 15px; } .intro-description { display: none; } .intro-line { margin-top: 20px; } .intro .start-button { margin-top: 20px; } .scene-caption { bottom: 90px; } .objective { top: 115px; } .objective p, .objective .label { display: none; } .station, .ammo-panel { bottom: 64px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 150ms !important; transition-duration: 0ms !important; } }
