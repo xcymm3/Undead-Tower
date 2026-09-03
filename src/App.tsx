@@ -5,7 +5,7 @@ import type { Difficulty, GameMode, GameSnapshot } from './game/config';
 import { formatDuration, LeaderboardStore } from './game/leaderboard';
 import { DeploymentPanel, DifficultyTabs, LeaderboardTable, ResultPanel } from './ui/SessionPanels';
 
-const initialState: GameSnapshot = { phase: 'ready', mode: 'practice', difficulty: 'normal', survived: 0, alive: 4, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, pixelated: false };
+const initialState: GameSnapshot = { phase: 'ready', mode: 'practice', difficulty: 'normal', survived: 0, alive: 4, zombieCounts: { normal: 4, cone: 0, bucket: 0 }, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, pixelated: false };
 
 function Icon({ name, size = 18 }: { name: 'tower' | 'aim' | 'sound' | 'mute' | 'settings' | 'expand' | 'pause' | 'arrow' | 'close'; size?: number }) {
   const paths = {
@@ -104,7 +104,7 @@ export function App() {
       <div className="brand"><span className="brand-mark"><Icon name="tower" size={27} /></span><div>UNDEAD TOWER<small>灰松哨站 · PINE RIDGE</small></div></div>
       {state.phase !== 'ready' && <div className="compass" aria-label="朝向始终固定在北方附近"><div className="compass-ticks" style={{ transform: `translateX(${state.yaw * 3}px)` }}><span>345</span><i /><i /><b>N</b><i /><i /><span>015</span></div><span className="compass-notch" /><small>固定朝向</small></div>}
       <div className="top-actions">
-        <span className="build-label">SURVIVAL <b>0.2</b></span>
+        <span className="build-label">SURVIVAL <b>0.3</b></span>
         <button className="icon-button sound-button" onClick={() => game.current?.setSound(!state.sound)} aria-label={state.sound ? '关闭声音' : '开启声音'} title={state.sound ? '关闭声音 · M' : '开启声音 · M'}><Icon name={state.sound ? 'sound' : 'mute'} /></button>
         <button className="icon-button" onClick={toggleFullscreen} aria-label={fullscreen ? '退出全屏' : '进入全屏'} title="切换全屏"><Icon name="expand" /></button>
         <button className="icon-button" onClick={openSettings} aria-label="游戏设置" title="游戏设置"><Icon name="settings" /></button>
@@ -126,7 +126,7 @@ export function App() {
 
     {state.phase !== 'ready' && <div className="hud" aria-label="游戏状态">
       <aside className="objective"><span className="label">{state.mode === 'practice' ? 'FIELD TRAINING' : `SURVIVAL / ${DIFFICULTIES[state.difficulty].label}`}</span><h2>{state.mode === 'practice' ? '僵尸练习靶场' : '守住北侧防线'}</h2><p><span className="tiny-square" /> {state.mode === 'practice' ? '僵尸静止站位，击倒后复位' : '留意各条通路，不要让僵尸接近'}</p><div className="objective-score"><span><b>{String(state.kills).padStart(2, '0')}</b> 击杀</span><span><b>{state.hits}</b> 命中</span><span><b>{state.shots ? Math.round(state.hits / state.shots * 100) : '—'}{state.shots > 0 && '%'}</b> 命中率</span></div></aside>
-      {state.mode === 'survival' && <><div className="survival-clock"><span>坚守时长</span><strong data-testid="survival-clock">{formatDuration(state.survived)}</strong></div><aside className="horde-status"><span className="label">INCOMING HORDE</span><p><b>{state.alive}</b> 只僵尸正在逼近</p><small>刷新 {state.spawnRate.toFixed(1)} / 秒 · 移速 {state.speed.toFixed(1)} m/s</small></aside><div className={`proximity ${state.nearest !== null && state.nearest < 14 ? 'danger' : ''}`}>{state.nearest === null ? '留意公路和林地，僵尸即将出现' : <>最近僵尸距防线 <b>{Math.max(0, state.nearest - SURVIVAL.breachRadius).toFixed(1)} m</b></>}</div></>}
+      {state.mode === 'survival' && <><div className="survival-clock"><span>坚守时长</span><strong data-testid="survival-clock">{formatDuration(state.survived)}</strong></div><aside className="horde-status"><span className="label">INCOMING HORDE</span><p><b>{state.alive}</b> 只僵尸正在逼近</p><small>普通 {state.zombieCounts.normal} · 路障 {state.zombieCounts.cone} · 铁桶 {state.zombieCounts.bucket}</small><small>刷新 {state.spawnRate.toFixed(1)} / 秒 · 移速 {state.speed.toFixed(1)} m/s</small></aside><div className={`proximity ${state.nearest !== null && state.nearest < 14 ? 'danger' : ''}`}>{state.nearest === null ? '留意公路和林地，僵尸即将出现' : <>最近僵尸距防线 <b>{Math.max(0, state.nearest - SURVIVAL.breachRadius).toFixed(1)} m</b></>}</div></>}
       <div className="station"><Icon name="tower" size={24} /><div>04 <span>灰松哨站</span><small>{state.mode === 'practice' ? '练习模式 · 不计入排行榜' : `正式模式 · ${DIFFICULTIES[state.difficulty].label}难度`}</small></div></div>
       {feedback && state.phase === 'playing' && <div className={`hit-feedback ${feedback.head ? 'headshot' : ''}`} key={feedback.key}>{feedback.head ? '精准命中' : feedback.killed ? '目标击倒' : '命中目标'}<small>{feedback.head ? 'HEADSHOT' : feedback.killed ? 'TARGET DOWN' : 'TARGET HIT'}</small></div>}
       <div className={`ammo-panel ${state.ammo === 0 ? 'empty' : ''}`}><div className="weapon-label"><RifleIcon /><span>R-4 CARBINE<small>5.56 × 45 MM · 自动</small></span></div><div className="ammo-count"><strong data-testid="ammo">{String(state.ammo).padStart(2, '0')}</strong><span>/ 30<small>哨站备弹 ∞</small></span></div><div className="ammo-bars" aria-hidden="true">{Array.from({ length: 30 }, (_, i) => <i key={i} className={i < state.ammo ? 'loaded' : ''} />)}</div><span className="reload-hint">{state.reloading ? '正在更换弹匣…' : state.ammo === 0 ? '弹匣已空 · 按 R 换弹' : <><kbd>R</kbd> 换弹</>}</span></div>
@@ -140,7 +140,7 @@ export function App() {
 
     <dialog ref={scoreDialog} className="settings-dialog leaderboard-dialog" aria-labelledby="leaderboard-title" onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>
       <div className="dialog-heading"><div><span className="label">LOCAL RECORDS</span><h2 id="leaderboard-title">坚守排行榜</h2></div><button className="icon-button" onClick={() => scoreDialog.current?.close()} aria-label="关闭排行榜"><Icon name="close" /></button></div>
-      <p className="settings-intro">本机前 10 名 · 按难度分别记录</p><DifficultyTabs value={boardDifficulty} onChange={setBoardDifficulty} label="排行榜难度" /><LeaderboardTable entries={entries} difficulty={boardDifficulty} /><p className="board-footnote">正式模式结束后自动记录。<br />成绩保存在当前浏览器，清除网站数据会移除纪录。</p>
+      <p className="settings-intro">护甲规则榜 · 本机前 10 名 · 按难度记录</p><DifficultyTabs value={boardDifficulty} onChange={setBoardDifficulty} label="排行榜难度" /><LeaderboardTable entries={entries} difficulty={boardDifficulty} /><p className="board-footnote">正式模式结束后自动记录。<br />成绩保存在当前浏览器，清除网站数据会移除纪录。</p>
     </dialog>
 
     <dialog ref={dialog} className="settings-dialog" aria-labelledby="settings-title" onCancel={event => { event.preventDefault(); event.stopPropagation(); closeSettings(); }} onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>

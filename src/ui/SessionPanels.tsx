@@ -17,7 +17,7 @@ export function DeploymentPanel({ mode, difficulty, onMode, onDifficulty, onStar
       <button className="mode-option" aria-pressed={mode === 'survival'} onClick={() => onMode('survival')}><span className="mode-radio" /><span>正式模式<small>僵尸逼近 · 挑战坚守纪录</small></span><b>02</b></button>
     </div>
     <div className="deployment-detail">
-      {mode === 'survival' ? <><DifficultyTabs value={difficulty} onChange={onDifficulty} /><p>{DIFFICULTIES[difficulty].description}。<br />刷新和移速持续提升，最多每秒 10 只。<br /><strong>任意僵尸进入哨塔 {SURVIVAL.breachRadius} 米内，防守失败。</strong></p></> : <><span className="practice-note">先熟悉你的第一发子弹。</span><p>僵尸固定站位，击倒后自动复位。<br />练习不会失败，也不会计入排行榜。</p></>}
+      {mode === 'survival' ? <><DifficultyTabs value={difficulty} onChange={onDifficulty} /><p>{DIFFICULTIES[difficulty].description}。<br />{difficulty === 'easy' ? '三档共享刷新和移速，最多每秒 10 只。' : difficulty === 'normal' ? '每 4 只普通加入 1 只路障。' : '每 4 普 → 1 路障；每 4 路障 → 1 铁桶。'}<br /><strong>任意僵尸进入哨塔 {SURVIVAL.breachRadius} 米内，防守失败。</strong></p></> : <><span className="practice-note">先熟悉你的第一发子弹。</span><p>僵尸固定站位，击倒后自动复位。<br />练习不会失败，也不会计入排行榜。</p></>}
     </div>
     <button className="start-button" onClick={onStart} disabled={disabled}><span>{mode === 'practice' ? '进入哨站' : '开始坚守'}<small>{mode === 'practice' ? 'ENTER THE RANGE' : 'HOLD THE LINE'}</small></span><span aria-hidden="true">→</span></button>
     <button className="leaderboard-link" onClick={onLeaderboard}>查看排行榜 <span>本机 TOP 10 ↗</span></button>

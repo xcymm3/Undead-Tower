@@ -12,7 +12,7 @@ async function startSurvival(page: Page, difficulty = '困难') {
 }
 
 test('正式模式移动、暂停、失败结算与刷新后排行榜持久化', async ({ page }) => {
-  test.setTimeout(45000);
+  test.setTimeout(60000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await startSurvival(page);
@@ -29,7 +29,7 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect(frozen.targets).toEqual(paused.targets);
   expect(frozen.totalSpawned).toBe(paused.totalSpawned);
   await page.keyboard.press('Escape');
-  await page.waitForTimeout(6500);
+  await expect.poll(async () => (await snapshot(page)).totalSpawned, { timeout: 12000 }).toBeGreaterThanOrEqual(8);
   const arrivals = (await snapshot(page)).targets;
   expect(new Set(arrivals.map(z => z.spawnZone)).size).toBe(8);
   expect(arrivals.some(z => z.spawnZone === 'north-road')).toBe(true);
@@ -42,7 +42,7 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   }
   expect((await snapshot(page)).kills).toBeGreaterThan(0);
   expect((await snapshot(page)).blood.bursts).toBeGreaterThan(0);
-  await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 30000 });
+  await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 45000 });
   const ended = await snapshot(page);
   expect(ended.phase).toBe('failed');
   expect(ended.nearest).toBeCloseTo(8, 6);

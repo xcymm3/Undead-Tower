@@ -6,11 +6,19 @@ export const CONFIG = {
 
 export type GameMode = 'practice' | 'survival';
 export type Difficulty = 'easy' | 'normal' | 'hard';
+export type ZombieKind = 'normal' | 'cone' | 'bucket';
 export type GamePhase = 'ready' | 'playing' | 'paused' | 'failed';
+export const PRESSURE = { spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.25, speedGrowth: 0.011 } as const;
+export const ZOMBIE_TYPES = {
+  normal: { label: '普通僵尸', health: 100 },
+  cone: { label: '路障僵尸', health: 200 },
+  bucket: { label: '铁桶僵尸', health: 400 },
+} as const;
+export const ARMOR_SPAWNS = { startAt: 30, normalPerCone: 4, conesPerBucket: 4 } as const;
 export const DIFFICULTIES = {
-  easy: { label: '简单', description: '更慢的脚步，更长的准备时间', spawnRate: 0.38, spawnGrowth: 0.02, speed: 0.85, speedGrowth: 0.007 },
-  normal: { label: '普通', description: '保持射击节奏，兼顾多路来敌', spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.25, speedGrowth: 0.011 },
-  hard: { label: '困难', description: '更密集的尸群，更快的逼近', spawnRate: 1.1, spawnGrowth: 0.06, speed: 1.75, speedGrowth: 0.016 },
+  easy: { label: '简单', description: '仅普通僵尸，爆头 1 枪击倒' },
+  normal: { label: '普通', description: '30 秒后混入路障僵尸，爆头需 2 枪' },
+  hard: { label: '困难', description: '30 秒后加入路障与铁桶，铁桶爆头需 4 枪' },
 } as const;
 export const SURVIVAL = { maxSpawnRate: 10, maxZombies: 256, breachRadius: 8, playerX: 0, playerZ: 9 } as const;
 export interface RunResult {
@@ -28,6 +36,7 @@ export interface GameSnapshot {
   difficulty: Difficulty;
   survived: number;
   alive: number;
+  zombieCounts: Record<ZombieKind, number>;
   nearest: number | null;
   spawnRate: number;
   speed: number;

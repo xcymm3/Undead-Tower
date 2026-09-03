@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { cube } from './geometry';
 import { SURVIVAL } from './config';
+import type { ZombieKind } from './config';
 import type { Encounter, Zombie } from './encounter';
 
 type Triple = [number, number, number];
-interface Part { size: Triple; position: Triple; color: number; head?: boolean; limb?: number; shirt?: boolean; }
+interface Part { size: Triple; position: Triple; color: number; head?: boolean; limb?: number; shirt?: boolean; kind?: ZombieKind; }
 const PARTS: Part[] = [
   { size: [0.64, 0.70, 0.35], position: [0, 1.18, 0], color: 0x596450, shirt: true },
   { size: [0.18, 0.24, 0.02], position: [-0.16, 1.30, 0.19], color: 0x81965d },
@@ -26,6 +27,16 @@ const PARTS: Part[] = [
   { size: [0.23, 0.23, 0.47], position: [0.43, 1.27, 0.23], color: 0x596450, shirt: true, limb: -0.25 },
   { size: [0.20, 0.20, 0.26], position: [-0.44, 1.24, 0.53], color: 0x8c9f68, limb: 0.25 },
   { size: [0.20, 0.20, 0.26], position: [0.44, 1.21, 0.57], color: 0x8c9f68, limb: -0.25 },
+  { size: [0.79, 0.10, 0.74], position: [0, 2.08, 0], color: 0xb95620, head: true, kind: 'cone' },
+  { size: [0.61, 0.22, 0.59], position: [0, 2.24, 0], color: 0xe9822d, head: true, kind: 'cone' },
+  { size: [0.46, 0.10, 0.45], position: [0, 2.40, 0], color: 0xe8e1c7, head: true, kind: 'cone' },
+  { size: [0.36, 0.18, 0.35], position: [0, 2.54, 0], color: 0xe9822d, head: true, kind: 'cone' },
+  { size: [0.19, 0.18, 0.18], position: [0, 2.72, 0], color: 0xf69b3e, head: true, kind: 'cone' },
+  { size: [0.72, 0.11, 0.67], position: [0, 1.94, 0], color: 0x495657, head: true, kind: 'bucket' },
+  { size: [0.65, 0.48, 0.60], position: [0, 2.21, 0], color: 0x9aa9ac, head: true, kind: 'bucket' },
+  { size: [0.68, 0.08, 0.63], position: [0, 2.47, 0], color: 0xc0cbca, head: true, kind: 'bucket' },
+  { size: [0.10, 0.25, 0.02], position: [-0.17, 2.19, 0.31], color: 0x657778, head: true, kind: 'bucket' },
+  { size: [0.18, 0.08, 0.02], position: [0.09, 2.35, 0.31], color: 0xd0d6cc, head: true, kind: 'bucket' },
 ];
 const SHIRTS = [0x596450, 0x6c585a, 0x546877, 0x827157].map(color => new THREE.Color(color));
 const COLORS = PARTS.map(part => new THREE.Color(part.color));
@@ -54,7 +65,7 @@ export class ZombieField extends THREE.InstancedMesh {
 
   sync(encounter: Encounter) {
     this.enemies = encounter.zombies;
-    const ids = this.enemies.map(z => z.id).join(',');
+    const ids = this.enemies.map(z => `${z.id}:${z.kind}`).join(',');
     const colorsChanged = ids !== this.previousIds;
     this.previousIds = ids;
     this.count = this.enemies.length * PARTS.length;
@@ -72,6 +83,7 @@ export class ZombieField extends THREE.InstancedMesh {
         this.part.position.z += stride * (part.limb ?? 0) * 0.12;
         this.part.rotation.set(stride * (part.limb ?? 0) * 0.14, 0, 0);
         this.part.scale.set(...part.size);
+        if (part.kind && part.kind !== zombie.kind) this.part.scale.setScalar(0);
         this.part.updateMatrix();
         this.partMatrix.multiplyMatrices(this.root.matrix, this.part.matrix);
         const instance = index * PARTS.length + partIndex;
@@ -87,10 +99,11 @@ export class ZombieField extends THREE.InstancedMesh {
     this.enemies.forEach((zombie, index) => {
       if (zombie.health <= 0) return;
       this.broadBox.min.set(zombie.x - 1, -0.1, zombie.z - 1);
-      this.broadBox.max.set(zombie.x + 1, 2.15, zombie.z + 1);
+      this.broadBox.max.set(zombie.x + 1, 2.9, zombie.z + 1);
       if (!raycaster.ray.intersectsBox(this.broadBox)) return;
       let nearest: THREE.Intersection | undefined;
       for (let partIndex = 0; partIndex < PARTS.length; partIndex++) {
+        if (PARTS[partIndex].kind && PARTS[partIndex].kind !== zombie.kind) continue;
         const instanceId = index * PARTS.length + partIndex;
         this.getMatrixAt(instanceId, this.partMatrix);
         this.inverse.copy(this.partMatrix).invert();

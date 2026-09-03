@@ -1,26 +1,34 @@
-import { CONFIG, DIFFICULTIES, SURVIVAL } from './config';
-import type { Difficulty, GameMode } from './config';
+import { ARMOR_SPAWNS, CONFIG, PRESSURE, SURVIVAL, ZOMBIE_TYPES } from './config';
+import type { Difficulty, GameMode, ZombieKind } from './config';
 
 export interface Position { x: number; z: number; }
 export interface SpawnPosition extends Position { waypoint?: Position; spawnZone?: string; }
-export interface Zombie extends SpawnPosition { id: number; health: number; downTime: number; bornAt: number; }
+export interface Zombie extends SpawnPosition { id: number; kind: ZombieKind; health: number; maxHealth: number; downTime: number; bornAt: number; }
 export const PRACTICE_POSITIONS: Position[] = [{ x: -5.8, z: -9.5 }, { x: 0.15, z: -17 }, { x: 5.4, z: -21 }, { x: -1, z: -31 }];
 
-export function pressureAt(difficulty: Difficulty, elapsed: number) {
-  const profile = DIFFICULTIES[difficulty];
+export function pressureAt(_difficulty: Difficulty, elapsed: number) {
+  const profile = PRESSURE;
   const time = Math.max(0, elapsed);
   return { spawnRate: Math.min(SURVIVAL.maxSpawnRate, profile.spawnRate + profile.spawnGrowth * time), speed: profile.speed + profile.speedGrowth * time };
 }
 
 /** 积分而非每帧概率，保证不同帧率下的刷新量一致，封顶后稳定每秒 10 只。 */
-export function spawnIntegral(difficulty: Difficulty, from: number, to: number) {
-  const profile = DIFFICULTIES[difficulty];
+export function spawnIntegral(_difficulty: Difficulty, from: number, to: number) {
+  const profile = PRESSURE;
   const capAt = (SURVIVAL.maxSpawnRate - profile.spawnRate) / profile.spawnGrowth;
   const primitive = (t: number) => {
     const ramp = Math.min(Math.max(0, t), capAt);
     return profile.spawnRate * ramp + profile.spawnGrowth * ramp * ramp / 2 + Math.max(0, t - capAt) * SURVIVAL.maxSpawnRate;
   };
   return Math.max(0, primitive(to) - primitive(from));
+}
+
+export function distanceToBreach(zombie: SpawnPosition) {
+  const goal = zombie.waypoint;
+  const distance = goal
+    ? Math.hypot(zombie.x - goal.x, zombie.z - goal.z) + Math.hypot(goal.x - SURVIVAL.playerX, goal.z - SURVIVAL.playerZ)
+    : Math.hypot(zombie.x - SURVIVAL.playerX, zombie.z - SURVIVAL.playerZ);
+  return Math.max(0, distance - SURVIVAL.breachRadius);
 }
 
 export class Encounter {
@@ -33,20 +41,45 @@ export class Encounter {
   totalSpawned = 0;
   private spawnCredit = 0;
   private nextId = 0;
+  private normalsSinceCone = 0;
+  private conesSinceBucket = 0;
 
   constructor() { this.reset('practice', 'normal'); }
 
   reset(mode: GameMode, difficulty: Difficulty) {
     this.mode = mode; this.difficulty = difficulty;
     this.elapsed = 0; this.failed = false; this.kills = 0; this.spawnCredit = 0; this.nextId = 0; this.totalSpawned = 0;
+    this.normalsSinceCone = 0; this.conesSinceBucket = 0;
     this.zombies = mode === 'practice' ? PRACTICE_POSITIONS.map(p => this.makeZombie(p)) : [];
   }
 
+  private nextKind(): ZombieKind {
+    if (this.mode === 'practice' || this.difficulty === 'easy' || this.elapsed < ARMOR_SPAWNS.startAt) return 'normal';
+    if (this.difficulty === 'hard' && this.conesSinceBucket === ARMOR_SPAWNS.conesPerBucket) {
+      this.conesSinceBucket = 0;
+      return 'bucket';
+    }
+    if (this.normalsSinceCone === ARMOR_SPAWNS.normalPerCone) {
+      this.normalsSinceCone = 0;
+      this.conesSinceBucket++;
+      return 'cone';
+    }
+    this.normalsSinceCone++;
+    return 'normal';
+  }
+
   private makeZombie(position: SpawnPosition): Zombie {
-    return { ...position, id: this.nextId++, health: 100, downTime: 0, bornAt: this.elapsed };
+    const kind = this.nextKind();
+    const health = ZOMBIE_TYPES[kind].health;
+    return { ...position, id: this.nextId++, kind, health, maxHealth: health, downTime: 0, bornAt: this.elapsed };
   }
   get pressure() { return pressureAt(this.difficulty, this.elapsed); }
   get alive() { return this.zombies.filter(z => z.health > 0).length; }
+  get zombieCounts(): Record<ZombieKind, number> {
+    const counts = { normal: 0, cone: 0, bucket: 0 };
+    for (const zombie of this.zombies) if (zombie.health > 0) counts[zombie.kind]++;
+    return counts;
+  }
   get nearest(): number | null {
     let nearest = Infinity;
     for (const z of this.zombies) if (z.health > 0) nearest = Math.min(nearest, Math.hypot(z.x - SURVIVAL.playerX, z.z - SURVIVAL.playerZ));
@@ -71,18 +104,14 @@ export class Encounter {
       remaining -= step;
       for (const zombie of this.zombies) if (zombie.health === 0) {
         zombie.downTime = Math.max(0, zombie.downTime - step);
-        if (zombie.downTime === 0 && this.mode === 'practice') zombie.health = 100;
+        if (zombie.downTime === 0 && this.mode === 'practice') zombie.health = zombie.maxHealth;
       }
       if (this.mode === 'practice') continue;
       this.zombies = this.zombies.filter(z => z.health > 0 || z.downTime > 0);
       const speed = pressureAt(this.difficulty, this.elapsed + step / 2).speed;
       let allowedStep = step;
       for (const zombie of this.zombies) if (zombie.health > 0) {
-        const goal = zombie.waypoint;
-        const distance = goal
-          ? Math.hypot(zombie.x - goal.x, zombie.z - goal.z) + Math.hypot(goal.x - SURVIVAL.playerX, goal.z - SURVIVAL.playerZ)
-          : Math.hypot(zombie.x - SURVIVAL.playerX, zombie.z - SURVIVAL.playerZ);
-        allowedStep = Math.min(allowedStep, Math.max(0, distance - SURVIVAL.breachRadius) / speed);
+        allowedStep = Math.min(allowedStep, distanceToBreach(zombie) / speed);
       }
       for (const zombie of this.zombies) if (zombie.health > 0) {
         let budget = speed * allowedStep;
