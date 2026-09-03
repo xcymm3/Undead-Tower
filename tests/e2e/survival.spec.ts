@@ -19,7 +19,8 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   await expect.poll(async () => (await snapshot(page)).targets.length).toBeGreaterThan(0);
   const first = (await snapshot(page)).targets[0];
   await expect.poll(async () => (await snapshot(page)).targets.find(z => z.id === first.id)!.z).toBeGreaterThan(first.z + 0.3);
-  expect(Math.abs((await snapshot(page)).targets[0].x)).toBeLessThan(Math.abs(first.x));
+  const moved = (await snapshot(page)).targets[0];
+  expect(Math.hypot(moved.x, moved.z - 9)).toBeLessThan(Math.hypot(first.x, first.z - 9));
   await page.keyboard.press('Escape');
   const paused = await snapshot(page);
   await page.waitForTimeout(500);
@@ -29,6 +30,9 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect(frozen.totalSpawned).toBe(paused.totalSpawned);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(6500);
+  const arrivals = (await snapshot(page)).targets;
+  expect(new Set(arrivals.map(z => z.spawnZone)).size).toBe(8);
+  expect(arrivals.some(z => z.spawnZone === 'north-road')).toBe(true);
   await page.screenshot({ path: 'test-results/survival-playing.png' });
   // 真实移动模型必须能被枪口射线击杀，成绩不能只验证零击杀的空局。
   for (let shot = 0; shot < 5 && (await snapshot(page)).kills === 0; shot++) {

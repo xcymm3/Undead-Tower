@@ -9,7 +9,7 @@ import { createWeapon } from './weapon';
 import { createWorld } from './world';
 import { Encounter } from './encounter';
 import { ZombieField } from './zombies';
-import { spawnAtScreenEdge } from './spawn';
+import { SpawnDirector } from './spawn';
 import { BloodEffects } from './blood';
 
 interface Effect { mesh: THREE.Mesh; velocity: THREE.Vector3; life: number; maxLife: number; gravity: number; spin: boolean; shrink: boolean; }
@@ -22,6 +22,7 @@ export class Game {
   private weapon = createWeapon();
   private world: ReturnType<typeof createWorld>;
   private encounter = new Encounter();
+  private spawns = new SpawnDirector();
   private zombieField = new ZombieField();
   private blood = new BloodEffects();
   private result: RunResult | null = null;
@@ -173,6 +174,7 @@ export class Game {
   private prepare(mode: GameMode, difficulty: Difficulty) {
     this.firearm.reset(); this.hitCount = 0; this.kills = 0;
     this.encounter.reset(mode, difficulty);
+    this.spawns.reset();
     this.zombieField.sync(this.encounter);
     this.blood.reset();
     this.result = null;
@@ -206,10 +208,7 @@ export class Game {
     this.publish();
   }
 
-  private edgeSpawn = () => {
-    // 使用当前镜头实际屏幕边缘投射到躯干高度，保留有限视角与不同宽高比。
-    return spawnAtScreenEdge(this.camera);
-  };
+  private spawnEnemy = () => this.spawns.next(this.camera);
 
   reload() {
     if (this.phase === 'playing' && this.firearm.reload()) {
@@ -316,7 +315,7 @@ export class Game {
       this.recoil *= Math.exp(-delta * 15);
       this.flashTime = Math.max(0, this.flashTime - delta);
       this.blood.update(delta);
-      this.encounter.update(rawDelta, this.edgeSpawn);
+      this.encounter.update(rawDelta, this.spawnEnemy);
       this.zombieField.sync(this.encounter);
       if (this.encounter.failed) this.endRun();
       for (let i = this.effects.length - 1; i >= 0; i--) {
@@ -361,7 +360,7 @@ export class Game {
       yaw: this.view.x, pitch: this.view.y, aim: this.aim.toArray(), aimPoint: this.aimPoint.toArray(), muzzle: muzzle.toArray(), barrelDirection: barrelDirection.toArray(),
       flashVisible: this.weapon.flash.visible, effects: this.effects.length, lastShot: this.lastShot, drawCalls: this.renderer.info.render.calls, renderCount: this.renderCount, fps: this.fps,
       blood: this.blood.diagnostics(),
-      targets: this.encounter.zombies.map(z => ({ id: z.id, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, head: project(new THREE.Vector3(z.x, 1.83, z.z + 0.24)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
+      targets: this.encounter.zombies.map(z => ({ id: z.id, spawnZone: z.spawnZone, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, head: project(new THREE.Vector3(z.x, 1.83, z.z + 0.24)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
     };
   }
 

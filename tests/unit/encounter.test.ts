@@ -3,7 +3,8 @@ import { DIFFICULTIES, SURVIVAL } from '../../src/game/config';
 import type { Difficulty } from '../../src/game/config';
 import { Encounter, pressureAt, spawnIntegral } from '../../src/game/encounter';
 import { PerspectiveCamera, Vector3 } from 'three';
-import { spawnAtScreenEdge } from '../../src/game/spawn';
+import { SPAWN_ZONES, SpawnDirector, spawnAtScreenEdge } from '../../src/game/spawn';
+import { seededRandom } from '../../src/game/geometry';
 
 const farSpawn = () => ({ x: 80, z: -100 });
 describe('练习与正式模式', () => {
@@ -114,6 +115,35 @@ describe('练习与正式模式', () => {
 import { ZombieField } from '../../src/game/zombies';
 import { Raycaster } from 'three';
 describe('僵尸批量模型', () => {
+  it('桌面防区每轮覆盖八个入口，正面刷新不再被随机遗漏', () => {
+    const camera = new PerspectiveCamera(61, 1440 / 900, 0.025, 220);
+    camera.position.set(0, 4.8, 9);
+    for (const yaw of [-0.069, 0, 0.069]) for (const seed of [5, 31, 420]) {
+      camera.rotation.set(-0.105, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
+      const director = new SpawnDirector(seededRandom(seed));
+      for (let round = 0; round < 3; round++) {
+        const spawns = Array.from({ length: 8 }, () => director.next(camera));
+        expect(new Set(spawns.map(s => s.spawnZone))).toEqual(new Set(SPAWN_ZONES.map(z => z.id)));
+        expect(spawns.filter(s => Math.abs(s.x) < 8)).toHaveLength(4);
+        expect(spawns.every(s => s.z < 0 && Math.hypot(s.x, s.z - 9) > 24)).toBe(true);
+      }
+    }
+  });
+
+  it('窄视野跳过不可见固定入口，保留可射击的正面与两侧路径', () => {
+    for (const yaw of [-0.069, 0, 0.069]) {
+      const camera = new PerspectiveCamera(61, 320 / 844, 0.025, 220);
+      camera.position.set(0, 4.8, 9); camera.rotation.set(-0.105, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
+      const director = new SpawnDirector(seededRandom(44));
+      const spawns = Array.from({ length: 24 }, () => director.next(camera));
+      expect(new Set(spawns.map(s => s.spawnZone))).toEqual(new Set(['north-road', 'west-woods', 'east-woods']));
+      for (const spawn of spawns) {
+        expect(Math.abs(new Vector3(spawn.x, 1, spawn.z).project(camera).x)).toBeLessThanOrEqual(1.026);
+        expect(Math.abs(new Vector3(spawn.waypoint!.x, 1, spawn.waypoint!.z).project(camera).x)).toBeLessThan(0.92);
+      }
+    }
+  });
+
   it('不同窗口宽度和镜头角度下，出生位置仍在真实屏幕两侧边缘', () => {
     for (const aspect of [320 / 844, 1440 / 900, 1920 / 900]) for (const yaw of [-0.069, 0, 0.069]) for (const side of [0.2, 0.8]) {
       const camera = new PerspectiveCamera(61, aspect, 0.025, 220);

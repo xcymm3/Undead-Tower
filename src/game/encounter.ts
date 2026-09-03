@@ -2,7 +2,7 @@ import { CONFIG, DIFFICULTIES, SURVIVAL } from './config';
 import type { Difficulty, GameMode } from './config';
 
 export interface Position { x: number; z: number; }
-export interface SpawnPosition extends Position { waypoint?: Position; }
+export interface SpawnPosition extends Position { waypoint?: Position; spawnZone?: string; }
 export interface Zombie extends SpawnPosition { id: number; health: number; downTime: number; bornAt: number; }
 export const PRACTICE_POSITIONS: Position[] = [{ x: -5.8, z: -9.5 }, { x: 0.15, z: -17 }, { x: 5.4, z: -21 }, { x: -1, z: -31 }];
 
