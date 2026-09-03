@@ -1,7 +1,7 @@
 import type { Difficulty, RunResult } from './config';
 
-// 护甲难度与旧速度难度分榜；旧 v1 数据保留在原键，不混入当前成绩。
-export const LEADERBOARD_KEY = 'undead-tower.leaderboard.armor-v2';
+// 开局护甲新比例单独记榜；旧 v1 与 armor-v2 数据保留在原键。
+export const LEADERBOARD_KEY = 'undead-tower.leaderboard.armor-v3';
 type StoragePort = Pick<Storage, 'getItem' | 'setItem'>;
 const difficulties: Difficulty[] = ['easy', 'normal', 'hard'];
 

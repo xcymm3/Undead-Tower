@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('真实对局在30秒后生成护甲僵尸，路障和铁桶分别需要2次与4次爆头', async ({ page }) => {
+test('真实对局开局按比例生成护甲僵尸，路障和铁桶分别需要2次与4次爆头', async ({ page }) => {
   test.setTimeout(80000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -31,26 +31,37 @@ test('真实对局在30秒后生成护甲僵尸，路障和铁桶分别需要2�
     return { first, phase: 'timeout' };
   });
   expect(appearance.phase).toBe('playing');
-  expect(appearance.first.cone).toBeGreaterThanOrEqual(30);
+  expect(appearance.first.cone).toBeGreaterThan(5);
+  expect(appearance.first.cone).toBeLessThan(6);
   expect(appearance.first.bucket).toBeGreaterThan(appearance.first.cone);
+  expect(appearance.first.bucket).toBeLessThan(11);
   await page.waitForTimeout(800);
   await page.screenshot({ path: 'test-results/armored-horde.png' });
   for (const [kind, health, shots] of [['cone', 200, 2], ['bucket', 400, 4]] as const) {
     const target = await page.evaluate(kind => window.__undeadTower!.snapshot().targets.find(z => z.kind === kind && z.health > 0)!, kind);
     expect(target.maxHealth).toBe(health);
-    for (let i = 1; i <= shots; i++) {
+    let confirmedHits = 0;
+    const deadline = Date.now() + 15000;
+    // 提前出生的护甲怪可能仍在屏幕边缘或建筑后，等实际射线命中后再计伤害。
+    while (confirmedHits < shots && Date.now() < deadline) {
       const state = await page.evaluate(() => window.__undeadTower!.snapshot());
+      expect(state.phase).toBe('playing');
       if (state.ammo === 0 || state.reloading) { await page.keyboard.press('r'); await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).reloading).toBe(false); }
       const result = await page.evaluate(id => {
-        const target = window.__undeadTower!.snapshot().targets.find(z => z.id === id)!;
+        const before = window.__undeadTower!.snapshot();
+        const target = before.targets.find(z => z.id === id)!;
+        if (target.head.x < 20 || target.head.x > innerWidth - 20 || target.head.y < 20 || target.head.y > innerHeight - 20) return { health: target.health, hit: false };
         const canvas = document.querySelector('canvas')!;
         canvas.dispatchEvent(new PointerEvent('pointerdown', { clientX: target.head.x, clientY: target.head.y, button: 0, bubbles: true }));
         window.dispatchEvent(new PointerEvent('pointerup', { button: 0 }));
-        return window.__undeadTower!.snapshot().targets.find(z => z.id === id)!.health;
+        const after = window.__undeadTower!.snapshot();
+        return { health: after.targets.find(z => z.id === id)!.health, hit: after.shots > before.shots && after.lastShot?.hitTarget === id };
       }, target.id);
-      expect(result).toBe(health - i * 100);
+      if (result.hit) confirmedHits++;
+      expect(result.health).toBe(health - confirmedHits * 100);
       await page.waitForTimeout(180);
     }
+    expect(confirmedHits).toBe(shots);
   }
   await page.keyboard.press('Escape');
   expect(errors).toEqual([]);

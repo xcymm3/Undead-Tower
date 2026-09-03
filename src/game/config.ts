@@ -14,11 +14,11 @@ export const ZOMBIE_TYPES = {
   cone: { label: '路障僵尸', health: 200 },
   bucket: { label: '铁桶僵尸', health: 400 },
 } as const;
-export const ARMOR_SPAWNS = { startAt: 30, normalPerCone: 4, conesPerBucket: 4 } as const;
+export const ARMOR_SPAWNS = { normalPerCone: 3, conesPerBucket: 2 } as const;
 export const DIFFICULTIES = {
   easy: { label: '简单', description: '仅普通僵尸，爆头 1 枪击倒' },
-  normal: { label: '普通', description: '30 秒后混入路障僵尸，爆头需 2 枪' },
-  hard: { label: '困难', description: '30 秒后加入路障与铁桶，铁桶爆头需 4 枪' },
+  normal: { label: '普通', description: '开局即按比例混入路障僵尸，爆头需 2 枪' },
+  hard: { label: '困难', description: '开局即按比例加入路障与铁桶，铁桶爆头需 4 枪' },
 } as const;
 export const SURVIVAL = { maxSpawnRate: 10, maxZombies: 256, breachRadius: 8, playerX: 0, playerZ: 9 } as const;
 export interface RunResult {

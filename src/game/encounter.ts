@@ -54,7 +54,7 @@ export class Encounter {
   }
 
   private nextKind(): ZombieKind {
-    if (this.mode === 'practice' || this.difficulty === 'easy' || this.elapsed < ARMOR_SPAWNS.startAt) return 'normal';
+    if (this.mode === 'practice' || this.difficulty === 'easy') return 'normal';
     if (this.difficulty === 'hard' && this.conesSinceBucket === ARMOR_SPAWNS.conesPerBucket) {
       this.conesSinceBucket = 0;
       return 'bucket';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDuration, LeaderboardStore, rankResults } from '../../src/game/leaderboard';
+import { formatDuration, LEADERBOARD_KEY, LeaderboardStore, rankResults } from '../../src/game/leaderboard';
 import type { RunResult } from '../../src/game/config';
 
 const result = (id: string, duration: number, difficulty: RunResult['difficulty'] = 'normal', kills = 2): RunResult => ({ id, duration, difficulty, kills, hits: 5, shots: 10, endedAt: '2026-09-03T08:00:00.000Z' });
@@ -9,6 +9,16 @@ const memoryStorage = () => {
 };
 
 describe('本机排行榜', () => {
+  it('新刷新规则单独记榜，保留旧规则成绩', () => {
+    const oldKey = 'undead-tower.leaderboard.armor-v2';
+    const oldData = JSON.stringify([result('old', 180)]);
+    const data = new Map([[oldKey, oldData]]);
+    const store = new LeaderboardStore({ getItem: key => data.get(key) ?? null, setItem: (key, value) => { data.set(key, value); } });
+    expect(store.read()).toEqual([]);
+    store.record(result('new', 90));
+    expect(data.get(oldKey)).toBe(oldData);
+    expect(JSON.parse(data.get(LEADERBOARD_KEY)!)).toEqual([result('new', 90)]);
+  });
   it('按时长降序、同分按击杀排序，并且每种难度只留前 10 名', () => {
     const records = Array.from({ length: 15 }, (_, i) => result(String(i), i));
     records.push(result('easy', 99, 'easy'), result('hard', 88, 'hard'), result('tie', 14, 'normal', 4));
