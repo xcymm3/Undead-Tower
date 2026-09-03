@@ -1,15 +1,18 @@
 import * as THREE from 'three';
 import { CONFIG } from './config';
-import type { GamePhase, GameSnapshot } from './config';
+import type { Difficulty, GameMode, GamePhase, GameSnapshot, RunResult } from './config';
 import { dampView, pointerToNdc, weaponQuaternion } from './aim';
 import { GameAudio } from './audio';
 import { Firearm } from './firearm';
 import { cube, material } from './geometry';
 import { createWeapon } from './weapon';
 import { createWorld } from './world';
+import { Encounter } from './encounter';
+import { ZombieField } from './zombies';
+import { spawnAtScreenEdge } from './spawn';
 
 interface Effect { mesh: THREE.Mesh; velocity: THREE.Vector3; life: number; maxLife: number; gravity: number; spin: boolean; shrink: boolean; }
-interface GameCallbacks { onState: (state: GameSnapshot) => void; onHit: (head: boolean, killed: boolean) => void; onError: (message: string) => void; }
+interface GameCallbacks { onState: (state: GameSnapshot) => void; onHit: (head: boolean, killed: boolean) => void; onError: (message: string) => void; onEnd: (result: RunResult) => void; }
 
 export class Game {
   private scene = new THREE.Scene();
@@ -17,6 +20,9 @@ export class Game {
   private renderer: THREE.WebGLRenderer;
   private weapon = createWeapon();
   private world: ReturnType<typeof createWorld>;
+  private encounter = new Encounter();
+  private zombieField = new ZombieField();
+  private result: RunResult | null = null;
   private firearm = new Firearm();
   private audio = new GameAudio();
   private phase: GamePhase = 'ready';
@@ -66,6 +72,8 @@ export class Game {
     this.camera.rotation.order = 'YXZ';
     this.camera.rotation.x = -0.105;
     this.world = createWorld(this.scene);
+    this.zombieField.sync(this.encounter);
+    this.scene.add(this.zombieField);
     this.scene.add(this.camera);
     this.camera.add(this.weapon.root);
     this.observer = new ResizeObserver(this.resize);
@@ -141,6 +149,7 @@ export class Game {
   };
 
   start() {
+    if (this.phase === 'failed') return;
     this.phase = 'playing';
     this.trigger = false;
     this.previousTime = 0;
@@ -158,15 +167,45 @@ export class Game {
     if (this.phase === 'playing') { this.phase = 'paused'; this.publish(); }
   }
 
-  reset() {
+  private prepare(mode: GameMode, difficulty: Difficulty) {
     this.firearm.reset(); this.hitCount = 0; this.kills = 0;
+    this.encounter.reset(mode, difficulty);
+    this.zombieField.sync(this.encounter);
+    this.result = null;
+    this.elapsed = 0;
     this.view.set(0, 0); this.aim.set(0, 0); this.recoil = 0; this.flashTime = 0; this.lastShot = null;
     this.renderer.shadowMap.needsUpdate = true;
     for (const effect of this.effects) this.scene.remove(effect.mesh);
     this.effects = [];
-    for (const target of this.world.targets) { target.health = 100; target.downTime = 0; target.body.rotation.set(0, 0, 0); target.body.position.y = 0; }
+  }
+
+  begin(mode: GameMode, difficulty: Difficulty) {
+    this.prepare(mode, difficulty);
+    this.phase = 'ready';
     this.start();
   }
+
+  reset() { this.begin(this.encounter.mode, this.encounter.difficulty); }
+
+  menu() {
+    this.prepare('practice', this.encounter.difficulty);
+    this.phase = 'ready'; this.trigger = false; this.dirty = true;
+    this.updateCrosshair(); this.publish();
+  }
+
+  private endRun() {
+    if (this.phase !== 'playing' || this.encounter.mode !== 'survival') return;
+    this.phase = 'failed'; this.trigger = false; this.flashTime = 0; this.dirty = true;
+    this.result = { id: crypto.randomUUID(), difficulty: this.encounter.difficulty, duration: this.encounter.elapsed, kills: this.kills, shots: this.firearm.shots, hits: this.hitCount, endedAt: new Date().toISOString() };
+    this.audio.tone(160, 50, 0.4, 0.06);
+    this.callbacks.onEnd(this.result);
+    this.publish();
+  }
+
+  private edgeSpawn = () => {
+    // 使用当前镜头实际屏幕边缘投射到躯干高度，保留有限视角与不同宽高比。
+    return spawnAtScreenEdge(this.camera);
+  };
 
   reload() {
     if (this.phase === 'playing' && this.firearm.reload()) {
@@ -179,7 +218,7 @@ export class Game {
   setDamping(value: number) { this.damping = THREE.MathUtils.clamp(value, 1, 5); }
 
   private activeSurfaces() {
-    return [...this.world.surfaces, ...this.world.targets.filter(t => t.health > 0).flatMap(t => t.meshes)];
+    return [...this.world.surfaces, this.zombieField];
   }
 
   private updateAim(delta: number) {
@@ -211,7 +250,7 @@ export class Game {
   private tracerMaterial = new THREE.MeshBasicMaterial({ color: 0xffdf9b });
 
   private shoot() {
-    if (!this.firearm.fire()) return;
+    if (this.phase !== 'playing' || !this.firearm.fire()) return;
     this.audio.shot();
     this.flashTime = 0.065;
     this.recoil = Math.min(1, this.recoil + 0.75);
@@ -225,15 +264,15 @@ export class Game {
     const length = muzzle.distanceTo(end);
     const tracer = this.addEffect(muzzle.clone().lerp(end, 0.5), new THREE.Vector3(), new THREE.Vector3(0.015, 0.015, length), 0, 0.045, 0, false, false, true);
     tracer.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
-    const targetId: number | undefined = hit?.object.userData.targetId;
+    const targetHit = this.zombieField.decode(hit);
+    const targetId = targetHit?.id;
     this.lastShot = { muzzle: muzzle.toArray(), direction: direction.toArray(), aimPoint: this.aimPoint.toArray(), impact: end.toArray(), hitTarget: targetId ?? null };
-    if (targetId !== undefined) {
-      const target = this.world.targets[targetId];
-      const head = Boolean(hit!.object.userData.head);
-      target.health = Math.max(0, target.health - (head ? CONFIG.target.headDamage : CONFIG.target.bodyDamage));
+    if (targetHit) {
+      const head = targetHit.head;
+      const damage = this.encounter.hit(targetHit.id, head)!;
       this.hitCount++;
-      if (target.health === 0) { this.kills++; target.downTime = CONFIG.target.respawn; }
-      this.callbacks.onHit(head, target.health === 0);
+      this.kills = this.encounter.kills;
+      this.callbacks.onHit(head, damage.killed);
       this.audio.tone(head ? 1100 : 800, 450, 0.07, 0.025);
     }
     if (hit) {
@@ -269,13 +308,9 @@ export class Game {
       if (wasReloading && !this.firearm.reloading) { this.audio.tone(350, 700, 0.08); this.publish(); }
       this.recoil *= Math.exp(-delta * 15);
       this.flashTime = Math.max(0, this.flashTime - delta);
-      for (const target of this.world.targets) {
-        if (target.health === 0) {
-          target.downTime -= delta;
-          target.body.rotation.x = THREE.MathUtils.damp(target.body.rotation.x, -Math.PI / 2, 10, delta);
-          if (target.downTime <= 0) { target.health = 100; target.body.rotation.x = 0; }
-        } else target.body.position.y = Math.sin(this.elapsed * 1.4 + target.id) * 0.018;
-      }
+      this.encounter.update(rawDelta, this.edgeSpawn);
+      this.zombieField.sync(this.encounter);
+      if (this.encounter.failed) this.endRun();
       for (let i = this.effects.length - 1; i >= 0; i--) {
         const effect = this.effects[i];
         effect.life -= delta;
@@ -287,7 +322,7 @@ export class Game {
       }
     }
     this.scene.updateMatrixWorld(true);
-    this.updateAim(this.phase === 'paused' ? 0 : delta);
+    this.updateAim(this.phase === 'playing' ? delta : 0);
     if (this.phase === 'playing' && this.trigger) this.shoot();
     this.weapon.flash.visible = this.flashTime > 0 && this.phase === 'playing';
     this.weapon.flash.rotation.z = this.elapsed * 26;
@@ -302,7 +337,7 @@ export class Game {
   };
 
   private publish() {
-    this.callbacks.onState({ phase: this.phase, ammo: this.firearm.ammo, reloading: this.firearm.reloading, shots: this.firearm.shots, hits: this.hitCount, kills: this.kills, fps: this.fps, yaw: THREE.MathUtils.radToDeg(this.view.x), pitch: THREE.MathUtils.radToDeg(this.view.y), sound: this.audio.enabled, pixelated: this.pixelated });
+    this.callbacks.onState({ phase: this.phase, mode: this.encounter.mode, difficulty: this.encounter.difficulty, survived: this.encounter.elapsed, alive: this.encounter.alive, nearest: this.encounter.nearest, spawnRate: this.encounter.pressure.spawnRate, speed: this.encounter.pressure.speed, result: this.result, ammo: this.firearm.ammo, reloading: this.firearm.reloading, shots: this.firearm.shots, hits: this.hitCount, kills: this.kills, fps: this.fps, yaw: THREE.MathUtils.radToDeg(this.view.x), pitch: THREE.MathUtils.radToDeg(this.view.y), sound: this.audio.enabled, pixelated: this.pixelated });
   }
 
   /** 只读诊断用于验收，生产构建不挂载到 window。 */
@@ -314,10 +349,10 @@ export class Game {
       return { x: (p.x + 1) / 2 * this.width, y: (1 - p.y) / 2 * this.height };
     };
     return {
-      phase: this.phase, ammo: this.firearm.ammo, shots: this.firearm.shots, hits: this.hitCount, kills: this.kills, reloading: this.firearm.reloading,
+      phase: this.phase, mode: this.encounter.mode, difficulty: this.encounter.difficulty, survived: this.encounter.elapsed, totalSpawned: this.encounter.totalSpawned, pressure: this.encounter.pressure, nearest: this.encounter.nearest, result: this.result, ammo: this.firearm.ammo, shots: this.firearm.shots, hits: this.hitCount, kills: this.kills, reloading: this.firearm.reloading,
       yaw: this.view.x, pitch: this.view.y, aim: this.aim.toArray(), aimPoint: this.aimPoint.toArray(), muzzle: muzzle.toArray(), barrelDirection: barrelDirection.toArray(),
       flashVisible: this.weapon.flash.visible, effects: this.effects.length, lastShot: this.lastShot, drawCalls: this.renderer.info.render.calls, renderCount: this.renderCount, fps: this.fps,
-      targets: this.world.targets.map(t => ({ id: t.id, health: t.health, head: project(t.root.localToWorld(new THREE.Vector3(0, 1.83, 0.24))), chest: project(t.root.localToWorld(new THREE.Vector3(0, 1.25, 0.2))) })),
+      targets: this.encounter.zombies.map(z => ({ id: z.id, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, head: project(new THREE.Vector3(z.x, 1.83, z.z + 0.24)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
     };
   }
 

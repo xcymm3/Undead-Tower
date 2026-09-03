@@ -1,15 +1,6 @@
 import * as THREE from 'three';
 import { batchStaticBoxes, box, cube, material, seededRandom } from './geometry';
 
-export interface PracticeTarget {
-  id: number;
-  root: THREE.Group;
-  body: THREE.Group;
-  meshes: THREE.Mesh[];
-  health: number;
-  downTime: number;
-}
-
 function sign(parent: THREE.Object3D, text: string, subtitle: string, x: number, y: number, z: number, width = 5) {
   const canvas = document.createElement('canvas');
   canvas.width = 512; canvas.height = 160;
@@ -75,38 +66,6 @@ function pickup(scene: THREE.Scene, x: number, z: number) {
     hub.rotation.z = Math.PI / 2; hub.position.copy(wheel.position); group.add(hub);
   }
   for (const sx of [-0.95, 0.95]) box(group, [0.26, 0.24, 0.03], [sx, 1.4, 2.54], 0xa9644e);
-}
-
-function target(scene: THREE.Scene, id: number, x: number, z: number): PracticeTarget {
-  const root = new THREE.Group(); root.position.set(x, 0, z); scene.add(root);
-  const body = new THREE.Group(); root.add(body);
-  const meshes: THREE.Mesh[] = [];
-  const add = (size: [number, number, number], pos: [number, number, number], color: number, head = false) => {
-    const mesh = box(body, size, pos, color);
-    mesh.userData = { targetId: id, head };
-    meshes.push(mesh);
-    return mesh;
-  };
-  add([0.64, 0.70, 0.34], [0, 1.18, 0], id % 2 ? 0x7a7662 : 0x606f64);
-  add([0.48, 0.48, 0.44], [0, 1.78, 0], 0x9da583, true);
-  add([0.5, 0.13, 0.46], [0, 2.02, -0.03], 0x687259, true);
-  add([0.235, 0.73, 0.30], [-0.19, 0.48, 0], 0x46534a);
-  add([0.235, 0.73, 0.30], [0.19, 0.48, 0.06], 0x4e5b51);
-  add([0.25, 0.16, 0.44], [-0.19, 0.12, 0.06], 0x303c36);
-  add([0.25, 0.16, 0.44], [0.19, 0.12, 0.12], 0x303c36);
-  add([0.22, 0.5, 0.27], [-0.44, 1.14, 0.04], 0x606f64).rotation.z = -0.2;
-  add([0.22, 0.5, 0.27], [0.44, 1.14, 0.10], 0x606f64).rotation.z = 0.2;
-  add([0.19, 0.26, 0.23], [-0.49, 0.84, 0.05], 0x9da583);
-  add([0.19, 0.26, 0.23], [0.49, 0.84, 0.11], 0x9da583);
-  // 红色胸靶和方块五官提供易读命中位置。
-  add([0.22, 0.25, 0.015], [0, 1.25, 0.18], 0xb96d55);
-  add([0.09, 0.10, 0.02], [0, 1.25, 0.195], 0xdec8a0);
-  add([0.09, 0.065, 0.012], [-0.115, 1.84, 0.226], 0x3b4737, true);
-  add([0.09, 0.065, 0.012], [0.115, 1.84, 0.226], 0x3b4737, true);
-  add([0.13, 0.04, 0.014], [0.02, 1.68, 0.226], 0x625d47, true);
-  box(root, [1.3, 0.1, 1.1], [0, 0.015, 0], 0x808570);
-  sign(root, `0${id + 1}`, 'TRAINING', 0, 0.2, 0.61, 0.65);
-  return { id, root, body, meshes, health: 100, downTime: 0 };
 }
 
 export function createWorld(scene: THREE.Scene) {
@@ -203,11 +162,9 @@ export function createWorld(scene: THREE.Scene) {
   for (let i = 0; i < 3; i++) box(scene, [1.05, 0.30, 0.65], [-3.3 + i * 0.93, 3.17, 5.9], 0x969575);
   box(scene, [1.5, 1, 1.2], [-4.1, 3.13, 7.4], 0x657455);
   for (const x of [-4.7, -3.5]) box(scene, [0.12, 1.02, 1.24], [x, 3.14, 7.4], 0x929578);
-  const targets = [target(scene, 0, -5.8, -9.5), target(scene, 1, 0.15, -17), target(scene, 2, 5.4, -21), target(scene, 3, -1, -31)];
-  // 固定场景几何进入遮挡检测；武器和瞬时特效不会进入世界命中列表。
-  const targetSet = new Set<THREE.Object3D>(targets.flatMap(t => t.meshes));
-  batchStaticBoxes(scene, targetSet);
+  // 僵尸在场景合批后单独加入，便于模式切换与高密度绘制。
+  batchStaticBoxes(scene, new Set());
   const surfaces: THREE.Object3D[] = [];
-  scene.traverse(obj => { if (obj instanceof THREE.Mesh && !targetSet.has(obj) && obj !== sunDisc && obj !== grasses) surfaces.push(obj); });
-  return { targets, surfaces };
+  scene.traverse(obj => { if (obj instanceof THREE.Mesh && obj !== sunDisc && obj !== grasses) surfaces.push(obj); });
+  return { surfaces };
 }

@@ -176,3 +176,126 @@ input[type='range'] { width: 100%; margin: 22px 0 7px; accent-color: var(--color
 }
 @media (max-height: 580px) { .game-shell { min-height: 420px; } .intro-copy { top: 22%; } .intro h1 { font-size: 72px; } .intro .field-tag { margin-bottom: 15px; } .intro-description { display: none; } .intro-line { margin-top: 20px; } .intro .start-button { margin-top: 20px; } .scene-caption { bottom: 90px; } .objective { top: 115px; } .objective p, .objective .label { display: none; } .station, .ammo-panel { bottom: 64px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 150ms !important; transition-duration: 0ms !important; } }
+
+/* M1 · 双模式、尸群压力与本机坚守记录；沿用既有界面设计变量。 */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: clip; clip-path: inset(50%); white-space: nowrap; }
+.mode-menu .intro-copy { top: 27%; }
+.deployment-panel { position: absolute; right: 7%; top: 50%; transform: translateY(-50%); width: 368px; padding: var(--space-xl); background: var(--color-panel); border: 1px solid var(--color-rule); box-shadow: 0 16px 64px var(--color-shadow); }
+.deployment-panel h2 { font-size: 24px; letter-spacing: 2px; font-weight: 500; margin-top: var(--space-sm); }
+.mode-options { margin-top: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-sm); }
+.mode-option { display: flex; align-items: center; gap: var(--space-md); width: 100%; padding: var(--space-md); border: 1px solid var(--color-rule); background: var(--color-clear); text-align: left; font-size: 14px; }
+.mode-option:hover { background: var(--color-panel-raised); }
+.mode-option[aria-pressed='true'] { border-color: var(--color-accent); background: var(--color-panel-raised); }
+.mode-option small { font-size: 10px; color: var(--color-muted); margin-top: var(--space-sm); }
+.mode-option b { margin-left: auto; color: var(--color-dim); font-weight: 400; font-size: 11px; }
+.mode-radio { width: 10px; height: 10px; border: 1px solid var(--color-dim); flex-shrink: 0; }
+.mode-option[aria-pressed='true'] .mode-radio { background: var(--color-accent); border-color: var(--color-accent); }
+.deployment-detail { min-height: 144px; padding-top: var(--space-lg); }
+.difficulty-tabs { display: flex; gap: var(--space-xs); width: 100%; }
+.difficulty-tabs button { flex: 1; min-width: 0; min-height: 40px; border: 1px solid var(--color-rule); background: var(--color-clear); color: var(--color-muted); font-size: 12px; }
+.difficulty-tabs button:hover { background: var(--color-panel-raised); color: var(--color-ink); }
+.difficulty-tabs button[aria-pressed='true'] { color: var(--color-accent-ink); background: var(--color-accent); border-color: var(--color-accent); }
+.deployment-detail p { font-size: 10px; color: var(--color-muted); line-height: 1.9; margin-top: 12px; }
+.deployment-detail strong { font-weight: 400; color: var(--color-accent); }
+.practice-note { font-size: 12px; color: var(--color-ink); }
+.deployment-panel .start-button { width: 100%; margin-top: var(--space-md); min-height: 60px; }
+.deployment-panel .start-button > span:last-child { font-size: 26px; }
+.leaderboard-link { background: var(--color-clear); border: 0; padding: var(--space-md) 0 0; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); color: var(--color-muted); font-size: 11px; }
+.leaderboard-link span { font-size: 9px; color: var(--color-dim); }
+.leaderboard-link:hover, .leaderboard-link:hover span { color: var(--color-accent); }
+.survival-clock { position: absolute; top: 116px; left: 50%; transform: translateX(-50%); text-align: center; }
+.survival-clock > span { font-size: 9px; color: var(--color-muted); letter-spacing: 2px; }
+.survival-clock strong { display: block; font: 500 38px/1.2 var(--font-display); letter-spacing: 3px; }
+.horde-status { position: absolute; top: 146px; right: 36px; text-align: right; }
+.horde-status p { font-size: 11px; margin-top: 10px; }
+.horde-status b { font-size: 22px; font-weight: 400; color: var(--color-accent); }
+.horde-status small { font-size: 9px; color: var(--color-muted); margin-top: 8px; }
+.proximity { position: absolute; left: 50%; bottom: 114px; transform: translateX(-50%); padding: 12px 16px; background: var(--color-overlay); color: var(--color-muted); font-size: 11px; white-space: nowrap; }
+.proximity b { font-weight: 500; color: var(--color-ink); margin-left: 8px; }
+.proximity.danger { color: var(--color-danger); border: 1px solid var(--color-danger); }
+.proximity.danger b { color: var(--color-danger); }
+.result-screen { position: absolute; inset: 0; z-index: 6; background: var(--color-overlay); display: flex; align-items: center; justify-content: center; padding: 32px; overflow-y: auto; }
+.result-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; width: min(900px, 100%); max-height: 100%; background: var(--color-panel); border: 1px solid var(--color-rule); padding: 40px; overflow-y: auto; }
+.result-summary > .label { color: var(--color-danger); }
+.result-summary h2 { font-size: 32px; font-weight: 500; letter-spacing: 4px; margin: 12px 0; outline: none; }
+.result-summary > p { color: var(--color-muted); font-size: 11px; line-height: 1.8; }
+.result-time-label { display: block; font-size: 11px; color: var(--color-muted); margin-top: 32px; }
+.result-time { display: block; font: 600 clamp(60px, 6vw, 88px)/1.2 var(--font-display); color: var(--color-accent); letter-spacing: 2px; white-space: nowrap; }
+.result-stats { display: flex; gap: 24px; font-size: 10px; color: var(--color-muted); margin-top: 12px; }
+.result-stats b { font-weight: 400; font-size: 17px; color: var(--color-ink); }
+.result-summary .record-notice { font-size: 10px; margin-top: 24px; color: var(--color-signal); }
+.result-summary .start-button { margin-top: 24px; width: 100%; min-height: 52px; font-size: 14px; }
+.result-summary .text-button { width: 100%; }
+.board-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
+.board-heading h3 { font-size: 17px; font-weight: 400; margin: 0; }
+.board-heading > span { font-size: 9px; color: var(--color-muted); }
+.leaderboard-scroll { max-height: 360px; overflow: auto; }
+.leaderboard-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; }
+.leaderboard-table th { color: var(--color-muted); font-weight: 400; font-size: 9px; padding: 12px 8px; background: var(--color-panel-raised); white-space: nowrap; }
+.leaderboard-table td { padding: 12px 8px; border-bottom: 1px solid var(--color-rule); color: var(--color-muted); }
+.leaderboard-table td:nth-child(2) { color: var(--color-ink); font-size: 15px; white-space: nowrap; }
+.leaderboard-table td small { font-size: 8px; color: var(--color-accent); margin-top: 4px; }
+.leaderboard-table .current-result td { color: var(--color-accent); background: var(--color-faint); }
+.board-footnote { font-size: 9px; line-height: 1.9; color: var(--color-muted); margin-top: 20px; }
+.empty-leaderboard { padding: 36px 16px; text-align: center; }
+.empty-leaderboard > span { display: block; color: var(--color-dim); font: 36px var(--font-display); }
+.empty-leaderboard p { font-size: 13px; margin-top: 8px; }
+.empty-leaderboard small { font-size: 10px; color: var(--color-muted); line-height: 1.9; margin-top: 12px; white-space: normal; }
+.leaderboard-dialog { width: min(480px, calc(100% - 32px)); }
+.leaderboard-dialog .difficulty-tabs { margin-bottom: 16px; }
+@media (max-width: 1100px) and (min-width: 901px) { .mode-menu .intro-copy { left: 5%; } .mode-menu h1 { font-size: 98px; } .deployment-panel { right: 4%; width: 340px; padding: 24px; } }
+@media (max-width: 900px) {
+  .intro.mode-menu { overflow-y: auto; }
+  .mode-menu .intro-copy { position: relative; top: auto; left: auto; margin: 104px auto 24px; width: min(440px, calc(100% - 40px)); }
+  .mode-menu h1 { font-size: 56px; line-height: 1; }
+  .mode-menu h1 br { display: none; }
+  .mode-menu h1 span { margin-left: 8px; }
+  .mode-menu .field-tag { margin-bottom: 12px; font-size: 9px; }
+  .mode-menu .intro-line { margin-top: 12px; font-size: 12px; letter-spacing: 1px; }
+  .mode-menu .intro-description, .mode-menu .intro-controls { display: none; }
+  .deployment-panel { position: relative; top: auto; right: auto; transform: none; margin: 0 auto 56px; width: min(440px, calc(100% - 40px)); padding: 24px; }
+  .deployment-detail { min-height: 0; padding-top: 20px; }
+  .mode-menu .intro-foot { display: none; }
+  .deployment-panel .start-button { width: 100%; margin-top: 20px; }
+  .mode-options { margin-top: 20px; }
+  .mode-option small { font-size: 9px; }
+  .result-panel { gap: 28px; padding: 28px; }
+  .result-stats { gap: 12px; }
+  .horde-status { top: 214px; right: 24px; }
+  .horde-status .label { display: none; }
+  .proximity { bottom: 225px; }
+}
+@media (max-width: 580px) {
+  .mode-menu h1 { font-size: 44px; }
+  .deployment-panel { padding: 20px; }
+  .deployment-panel h2 { font-size: 21px; }
+  .mode-option { padding: 12px; gap: 12px; }
+  .difficulty-tabs button { min-height: 44px; }
+  .deployment-panel .start-button { min-height: 56px; }
+  .leaderboard-link { min-height: 44px; padding-top: 12px; }
+  .survival-clock { top: 148px; left: auto; right: 18px; transform: none; }
+  .survival-clock strong { font-size: 32px; }
+  .horde-status { top: 242px; right: 18px; }
+  .horde-status p { font-size: 9px; }
+  .horde-status small { font-size: 8px; }
+  .result-screen { padding: 16px; align-items: flex-start; }
+  .result-panel { display: block; padding: 24px; }
+  .result-time { font-size: 72px; }
+  .result-leaderboard { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--color-rule); }
+  .result-summary .start-button { margin-top: 16px; }
+  .result-time-label { margin-top: 20px; }
+  .result-summary h2 { font-size: 28px; }
+  .board-heading { gap: 8px; }
+  .board-heading h3 { font-size: 15px; }
+  .leaderboard-table td, .leaderboard-table th { padding: 10px 6px; }
+  .leaderboard-table td:nth-child(2) { font-size: 13px; }
+}
+@media (max-height: 650px) and (min-width: 901px) {
+  .deployment-panel { padding: 20px; width: 336px; top: 96px; transform: none; }
+  .mode-options { margin-top: 12px; }
+  .mode-option { padding: 10px 12px; }
+  .deployment-detail { min-height: 0; padding-top: 12px; }
+  .mode-menu { overflow-y: auto; }
+  .deployment-panel .start-button { margin-top: 12px; min-height: 48px; }
+  .mode-menu .intro-foot { display: none; }
+}
