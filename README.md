@@ -4,6 +4,10 @@
 
 ## 启动
 
+**Windows 便携版**：双击 `release/Undead-Tower-0.3.0-portable-x64.exe`，可离线运行，无需安装 Node.js 或启动服务器。排行榜保存在 EXE 旁的 `Undead Tower Data` 文件夹；换位置时一起拷贝。使用、重新打包与成品验证见 [便携版说明](docs/PORTABLE.md)。
+
+以下为源码开发方式：
+
 需要 Node.js 22.12+（本机使用 22.23.1）、npm，以及开启硬件加速并支持 WebGL 2 的桌面浏览器。
 
 ```powershell
@@ -75,6 +79,8 @@ npm run test       # 瞄准、武器、僵尸、刷新曲线、排行榜单元�
 npm run build      # TypeScript 检查和生产构建
 npm run test:e2e   # Chrome 单浏览器、单 worker 交互验收
 npm run balance    # 720 局纯逻辑时长模拟，写入 docs/balance-results.json
+npm run dist:portable # 生成 Windows x64 单文件便携 EXE
+npm run test:portable # 直接测试成品 EXE 的离线游玩和成绩保存
 npm run preview   # 在 4175 端口预览 dist
 ```
 
@@ -101,6 +107,9 @@ tokens.css             界面颜色与字体设计变量
 docs/PROJECT.md         立项、范围、阶段规划和技术决策
 docs/ACCEPTANCE.md      M0 / M1 验收步骤和验证记录
 docs/BALANCE.md         护甲规则、操作假设、单局时长与评估限制
+docs/PORTABLE.md        Windows 便携版使用、打包与验证
+desktop/               Electron 桌面入口与应用图标
+electron-builder.cjs   Windows x64 portable 打包配置
 scripts/               可复现的平衡模拟工具
 tests/                 单元测试与真实浏览器测试
 ```
@@ -109,4 +118,4 @@ tests/                 单元测试与真实浏览器测试
 
 实际游玩最多绘制 60 FPS，默认渲染分辨率最高 1920×1080，阴影 1024×1024、每秒最多刷新约 10 次。标题、暂停和结算画面只在内容变化时绘制；后台页面停止绘制。静态方块按材质实例化合批，树木和草也是实例化绘制；整群僵尸共用一份实例模型，同时最多 256 只（含待回收尸体，达到上限时跳过刷新）；普通瞬时特效上限 160 个，血滴单独使用一份实例模型，最多 384 滴循环复用。可在设置中打开粗颗粒像素进一步降低分辨率。
 
-当前面向桌面鼠标和键盘；小屏界面可显示，但未实现移动端专用触控操作。正式模式为持续生存，没有固定波次或通关终点。当前不含塔防经济、对局中途存档、联网排行榜、联机或独立桌面安装包。
+当前面向桌面鼠标和键盘，提供网页版及 Windows x64 便携 EXE；小屏界面可显示，但未实现移动端专用触控操作。正式模式为持续生存，没有固定波次或通关终点。当前不含塔防经济、对局中途存档、联网排行榜或联机。

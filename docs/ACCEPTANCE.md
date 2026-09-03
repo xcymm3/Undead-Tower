@@ -1,5 +1,16 @@
 # Undead Tower 验收记录
 
+## Windows portable EXE（0.3.0）
+
+- `npm run dist:portable` 成功生成 `release/Undead-Tower-0.3.0-portable-x64.exe`，103,201,923 字节，Windows x64 单文件免安装版；主程序名称、图标和版本资源已写入。当前未签名。
+- `npm run test:portable` 直接启动成品副本，开启离线模拟并重新加载，生产 WebGL 场景正常；加载请求全部来自包内 `undead://game/`，没有访问网页开发服务器或远程资源。生产页面没有 Node API 和开发诊断入口。
+- 真实输入验证练习开火消耗弹药、R 装填、Esc 暂停、UI 全屏；困难模式约 11 秒前出现铁桶，随后自然失败并保存成绩。已查看成品对局截图，持枪、场景、僵尸和 HUD 显示正常，页面异常为零。
+- 正常退出后，将测试 EXE 与 `Undead Tower Data` 一起移动到另一中文目录，再次离线启动，困难排行榜中同一条成绩可读。两次启动均正常退出；测试数据不写入交付目录。
+- 构建时校验 Electron 官方 npm 包附带的运行环境 SHA-256，包内包含前端、字体、Electron、Chromium 的许可说明。发布文件 SHA-256 为 `3421037cfde0b10fcd74329891d16430ffd70e05b096164c543cb042427479a1`，校验文件与 EXE 放在同一目录。
+- 结果见 [成品验证数据](portable-validation.json)，操作与重建见 [PORTABLE.md](PORTABLE.md)。实际测试环境为本机 Windows 11 x64；其他电脑的性能和驱动兼容性尚未实机验证。
+
+![Windows 便携版实际对局](screenshots/portable-game.png)
+
 ## 开局护甲比例调整（当前规则）
 
 - 移除 30 秒门槛；普通从开局循环 3 普通、1 路障，困难循环 6 普通、2 路障、1 铁桶。三档的刷新、移速及增长曲线沿用统一参数。
