@@ -37,6 +37,7 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
     await page.waitForTimeout(150);
   }
   expect((await snapshot(page)).kills).toBeGreaterThan(0);
+  expect((await snapshot(page)).blood.bursts).toBeGreaterThan(0);
   await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 30000 });
   const ended = await snapshot(page);
   expect(ended.phase).toBe('failed');
@@ -60,6 +61,8 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect(reset.difficulty).toBe('hard');
   expect(reset.survived).toBeLessThan(1);
   expect(reset.shots).toBe(0);
+  expect(reset.blood.active).toBe(0);
+  expect(reset.blood.bursts).toBe(0);
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: '返回主菜单' }).click();
   await page.reload();

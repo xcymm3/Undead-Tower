@@ -10,6 +10,7 @@ import { createWorld } from './world';
 import { Encounter } from './encounter';
 import { ZombieField } from './zombies';
 import { spawnAtScreenEdge } from './spawn';
+import { BloodEffects } from './blood';
 
 interface Effect { mesh: THREE.Mesh; velocity: THREE.Vector3; life: number; maxLife: number; gravity: number; spin: boolean; shrink: boolean; }
 interface GameCallbacks { onState: (state: GameSnapshot) => void; onHit: (head: boolean, killed: boolean) => void; onError: (message: string) => void; onEnd: (result: RunResult) => void; }
@@ -22,6 +23,7 @@ export class Game {
   private world: ReturnType<typeof createWorld>;
   private encounter = new Encounter();
   private zombieField = new ZombieField();
+  private blood = new BloodEffects();
   private result: RunResult | null = null;
   private firearm = new Firearm();
   private audio = new GameAudio();
@@ -74,6 +76,7 @@ export class Game {
     this.world = createWorld(this.scene);
     this.zombieField.sync(this.encounter);
     this.scene.add(this.zombieField);
+    this.scene.add(this.blood);
     this.scene.add(this.camera);
     this.camera.add(this.weapon.root);
     this.observer = new ResizeObserver(this.resize);
@@ -171,6 +174,7 @@ export class Game {
     this.firearm.reset(); this.hitCount = 0; this.kills = 0;
     this.encounter.reset(mode, difficulty);
     this.zombieField.sync(this.encounter);
+    this.blood.reset();
     this.result = null;
     this.elapsed = 0;
     this.view.set(0, 0); this.aim.set(0, 0); this.recoil = 0; this.flashTime = 0; this.lastShot = null;
@@ -266,16 +270,19 @@ export class Game {
     tracer.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
     const targetHit = this.zombieField.decode(hit);
     const targetId = targetHit?.id;
+    let killed = false;
     this.lastShot = { muzzle: muzzle.toArray(), direction: direction.toArray(), aimPoint: this.aimPoint.toArray(), impact: end.toArray(), hitTarget: targetId ?? null };
     if (targetHit) {
       const head = targetHit.head;
       const damage = this.encounter.hit(targetHit.id, head)!;
+      killed = damage.killed;
+      if (killed) this.blood.burst(end, direction, head);
       this.hitCount++;
       this.kills = this.encounter.kills;
       this.callbacks.onHit(head, damage.killed);
       this.audio.tone(head ? 1100 : 800, 450, 0.07, 0.025);
     }
-    if (hit) {
+    if (hit && !killed) {
       for (let i = 0; i < 9; i++) {
         const velocity = new THREE.Vector3((Math.random() - 0.5) * 2, 1 + Math.random() * 2, (Math.random() - 0.3) * 2);
         this.addEffect(end.clone(), velocity, new THREE.Vector3().setScalar(0.035 + Math.random() * 0.055), targetId === undefined ? 0xb0ac85 : 0xc6ad78, 0.3 + Math.random() * 0.3, 5, true);
@@ -308,6 +315,7 @@ export class Game {
       if (wasReloading && !this.firearm.reloading) { this.audio.tone(350, 700, 0.08); this.publish(); }
       this.recoil *= Math.exp(-delta * 15);
       this.flashTime = Math.max(0, this.flashTime - delta);
+      this.blood.update(delta);
       this.encounter.update(rawDelta, this.edgeSpawn);
       this.zombieField.sync(this.encounter);
       if (this.encounter.failed) this.endRun();
@@ -352,6 +360,7 @@ export class Game {
       phase: this.phase, mode: this.encounter.mode, difficulty: this.encounter.difficulty, survived: this.encounter.elapsed, totalSpawned: this.encounter.totalSpawned, pressure: this.encounter.pressure, nearest: this.encounter.nearest, result: this.result, ammo: this.firearm.ammo, shots: this.firearm.shots, hits: this.hitCount, kills: this.kills, reloading: this.firearm.reloading,
       yaw: this.view.x, pitch: this.view.y, aim: this.aim.toArray(), aimPoint: this.aimPoint.toArray(), muzzle: muzzle.toArray(), barrelDirection: barrelDirection.toArray(),
       flashVisible: this.weapon.flash.visible, effects: this.effects.length, lastShot: this.lastShot, drawCalls: this.renderer.info.render.calls, renderCount: this.renderCount, fps: this.fps,
+      blood: this.blood.diagnostics(),
       targets: this.encounter.zombies.map(z => ({ id: z.id, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, head: project(new THREE.Vector3(z.x, 1.83, z.z + 0.24)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
     };
   }
