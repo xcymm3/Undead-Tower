@@ -15,6 +15,9 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   test.setTimeout(60000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(key => {
+    if (!localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify([{ id: 'previous-best', difficulty: 'hard', duration: 5, kills: 0, hits: 0, shots: 0, endedAt: '2026-09-03T08:00:00.000Z' }]));
+  }, LEADERBOARD_KEY);
   await startSurvival(page);
   await expect.poll(async () => (await snapshot(page)).targets.length).toBeGreaterThan(0);
   const first = (await snapshot(page)).targets[0];
@@ -56,11 +59,16 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   const ended = await snapshot(page);
   expect(ended.phase).toBe('failed');
   expect(ended.nearest).toBeCloseTo(8, 6);
+  expect(ended.defenseVisible).toBe(true);
+  expect(ended.weaponVisible).toBe(false);
   const breached = ended.targets.filter(z => z.health > 0).sort((a, b) => Math.hypot(a.x, a.z - 9) - Math.hypot(b.x, b.z - 9))[0];
   expect(breached.head.x).toBeGreaterThan(10);
   expect(breached.head.x).toBeLessThan(1430);
   expect(breached.head.y).toBeGreaterThan(0);
   expect(breached.head.y).toBeLessThan(900);
+  expect(ended.breach!.id).toBe(breached.id);
+  await expect(page.getByTestId('breached-zombie')).toHaveAttribute('data-zombie-id', String(breached.id));
+  await page.screenshot({ path: 'test-results/breach-feedback.png' });
   expect(ended.result!.duration).toBeGreaterThan(1);
   await page.mouse.click(20, 500);
   await page.keyboard.press('r');
@@ -68,9 +76,15 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect((await snapshot(page)).phase).toBe('failed');
   expect((await snapshot(page)).shots).toBe(ended.shots);
   expect((await snapshot(page)).survived).toBe(ended.survived);
+  await expect(page.getByTestId('personal-record')).toContainText('新纪录');
   await page.screenshot({ path: 'test-results/survival-result.png' });
+  await page.getByRole('button', { name: '查看突破位置' }).click();
+  await expect(page.getByTestId('breached-zombie')).toHaveAttribute('data-zombie-id', String(breached.id));
+  await page.waitForTimeout(300);
+  expect((await snapshot(page)).targets).toEqual(ended.targets);
+  await page.getByRole('button', { name: '查看结算' }).click();
   const stored = await page.evaluate(key => JSON.parse(localStorage.getItem(key)!), LEADERBOARD_KEY);
-  expect(stored).toHaveLength(1);
+  expect(stored).toHaveLength(2);
   expect(stored[0].id).toBe(ended.result!.id);
   expect(stored[0].kills).toBe(ended.kills);
   expect(stored[0].kills).toBeGreaterThan(0);
@@ -82,6 +96,9 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect(reset.shots).toBe(0);
   expect(reset.blood.active).toBe(0);
   expect(reset.blood.bursts).toBe(0);
+  expect(reset.armorEffects.active).toBe(0);
+  expect(reset.breach).toBeNull();
+  expect(reset.weaponVisible).toBe(true);
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: '返回主菜单' }).click();
   await page.reload();
@@ -89,7 +106,7 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   await expect(page.getByRole('group', { name: '排行榜难度' })).toHaveCount(0);
   await expect(page.getByText('困难难度 · 本机前 10 名')).toBeVisible();
   await expect(page.getByRole('table')).toBeVisible();
-  await expect(page.getByRole('row')).toHaveCount(2);
+  await expect(page.getByRole('row')).toHaveCount(3);
   expect(errors).toEqual([]);
 });
 

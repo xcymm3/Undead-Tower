@@ -40,15 +40,19 @@ describe('护甲僵尸规则', () => {
       try {
         for (const [height, damage] of [[1.83, 100], [1.18, 50], ...(kind === 'normal' ? [] : [[kind === 'cone' ? 2.54 : 2.21, 100]])]) {
           const health = ZOMBIE_TYPES[kind].health;
-          encounter.zombies = [{ id: 0, kind, health, maxHealth: health, x: 0, z: 0, bornAt: 0, downTime: 0 }];
+          encounter.zombies = [{ id: 0, kind, health, armorHealth: ZOMBIE_TYPES[kind].armor, maxHealth: health, x: 0, z: 0, bornAt: 0, downTime: 0 }];
           field.sync(encounter);
           for (let shot = 1; shot <= health / damage; shot++) {
-            const ray = new Raycaster(new Vector3(0, height, 10), new Vector3(0, 0, -1));
+            field.sync(encounter);
+            const currentHeight = height > 2 && encounter.zombies[0].kind === 'normal' ? 1.83 : height;
+            const ray = new Raycaster(new Vector3(0, currentHeight, 10), new Vector3(0, 0, -1));
             const hit = field.decode(ray.intersectObject(field)[0]);
             expect(hit).toEqual({ id: 0, head: damage === 100 });
             const result = encounter.hit(hit!.id, hit!.head);
             expect(result!.killed).toBe(shot === health / damage);
             expect(encounter.zombies[0].health).toBe(health - shot * damage);
+            expect(encounter.zombies[0].armorHealth).toBe(Math.max(0, ZOMBIE_TYPES[kind].armor - shot * damage));
+            if (encounter.zombies[0].armorHealth === 0) expect(encounter.zombies[0].kind).toBe('normal');
           }
         }
       } finally { field.dispose(); (field.material as { dispose(): void }).dispose(); }

@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { ARMOR_SPAWNS, DIFFICULTIES, FIXED_DIFFICULTY, SURVIVAL } from '../game/config';
-import type { Difficulty, GameMode, RunResult } from '../game/config';
+import { useEffect, useRef, useState } from 'react';
+import { ARMOR_SPAWNS, DIFFICULTIES, FIXED_DIFFICULTY, SURVIVAL, ZOMBIE_TYPES } from '../game/config';
+import type { Difficulty, GameMode, GameSnapshot, RunResult } from '../game/config';
 import { formatDuration } from '../game/leaderboard';
+import type { PersonalRecord } from '../game/leaderboard';
 
 export function DeploymentPanel({ mode, onMode, onStart, onLeaderboard, disabled }: {
   mode: GameMode; onMode: (mode: GameMode) => void; onStart: () => void; onLeaderboard: () => void; disabled: boolean;
@@ -26,12 +27,27 @@ export function LeaderboardTable({ entries, difficulty, highlightId }: { entries
   return <div className="leaderboard-scroll"><table className="leaderboard-table"><caption className="sr-only">{DIFFICULTIES[difficulty].label}难度坚守时长排行榜</caption><thead><tr><th scope="col">排名</th><th scope="col">坚守时长</th><th scope="col">击杀</th><th scope="col">日期</th></tr></thead><tbody>{rows.map((row, index) => <tr key={row.id} className={row.id === highlightId ? 'current-result' : ''}><td>{String(index + 1).padStart(2, '0')}{row.id === highlightId && <small>本次</small>}</td><td>{formatDuration(row.duration, true)}</td><td>{row.kills}</td><td>{new Date(row.endedAt).toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' })}</td></tr>)}</tbody></table></div>;
 }
 
-export function ResultPanel({ result, entries, saved, onRetry, onMenu }: { result: RunResult; entries: RunResult[]; saved: boolean; onRetry: () => void; onMenu: () => void }) {
+export function ResultPanel({ result, entries, saved, record, breach, onRetry, onMenu }: { result: RunResult; entries: RunResult[]; saved: boolean; record: PersonalRecord | null; breach: GameSnapshot['breach']; onRetry: () => void; onMenu: () => void }) {
   const focus = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { focus.current?.focus({ preventScroll: true }); }, []);
+  const [review, setReview] = useState(Boolean(breach));
+  useEffect(() => {
+    const timer = setTimeout(() => setReview(false), 2400);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => { focus.current?.focus({ preventScroll: true }); }, [review]);
   const rank = entries.filter(r => r.difficulty === result.difficulty).findIndex(r => r.id === result.id);
+  const culprit = breach ? `${ZOMBIE_TYPES[breach.kind].label}突破了${breach.side}` : `僵尸已进入哨塔 ${SURVIVAL.breachRadius} 米内`;
+  if (review && breach) return <section className="breach-review" aria-label="突破位置">
+    <div className="breach-title"><span className="label">BREACH IDENTIFIED</span><h2 ref={focus} tabIndex={-1}>防线失守</h2><p>{culprit}</p></div>
+    <div className="breach-pointer" data-testid="breached-zombie" data-zombie-id={breach.id} style={{ left: `clamp(120px, ${breach.x}%, calc(100% - 120px))`, top: `${Math.max(24, Math.min(72, breach.y))}%` }}><b>突破者 · {ZOMBIE_TYPES[breach.kind].label}</b><small>红框标记实际越线僵尸</small><span aria-hidden="true">↓</span></div>
+    <button className="start-button breach-continue" onClick={() => setReview(false)}>查看结算 <span aria-hidden="true">→</span></button>
+  </section>;
   return <section className="result-screen" aria-label="游戏结束"><div className="result-panel">
-    <div className="result-summary"><span className="label">PERIMETER BREACHED</span><h2 ref={focus} tabIndex={-1}>防线失守</h2><p>僵尸已进入哨塔 {SURVIVAL.breachRadius} 米内，游戏失败。</p><span className="result-time-label">你坚守了 · {DIFFICULTIES[result.difficulty].label}难度</span><strong className="result-time" data-testid="survival-result">{formatDuration(result.duration, true)}</strong><div className="result-stats"><span><b>{result.kills}</b> 击杀</span><span><b>{result.shots}</b> 发射</span><span><b>{result.shots ? Math.round(result.hits / result.shots * 100) : 0}%</b> 命中率</span></div><p className="record-notice" role="status">{saved ? rank >= 0 ? `已保存 · 本机${DIFFICULTIES[result.difficulty].label}榜第 ${rank + 1} 名` : '本次未进入前 10 名，继续挑战。' : '浏览器无法保存，本次成绩仅在当前页面保留。'}</p><button className="start-button" onClick={onRetry}>再守一次 <span aria-hidden="true">→</span></button><button className="text-button" onClick={onMenu}>返回主菜单</button></div>
+    <div className="result-summary"><span className="label">PERIMETER BREACHED</span><h2 ref={focus} tabIndex={-1}>防线失守</h2><p>{culprit}，游戏失败。</p>
+      {breach && <button className="text-button breach-revisit" onClick={() => setReview(true)}>查看突破位置 ↗</button>}
+      <span className="result-time-label">你坚守了 · {DIFFICULTIES[result.difficulty].label}难度</span><strong className="result-time" data-testid="survival-result">{formatDuration(result.duration, true)}</strong>
+      {record && <div className={`personal-record ${record.status}`} data-testid="personal-record" role="status"><strong>{record.status === 'first' ? '首次坚守 · 个人纪录已建立' : record.status === 'new' ? '新纪录！突破个人最佳' : record.status === 'tied' ? '追平个人最佳！' : '离个人最佳再近一点'}</strong><small>{record.status === 'first' ? '下一次，试着守得更久。' : record.status === 'new' ? `比上次最佳多守了 ${record.difference.toFixed(1)} 秒` : record.status === 'tied' ? '再坚持一步，就能刷新纪录。' : `距离个人最佳还差 ${record.difference.toFixed(1)} 秒`}</small>{record.previous !== null && <small>此前最佳 {formatDuration(record.previous, true)}</small>}</div>}
+      <div className="result-stats"><span><b>{result.kills}</b> 击杀</span><span><b>{result.shots}</b> 发射</span><span><b>{result.shots ? Math.round(result.hits / result.shots * 100) : 0}%</b> 命中率</span></div><p className="record-notice" role="status">{saved ? rank >= 0 ? `已保存 · 本机${DIFFICULTIES[result.difficulty].label}榜第 ${rank + 1} 名` : '本次未进入前 10 名，继续挑战。' : '浏览器无法保存，本次成绩仅在当前页面保留。'}</p><button className="start-button" onClick={onRetry}>再守一次 <span aria-hidden="true">→</span></button><button className="text-button" onClick={onMenu}>返回主菜单</button></div>
     <div className="result-leaderboard"><div className="board-heading"><h3>坚守排行榜</h3><span>{DIFFICULTIES[result.difficulty].label} · 本机前 10</span></div><LeaderboardTable entries={entries} difficulty={result.difficulty} highlightId={result.id} /><p className="board-footnote">按坚守时长排序，同分比较击杀数。<br />仅记录正式模式，保存在当前浏览器。</p></div>
   </div></section>;
 }

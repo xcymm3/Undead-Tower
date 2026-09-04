@@ -7,10 +7,24 @@ import { seededRandom } from '../../src/game/geometry';
 import { CrowdMovement } from '../../src/game/movement';
 import { sampleBreachTarget, SpawnDirector } from '../../src/game/spawn';
 
-const zombie = (id: number, x: number, z: number, breachTarget: Position = { x: 0, z: 1 }): Zombie => ({ id, x, z, breachTarget, kind: 'normal', health: 100, maxHealth: 100, downTime: 0, bornAt: 0 });
+const zombie = (id: number, x: number, z: number, breachTarget: Position = { x: 0, z: 1 }): Zombie => ({ id, x, z, breachTarget, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
 const radius = (p: Position) => Math.hypot(p.x, p.z - 9);
 
 describe('随机圆弧突破与轻微避让', () => {
+  it('记录首个实际越线者，同步越线时稳定选择最小 ID，重开清空', () => {
+    for (const reversed of [false, true]) {
+      const crowd = [zombie(9, 0, 0), zombie(2, 0, 0), zombie(1, 0, -10)].map(z => ({ ...z, waypoint: { x: 0, z: 1 } }));
+      const result = new CrowdMovement().advance(reversed ? crowd.reverse() : crowd, 1, 2);
+      expect(result.failed).toBe(true);
+      expect(result.breachedId).toBe(2);
+    }
+    const encounter = new Encounter(); encounter.reset('survival', 'hard');
+    encounter.zombies = [zombie(42, 0, 0.99)];
+    encounter.update(1, () => ({ x: 0, z: -100 }));
+    expect(encounter.breachedId).toBe(42);
+    encounter.reset('survival', 'hard');
+    expect(encounter.breachedId).toBeNull();
+  });
   it('突破点位于 8 米圆弧，窄屏和镜头极限角度下头部仍可见', () => {
     for (const aspect of [320 / 844, 1440 / 900, 1920 / 900]) {
       const camera = new PerspectiveCamera(CONFIG.camera.fov, aspect, 0.025, 220);

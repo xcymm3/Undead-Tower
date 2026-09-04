@@ -35,6 +35,7 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
   const firstAppearance: Partial<Record<ZombieKind, number>> = {};
   const spawned = { normal: 0, cone: 0, bucket: 0 };
   const kills = { normal: 0, cone: 0, bucket: 0 };
+  const originalKinds = new Map<number, ZombieKind>();
   while (!encounter.failed && encounter.elapsed < 360) {
     firearm.update(dt);
     encounter.update(dt, () => spawns.next(camera));
@@ -42,6 +43,7 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
     if (encounter.totalSpawned > observedSpawns) {
       for (const z of encounter.zombies) if (z.id >= observedSpawns) {
         spawned[z.kind]++;
+        originalKinds.set(z.id, z.kind);
         firstAppearance[z.kind] ??= z.bornAt;
       }
       observedSpawns = encounter.totalSpawned;
@@ -72,7 +74,7 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
     const head = randomShot() < profile.headshotShare;
     if (head) headHits++;
     const result = encounter.hit(target.id, head)!;
-    if (result.killed) { kills[target.kind]++; targetId = null; }
+    if (result.killed) { kills[originalKinds.get(target.id) ?? target.kind]++; targetId = null; }
   }
   return { seed, seconds: encounter.elapsed, failed: encounter.failed, shots: firearm.shots, hits, headHits, kills, spawned, firstAppearance, maxAlive, finalPressure: encounter.pressure };
 }

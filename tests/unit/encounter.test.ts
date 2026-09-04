@@ -59,7 +59,7 @@ describe('练习与正式模式', () => {
 
   it('僵尸向玩家靠近，进入半径时立即冻结时长，不能跨过防线', () => {
     const encounter = new Encounter(); encounter.reset('survival', 'hard');
-    encounter.zombies.push({ id: 99, x: 0, z: 0, kind: 'normal', health: 100, maxHealth: 100, downTime: 0, bornAt: 0 });
+    encounter.zombies.push({ id: 99, x: 0, z: 0, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
     encounter.update(0.2, farSpawn);
     expect(encounter.zombies[0].z).toBeGreaterThan(0);
     encounter.update(5, farSpawn);
@@ -74,7 +74,7 @@ describe('练习与正式模式', () => {
 
   it('击杀的僵尸不会造成失败，尸体被回收，重开清空全部状态', () => {
     const encounter = new Encounter(); encounter.reset('survival', 'hard');
-    encounter.zombies.push({ id: 99, x: 0, z: 0, kind: 'normal', health: 100, maxHealth: 100, downTime: 0, bornAt: 0 });
+    encounter.zombies.push({ id: 99, x: 0, z: 0, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
     expect(encounter.hit(99, false)?.killed).toBe(false);
     expect(encounter.hit(99, false)?.killed).toBe(true);
     expect(encounter.hit(99, true)).toBeNull();
@@ -91,7 +91,7 @@ describe('练习与正式模式', () => {
 
   it('侧边僵尸先进入前方射击区，经过路径点后继续逼近并准确触发失败', () => {
     const encounter = new Encounter(); encounter.reset('survival', 'hard');
-    encounter.zombies.push({ id: 99, x: 10, z: -12, waypoint: { x: 2, z: -6 }, kind: 'normal', health: 100, maxHealth: 100, downTime: 0, bornAt: 0 });
+    encounter.zombies.push({ id: 99, x: 10, z: -12, waypoint: { x: 2, z: -6 }, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
     encounter.update(1, farSpawn);
     expect(encounter.zombies[0].x).toBeLessThan(10);
     expect(encounter.zombies[0].z).toBeGreaterThan(-12);

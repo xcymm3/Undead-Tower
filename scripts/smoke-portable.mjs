@@ -92,12 +92,14 @@ try {
   await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(true);
   await page.getByRole('button', { name: '退出全屏' }).click();
   await page.getByRole('button', { name: '正式模式' }).click();
-  await page.getByRole('group', { name: '选择难度' }).getByRole('button', { name: '困难', exact: true }).click();
+  // 兼容保留的旧 EXE 和以后固定困难的新构建。
+  const difficulty = page.getByRole('group', { name: '选择难度' });
+  if (await difficulty.count()) await difficulty.getByRole('button', { name: '困难', exact: true }).click();
   await page.getByRole('button', { name: '开始坚守' }).click();
   await expect(page.locator('.horde-status')).toContainText('铁桶 1', { timeout: 16000 });
   await page.screenshot({ path: path.join(evidence, 'portable-game.png') });
   await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 45000 });
-  await expect(page.getByRole('status')).toContainText('已保存');
+  await expect(page.locator('.record-notice')).toContainText('已保存');
   record = await page.evaluate(() => {
     const key = Object.keys(localStorage).find(key => key.startsWith('undead-tower.leaderboard.') && localStorage.getItem(key) !== '[]');
     return { key, entries: JSON.parse(localStorage.getItem(key)) };
@@ -118,7 +120,8 @@ try {
   console.log('首次正常退出；将 EXE 连同数据文件夹搬迁，再次离线启动验证成绩');
   session = await start();
   await session.page.getByRole('button', { name: '查看排行榜' }).click();
-  await session.page.getByRole('group', { name: '排行榜难度' }).getByRole('button', { name: '困难', exact: true }).click();
+  const boardDifficulty = session.page.getByRole('group', { name: '排行榜难度' });
+  if (await boardDifficulty.count()) await boardDifficulty.getByRole('button', { name: '困难', exact: true }).click();
   await expect(session.page.getByRole('table')).toBeVisible();
   assert.deepEqual(await session.page.evaluate(key => JSON.parse(localStorage.getItem(key)), record.key), record.entries);
   await session.page.screenshot({ path: path.join(evidence, 'portable-persisted.png') });

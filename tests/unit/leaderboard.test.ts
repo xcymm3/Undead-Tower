@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDuration, LEADERBOARD_KEY, LeaderboardStore, rankResults } from '../../src/game/leaderboard';
+import { formatDuration, LEADERBOARD_KEY, LeaderboardStore, personalRecord, rankResults } from '../../src/game/leaderboard';
 import type { RunResult } from '../../src/game/config';
 
 const result = (id: string, duration: number, difficulty: RunResult['difficulty'] = 'normal', kills = 2): RunResult => ({ id, duration, difficulty, kills, hits: 5, shots: 10, endedAt: '2026-09-03T08:00:00.000Z' });
@@ -9,6 +9,13 @@ const memoryStorage = () => {
 };
 
 describe('本机排行榜', () => {
+  it('个人纪录区分首次、突破、追平和追赶，排除其他难度及本次成绩', () => {
+    const run = result('now', 90, 'hard');
+    expect(personalRecord(run, [result('easy', 200, 'easy'), run]).status).toBe('first');
+    expect(personalRecord(run, [result('old', 80, 'hard')])).toEqual({ status: 'new', previous: 80, difference: 10 });
+    expect(personalRecord(run, [result('old', 90.01, 'hard')]).status).toBe('tied');
+    expect(personalRecord(run, [result('old', 100, 'hard')])).toEqual({ status: 'chasing', previous: 100, difference: 10 });
+  });
   it('新刷新规则单独记榜，保留旧规则成绩', () => {
     const oldKey = 'undead-tower.leaderboard.armor-v2';
     const oldData = JSON.stringify([result('old', 180)]);

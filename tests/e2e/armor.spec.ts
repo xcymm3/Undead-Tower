@@ -58,6 +58,19 @@ test('真实对局开局按比例生成护甲僵尸，路障和铁桶分别需�
       }, target.id);
       if (result.hit) confirmedHits++;
       expect(result.health).toBe(health - confirmedHits * 100);
+      if (result.hit && confirmedHits === shots - 1) {
+        const stripped = await page.evaluate(() => window.__undeadTower!.snapshot());
+        const survivor = stripped.targets.find(z => z.id === target.id)!;
+        expect(survivor.kind).toBe('normal');
+        expect(survivor.armorHealth).toBe(0);
+        expect(survivor.bodyHealth).toBe(100);
+        expect(stripped.armorEffects.active).toBeGreaterThan(0);
+        expect(stripped.audio.lastArmorCue).toEqual({ kind, broken: true });
+        const positions = stripped.armorEffects.positions;
+        await page.waitForTimeout(120);
+        expect((await page.evaluate(() => window.__undeadTower!.snapshot())).armorEffects.positions).not.toEqual(positions);
+        await page.screenshot({ path: `test-results/${kind}-armor-off.png` });
+      }
       await page.waitForTimeout(180);
     }
     expect(confirmedHits).toBe(shots);

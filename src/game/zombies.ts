@@ -40,6 +40,7 @@ const PARTS: Part[] = [
 ];
 const SHIRTS = [0x596450, 0x6c585a, 0x546877, 0x827157].map(color => new THREE.Color(color));
 const COLORS = PARTS.map(part => new THREE.Color(part.color));
+const BREACH_COLOR = new THREE.Color(0xff5f48);
 
 /** 整个尸群共用一个 InstancedMesh；命中先按僵尸包围盒筛选，再检查实际方块。 */
 export class ZombieField extends THREE.InstancedMesh {
@@ -65,7 +66,7 @@ export class ZombieField extends THREE.InstancedMesh {
 
   sync(encounter: Encounter) {
     this.enemies = encounter.zombies;
-    const ids = this.enemies.map(z => `${z.id}:${z.kind}`).join(',');
+    const ids = `${encounter.breachedId}|${this.enemies.map(z => `${z.id}:${z.kind}`).join(',')}`;
     const colorsChanged = ids !== this.previousIds;
     this.previousIds = ids;
     this.count = this.enemies.length * PARTS.length;
@@ -88,11 +89,22 @@ export class ZombieField extends THREE.InstancedMesh {
         this.partMatrix.multiplyMatrices(this.root.matrix, this.part.matrix);
         const instance = index * PARTS.length + partIndex;
         this.setMatrixAt(instance, this.partMatrix);
-        if (colorsChanged) this.setColorAt(instance, part.shirt ? SHIRTS[zombie.id % SHIRTS.length] : COLORS[partIndex]);
+        if (colorsChanged) this.setColorAt(instance, zombie.id === encounter.breachedId ? BREACH_COLOR : part.shirt ? SHIRTS[zombie.id % SHIRTS.length] : COLORS[partIndex]);
       });
     });
     this.instanceMatrix.needsUpdate = true;
     if (colorsChanged && this.instanceColor) this.instanceColor.needsUpdate = true;
+  }
+
+  captureArmor(id: number, kind: ZombieKind) {
+    const index = this.enemies.findIndex(zombie => zombie.id === id);
+    if (index < 0 || kind === 'normal') return [];
+    return PARTS.flatMap((part, partIndex) => {
+      if (part.kind !== kind) return [];
+      const matrix = new THREE.Matrix4();
+      this.getMatrixAt(index * PARTS.length + partIndex, matrix);
+      return [{ matrix, color: part.color }];
+    });
   }
 
   override raycast(raycaster: THREE.Raycaster, intersections: THREE.Intersection[]) {

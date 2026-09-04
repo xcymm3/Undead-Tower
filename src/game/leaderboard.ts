@@ -3,6 +3,15 @@ import type { Difficulty, RunResult } from './config';
 // 开局护甲新比例单独记榜；旧 v1 与 armor-v2 数据保留在原键。
 export const LEADERBOARD_KEY = 'undead-tower.leaderboard.armor-v3';
 type StoragePort = Pick<Storage, 'getItem' | 'setItem'>;
+export interface PersonalRecord { status: 'first' | 'new' | 'tied' | 'chasing'; previous: number | null; difference: number; }
+
+/** 在写入本次成绩前比较同难度最佳，按界面显示的十分之一秒比较。 */
+export function personalRecord(result: RunResult, entries: RunResult[]): PersonalRecord {
+  const previous = entries.filter(r => r.difficulty === result.difficulty && r.id !== result.id).reduce<number | null>((best, r) => best === null ? r.duration : Math.max(best, r.duration), null);
+  if (previous === null) return { status: 'first', previous, difference: 0 };
+  const difference = (Math.floor(result.duration * 10 + 1e-6) - Math.floor(previous * 10 + 1e-6)) / 10;
+  return { status: difference > 0 ? 'new' : difference === 0 ? 'tied' : 'chasing', previous, difference: Math.abs(difference) };
+}
 const difficulties: Difficulty[] = ['easy', 'normal', 'hard'];
 
 function isResult(value: unknown): value is RunResult {

@@ -4,7 +4,7 @@ import { CrowdMovement } from './movement';
 
 export interface Position { x: number; z: number; }
 export interface SpawnPosition extends Position { waypoint?: Position; breachTarget?: Position; spawnZone?: string; }
-export interface Zombie extends SpawnPosition { id: number; kind: ZombieKind; health: number; maxHealth: number; downTime: number; bornAt: number; avoidance?: number; heading?: number; }
+export interface Zombie extends SpawnPosition { id: number; kind: ZombieKind; health: number; maxHealth: number; armorHealth: number; downTime: number; bornAt: number; avoidance?: number; heading?: number; }
 export const PRACTICE_POSITIONS: Position[] = [{ x: -5.8, z: -9.5 }, { x: 0.15, z: -17 }, { x: 5.4, z: -21 }, { x: -1, z: -31 }];
 
 export function pressureAt(_difficulty: Difficulty, elapsed: number) {
@@ -42,6 +42,7 @@ export class Encounter {
   difficulty: Difficulty = FIXED_DIFFICULTY;
   elapsed = 0;
   failed = false;
+  breachedId: number | null = null;
   kills = 0;
   zombies: Zombie[] = [];
   totalSpawned = 0;
@@ -51,11 +52,12 @@ export class Encounter {
   private conesSinceBucket = 0;
   private movement = new CrowdMovement();
 
-  constructor() { this.reset('practice', 'normal'); }
+  constructor() { this.reset('practice', FIXED_DIFFICULTY); }
 
   reset(mode: GameMode, difficulty: Difficulty) {
     this.mode = mode; this.difficulty = difficulty;
     this.elapsed = 0; this.failed = false; this.kills = 0; this.spawnCredit = 0; this.nextId = 0; this.totalSpawned = 0;
+    this.breachedId = null;
     this.normalsSinceCone = 0; this.conesSinceBucket = 0;
     this.zombies = mode === 'practice' ? PRACTICE_POSITIONS.map(p => this.makeZombie(p)) : [];
   }
@@ -78,7 +80,7 @@ export class Encounter {
   private makeZombie(position: SpawnPosition): Zombie {
     const kind = this.nextKind();
     const health = ZOMBIE_TYPES[kind].health;
-    return { ...position, id: this.nextId++, kind, health, maxHealth: health, downTime: 0, bornAt: this.elapsed };
+    return { ...position, id: this.nextId++, kind, health, armorHealth: ZOMBIE_TYPES[kind].armor, maxHealth: health, downTime: 0, bornAt: this.elapsed };
   }
   get pressure() { return pressureAt(this.difficulty, this.elapsed); }
   get alive() { return this.zombies.filter(z => z.health > 0).length; }
@@ -96,10 +98,15 @@ export class Encounter {
   hit(id: number, head: boolean) {
     const zombie = this.zombies.find(z => z.id === id && z.health > 0);
     if (!zombie || this.failed) return null;
-    zombie.health = Math.max(0, zombie.health - (head ? CONFIG.target.headDamage : CONFIG.target.bodyDamage));
+    const damage = head ? CONFIG.target.headDamage : CONFIG.target.bodyDamage;
+    const armorHit = zombie.armorHealth > 0 ? zombie.kind : null;
+    zombie.armorHealth = Math.max(0, zombie.armorHealth - damage);
+    zombie.health = Math.max(0, zombie.health - damage);
+    const armorBroken = armorHit !== null && zombie.armorHealth === 0;
+    if (armorBroken) zombie.kind = 'normal';
     const killed = zombie.health === 0;
     if (killed) { this.kills++; zombie.downTime = this.mode === 'practice' ? CONFIG.target.respawn : 0.85; }
-    return { killed };
+    return { killed, armorHit, armorBroken };
   }
 
   update(delta: number, spawnPosition: () => SpawnPosition) {
@@ -121,6 +128,7 @@ export class Encounter {
       this.elapsed += movement.duration;
       if (movement.failed) {
         this.failed = true;
+        this.breachedId = movement.breachedId;
         return;
       }
       this.spawnCredit += spawnIntegral(this.difficulty, previous, this.elapsed);

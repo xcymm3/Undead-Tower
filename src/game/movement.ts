@@ -81,8 +81,10 @@ export class CrowdMovement {
   advance(zombies: Zombie[], step: number, speed: number) {
     this.rebuild(zombies);
     const motions = zombies.filter(zombie => zombie.health > 0).map(zombie => this.plan(zombie, step, speed));
-    let duration = step, failed = false;
-    for (const motion of motions) if (motion.breachAt <= duration) { duration = motion.breachAt; failed = true; }
+    let duration = step, failed = false, breachedId: number | null = null;
+    for (const motion of motions) if (motion.breachAt < duration || (motion.breachAt === duration && (breachedId === null || motion.zombie.id < breachedId))) {
+      duration = motion.breachAt; failed = true; breachedId = motion.zombie.id;
+    }
     for (const motion of motions) {
       const zombie = motion.zombie;
       let remaining = duration;
@@ -98,6 +100,6 @@ export class CrowdMovement {
       if (duration + 1e-8 >= motion.clearWaypointAt) zombie.waypoint = undefined;
       zombie.avoidance = motion.avoidance;
     }
-    return { duration, failed };
+    return { duration, failed, breachedId };
   }
 }
