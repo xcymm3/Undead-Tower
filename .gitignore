@@ -1,6 +1,7 @@
 node_modules/
 dist/
 release/
+recordings/
 Undead Tower Data/
 test-results/
 playwright-report/
