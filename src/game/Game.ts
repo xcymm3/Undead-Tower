@@ -84,6 +84,7 @@ export class Game {
     this.scene.add(this.armorEffects, this.defense);
     this.scene.add(this.camera);
     this.camera.add(this.weapon.root);
+    this.camera.add(this.weapon.armRoot);
     this.observer = new ResizeObserver(this.resize);
     this.observer.observe(host);
     this.resize();
@@ -244,14 +245,16 @@ export class Game {
     this.raycaster.far = CONFIG.weapon.range;
     const hit = this.raycaster.intersectObjects(this.activeSurfaces(), false)[0];
     this.aimPoint.copy(hit?.point ?? this.raycaster.ray.at(CONFIG.weapon.range, new THREE.Vector3()));
-    const reloadProgress = this.firearm.reloading ? 1 - this.firearm.reloadRemaining / CONFIG.weapon.reloadDuration : 0;
-    const reloadOffset = Math.sin(reloadProgress * Math.PI);
+    const pose = this.weapon.animateReload(this.firearm.reloading ? this.firearm.reloadProgress : null, this.firearm.reloadEmpty);
+    this.host.parentElement?.style.setProperty('--reload-progress', String(this.firearm.reloadProgress));
     // 后坐力平移枪身，再重算朝向；准星、枪口轴和命中点不会分离。
-    this.weapon.root.position.set(0.43, -0.18 - reloadOffset * 0.55 - this.recoil * 0.035, -1.03 + this.recoil * 0.12);
+    const viewX = Math.min(0.38, Math.tan(THREE.MathUtils.degToRad(CONFIG.camera.fov / 2)) * this.camera.aspect * 0.8);
+    this.weapon.root.position.set(viewX + pose.shift, -0.40 + pose.lift - this.recoil * 0.025, -1.16 + this.recoil * 0.08);
     const localTarget = this.camera.worldToLocal(this.aimPoint.clone());
     this.weapon.root.quaternion.copy(weaponQuaternion(this.weapon.root.position, localTarget));
-    if (this.firearm.reloading) this.weapon.root.rotateZ(-reloadOffset * 0.32);
+    if (this.firearm.reloading) { this.weapon.root.rotateZ(pose.roll); this.weapon.root.rotateX(pose.tilt); }
     this.weapon.root.updateMatrixWorld(true);
+    this.weapon.updateArm();
   }
 
   private addEffect(position: THREE.Vector3, velocity: THREE.Vector3, scale: THREE.Vector3, color: number, life: number, gravity = 0, spin = false, shrink = true, emissive = false) {
@@ -327,7 +330,14 @@ export class Game {
     if (this.fpsTime >= 1) { this.fps = Math.round(this.frameCount / this.fpsTime); this.fpsTime = 0; this.frameCount = 0; }
     if (this.phase === 'playing') {
       const wasReloading = this.firearm.reloading;
+      const previousReload = this.firearm.reloadProgress;
       this.firearm.update(delta);
+      if (wasReloading) {
+        const progress = this.firearm.reloadProgress;
+        if (previousReload < 0.14 && progress >= 0.14) this.audio.tone(520, 210, 0.055, 0.035);
+        if (previousReload < 0.71 && progress >= 0.71) this.audio.tone(190, 410, 0.06, 0.045);
+        if (this.firearm.reloadEmpty && previousReload < 0.9 && progress >= 0.9) this.audio.tone(900, 230, 0.06, 0.04);
+      }
       if (wasReloading && !this.firearm.reloading) { this.audio.tone(350, 700, 0.08); this.publish(); }
       this.recoil *= Math.exp(-delta * 15);
       this.flashTime = Math.max(0, this.flashTime - delta);
@@ -387,6 +397,7 @@ export class Game {
       flashVisible: this.weapon.flash.visible, weaponVisible: this.weapon.root.visible, effects: this.effects.length, lastShot: this.lastShot, drawCalls: this.renderer.info.render.calls, renderCount: this.renderCount, fps: this.fps,
       blood: this.blood.diagnostics(),
       armorEffects: this.armorEffects.diagnostics(), audio: this.audio.diagnostics(), breach: this.breachFeedback(), defenseVisible: this.defense.visible,
+      reload: { progress: this.firearm.reloadProgress, remaining: this.firearm.reloadRemaining, empty: this.firearm.reloadEmpty, magazine: this.weapon.magazine.position.toArray(), magazineVisible: this.weapon.magazine.visible, oldMagazineVisible: this.weapon.oldMagazine.visible, hand: this.weapon.leftHand.position.toArray(), bolt: this.weapon.chargingHandle.position.z },
       targets: this.encounter.zombies.map(z => ({ id: z.id, kind: z.kind, maxHealth: z.maxHealth, armorHealth: z.armorHealth, bodyHealth: z.health - z.armorHealth, spawnZone: z.spawnZone, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, breachTarget: z.breachTarget ? { ...z.breachTarget } : undefined, waypoint: z.waypoint ? { ...z.waypoint } : undefined, avoidance: z.avoidance ?? 0, heading: z.heading, head: project(new THREE.Vector3(z.x, 1.83, z.z)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
     };
   }

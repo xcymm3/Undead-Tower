@@ -19,11 +19,21 @@ describe('射击与装填', () => {
     expect(gun.ammo).toBe(0);
     expect(gun.reload()).toBe(true);
     expect(gun.reload()).toBe(false);
-    gun.update(1);
+    expect(gun.reloadEmpty).toBe(true);
+    gun.update(0.774);
     expect(gun.fire()).toBe(false);
-    gun.update(0.56);
+    expect(gun.ammo).toBe(0);
+    gun.update(0.0011);
     expect(gun.ammo).toBe(30);
     expect(gun.fire()).toBe(true);
+  });
+  it('战术换弹也在 0.775 秒完成，重复换弹不重置进度', () => {
+    const gun = new Firearm(); gun.fire(); gun.reload();
+    expect(gun.reloadRemaining).toBe(0.775); expect(gun.reloadEmpty).toBe(false);
+    gun.update(0.4); const remaining = gun.reloadRemaining;
+    expect(gun.reload()).toBe(false); expect(gun.reloadRemaining).toBe(remaining);
+    expect(gun.ammo).toBe(29); expect(gun.fire()).toBe(false);
+    gun.update(0.375); expect(gun.ammo).toBe(30); expect(gun.reloading).toBe(false);
   });
   it('满弹匣不换弹，重置清除冷却与装填状态', () => {
     const gun = new Firearm();

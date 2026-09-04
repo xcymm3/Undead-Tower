@@ -5,8 +5,10 @@ export class Firearm {
   shots = 0;
   cooldown = 0;
   reloadRemaining = 0;
+  reloadEmpty = false;
 
   get reloading() { return this.reloadRemaining > 0; }
+  get reloadProgress() { return this.reloading ? 1 - this.reloadRemaining / CONFIG.weapon.reloadDuration : 1; }
 
   fire(): boolean {
     if (this.reloading || this.cooldown > 0 || this.ammo === 0) return false;
@@ -18,6 +20,7 @@ export class Firearm {
 
   reload(): boolean {
     if (this.reloading || this.ammo === CONFIG.weapon.capacity) return false;
+    this.reloadEmpty = this.ammo === 0;
     this.reloadRemaining = CONFIG.weapon.reloadDuration;
     return true;
   }
@@ -35,5 +38,6 @@ export class Firearm {
     this.shots = 0;
     this.cooldown = 0;
     this.reloadRemaining = 0;
+    this.reloadEmpty = false;
   }
 }

@@ -1,6 +1,6 @@
 export const CONFIG = {
   camera: { fov: 61, height: 4.8, yawLimit: 4 * Math.PI / 180, pitchLimit: 2.5 * Math.PI / 180, damping: 5 },
-  weapon: { capacity: 30, interval: 0.115, reloadDuration: 1.55, range: 180 },
+  weapon: { capacity: 30, interval: 0.115, reloadDuration: 0.775, range: 180 },
   target: { respawn: 3, bodyDamage: 50, headDamage: 100 },
 } as const;
 
