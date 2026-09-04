@@ -1,14 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { ARMOR_SPAWNS, DIFFICULTIES, SURVIVAL } from '../game/config';
+import { ARMOR_SPAWNS, DIFFICULTIES, FIXED_DIFFICULTY, SURVIVAL } from '../game/config';
 import type { Difficulty, GameMode, RunResult } from '../game/config';
 import { formatDuration } from '../game/leaderboard';
 
-export function DifficultyTabs({ value, onChange, label = '选择难度' }: { value: Difficulty; onChange: (value: Difficulty) => void; label?: string }) {
-  return <div className="difficulty-tabs" role="group" aria-label={label}>{(Object.keys(DIFFICULTIES) as Difficulty[]).map(key => <button key={key} aria-pressed={value === key} onClick={() => onChange(key)}>{DIFFICULTIES[key].label}</button>)}</div>;
-}
-
-export function DeploymentPanel({ mode, difficulty, onMode, onDifficulty, onStart, onLeaderboard, disabled }: {
-  mode: GameMode; difficulty: Difficulty; onMode: (mode: GameMode) => void; onDifficulty: (difficulty: Difficulty) => void; onStart: () => void; onLeaderboard: () => void; disabled: boolean;
+export function DeploymentPanel({ mode, onMode, onStart, onLeaderboard, disabled }: {
+  mode: GameMode; onMode: (mode: GameMode) => void; onStart: () => void; onLeaderboard: () => void; disabled: boolean;
 }) {
   return <div className="deployment-panel">
     <span className="label">PREPARE YOUR WATCH</span><h2>选择你的防守</h2>
@@ -17,7 +13,7 @@ export function DeploymentPanel({ mode, difficulty, onMode, onDifficulty, onStar
       <button className="mode-option" aria-pressed={mode === 'survival'} onClick={() => onMode('survival')}><span className="mode-radio" /><span>正式模式<small>僵尸逼近 · 挑战坚守纪录</small></span><b>02</b></button>
     </div>
     <div className="deployment-detail">
-      {mode === 'survival' ? <><DifficultyTabs value={difficulty} onChange={onDifficulty} /><p>{DIFFICULTIES[difficulty].description}。<br />{difficulty === 'easy' ? '三档共享刷新和移速，最多每秒 10 只。' : difficulty === 'normal' ? `每 ${ARMOR_SPAWNS.normalPerCone} 只普通加入 1 只路障。` : `每 ${ARMOR_SPAWNS.normalPerCone} 普 → 1 路障；每 ${ARMOR_SPAWNS.conesPerBucket} 路障 → 1 铁桶。`}<br /><strong>任意僵尸进入哨塔 {SURVIVAL.breachRadius} 米内，防守失败。</strong></p></> : <><span className="practice-note">先熟悉你的第一发子弹。</span><p>僵尸固定站位，击倒后自动复位。<br />练习不会失败，也不会计入排行榜。</p></>}
+      {mode === 'survival' ? <><span className="practice-note">困难难度 · 守住防线</span><p>{DIFFICULTIES[FIXED_DIFFICULTY].description}。<br />每 {ARMOR_SPAWNS.normalPerCone} 普 → 1 路障；每 {ARMOR_SPAWNS.conesPerBucket} 路障 → 1 铁桶。<br /><strong>任意僵尸进入哨塔 {SURVIVAL.breachRadius} 米内，防守失败。</strong></p></> : <><span className="practice-note">先熟悉你的第一发子弹。</span><p>僵尸固定站位，击倒后自动复位。<br />练习不会失败，也不会计入排行榜。</p></>}
     </div>
     <button className="start-button" onClick={onStart} disabled={disabled}><span>{mode === 'practice' ? '进入哨站' : '开始坚守'}<small>{mode === 'practice' ? 'ENTER THE RANGE' : 'HOLD THE LINE'}</small></span><span aria-hidden="true">→</span></button>
     <button className="leaderboard-link" onClick={onLeaderboard}>查看排行榜 <span>本机 TOP 10 ↗</span></button>

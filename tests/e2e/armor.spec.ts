@@ -6,7 +6,6 @@ test('真实对局开局按比例生成护甲僵尸，路障和铁桶分别需�
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
   await page.getByRole('button', { name: '正式模式' }).click();
-  await page.getByRole('group', { name: '选择难度' }).getByRole('button', { name: '困难', exact: true }).click();
   await page.getByRole('button', { name: '开始坚守' }).click();
   // 通过真实输入守到铁桶出生；不改游戏时钟、不注入僵尸、不修改生命值。
   const appearance = await page.evaluate(async () => {

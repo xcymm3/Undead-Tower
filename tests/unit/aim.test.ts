@@ -16,11 +16,14 @@ describe('有限视角契约', () => {
     expect(Math.abs(view.y)).toBeLessThanOrEqual(CONFIG.camera.pitchLimit);
     expect(view.x).toBeCloseTo(-CONFIG.camera.yawLimit, 8);
   });
-  it('镜头确实转动，但第一帧仅移动最终角度的很小部分', () => {
+  it('镜头使用原最快跟随速度，仍平滑过渡而非瞬间转向', () => {
     const step = dampView(new Vector2(), new Vector2(1, 1), 1 / 60);
     expect(step.x).toBeLessThan(0);
     expect(step.y).toBeGreaterThan(0);
-    expect(Math.abs(step.x)).toBeLessThan(CONFIG.camera.yawLimit * 0.05);
+    expect(Math.abs(step.x)).toBeGreaterThan(CONFIG.camera.yawLimit * 0.07);
+    expect(Math.abs(step.x)).toBeLessThan(CONFIG.camera.yawLimit * 0.09);
+    const near = dampView(new Vector2(), new Vector2(1, 1), 0.46);
+    expect(Math.abs(near.x) / CONFIG.camera.yawLimit).toBeCloseTo(0.9, 2);
   });
   it('30 FPS 与 144 FPS 的一秒结果相同', () => {
     const advance = (fps: number) => {

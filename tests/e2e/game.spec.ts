@@ -86,6 +86,7 @@ test('暂停、设置和失焦不会误射，重新开始清空训练状态', as
   expect((await snapshot(page)).shots).toBe(count);
   await page.getByRole('button', { name: '游戏设置' }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('slider')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).not.toBeVisible();
   expect((await snapshot(page)).phase).toBe('paused');

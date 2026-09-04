@@ -1,11 +1,12 @@
 export const CONFIG = {
-  camera: { fov: 61, height: 4.8, yawLimit: 4 * Math.PI / 180, pitchLimit: 2.5 * Math.PI / 180, damping: 2.4 },
+  camera: { fov: 61, height: 4.8, yawLimit: 4 * Math.PI / 180, pitchLimit: 2.5 * Math.PI / 180, damping: 5 },
   weapon: { capacity: 30, interval: 0.115, reloadDuration: 1.55, range: 180 },
   target: { respawn: 3, bodyDamage: 50, headDamage: 100 },
 } as const;
 
 export type GameMode = 'practice' | 'survival';
 export type Difficulty = 'easy' | 'normal' | 'hard';
+export const FIXED_DIFFICULTY = 'hard' satisfies Difficulty;
 export type ZombieKind = 'normal' | 'cone' | 'bucket';
 export type GamePhase = 'ready' | 'playing' | 'paused' | 'failed';
 export const PRESSURE = { spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.25, speedGrowth: 0.011 } as const;

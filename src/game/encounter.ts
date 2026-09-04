@@ -1,4 +1,4 @@
-import { ARMOR_SPAWNS, CONFIG, PRESSURE, SURVIVAL, ZOMBIE_TYPES } from './config';
+import { ARMOR_SPAWNS, CONFIG, FIXED_DIFFICULTY, PRESSURE, SURVIVAL, ZOMBIE_TYPES } from './config';
 import type { Difficulty, GameMode, ZombieKind } from './config';
 import { CrowdMovement } from './movement';
 
@@ -39,7 +39,7 @@ export function distanceToBreach(zombie: SpawnPosition) {
 
 export class Encounter {
   mode: GameMode = 'practice';
-  difficulty: Difficulty = 'normal';
+  difficulty: Difficulty = FIXED_DIFFICULTY;
   elapsed = 0;
   failed = false;
   kills = 0;

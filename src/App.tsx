@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Game } from './game/Game';
-import { DIFFICULTIES, SURVIVAL } from './game/config';
-import type { Difficulty, GameMode, GameSnapshot } from './game/config';
+import { DIFFICULTIES, FIXED_DIFFICULTY, SURVIVAL } from './game/config';
+import type { GameMode, GameSnapshot } from './game/config';
 import { formatDuration, LeaderboardStore } from './game/leaderboard';
-import { DeploymentPanel, DifficultyTabs, LeaderboardTable, ResultPanel } from './ui/SessionPanels';
+import { DeploymentPanel, LeaderboardTable, ResultPanel } from './ui/SessionPanels';
 
-const initialState: GameSnapshot = { phase: 'ready', mode: 'practice', difficulty: 'normal', survived: 0, alive: 4, zombieCounts: { normal: 4, cone: 0, bucket: 0 }, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, pixelated: false };
+const initialState: GameSnapshot = { phase: 'ready', mode: 'practice', difficulty: FIXED_DIFFICULTY, survived: 0, alive: 4, zombieCounts: { normal: 4, cone: 0, bucket: 0 }, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, pixelated: false };
 
 function Icon({ name, size = 18 }: { name: 'tower' | 'aim' | 'sound' | 'mute' | 'settings' | 'expand' | 'pause' | 'arrow' | 'close'; size?: number }) {
   const paths = {
@@ -34,13 +34,10 @@ export function App() {
   const [state, setState] = useState(initialState);
   const [error, setError] = useState('');
   const [settings, setSettings] = useState(false);
-  const [damping, setDamping] = useState(2.4);
   const [feedback, setFeedback] = useState<{ head: boolean; killed: boolean; key: number } | null>(null);
   const hitTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [fullscreen, setFullscreen] = useState(false);
   const [mode, setMode] = useState<GameMode>('practice');
-  const [difficulty, setDifficulty] = useState<Difficulty>('normal');
-  const [boardDifficulty, setBoardDifficulty] = useState<Difficulty>('normal');
   const scoreDialog = useRef<HTMLDialogElement>(null);
   const [leaderboard] = useState(() => new LeaderboardStore());
   const [entries, setEntries] = useState(() => leaderboard.read());
@@ -120,7 +117,7 @@ export function App() {
         <p className="intro-description">森林边缘有了动静。<br />拿起步枪，看看你能坚守多久。</p>
         <div className="intro-controls"><span><kbd>鼠标</kbd> 瞄准</span><span><kbd>左键</kbd> 开火</span><span><kbd>R</kbd> 换弹</span></div>
       </div>
-      <DeploymentPanel mode={mode} difficulty={difficulty} onMode={setMode} onDifficulty={setDifficulty} onStart={() => { setFeedback(null); game.current?.begin(mode, difficulty); }} disabled={Boolean(error) || !state.fps} onLeaderboard={() => { setEntries(leaderboard.read()); setBoardDifficulty(difficulty); scoreDialog.current?.showModal(); }} />
+      <DeploymentPanel mode={mode} onMode={setMode} onStart={() => { setFeedback(null); game.current?.begin(mode); }} disabled={Boolean(error) || !state.fps} onLeaderboard={() => { setEntries(leaderboard.read()); scoreDialog.current?.showModal(); }} />
       <div className="intro-foot"><span className="signal-dot" /> 固定哨位 · 僵尸生存 <span className="intro-foot-right">有限视角 / LOW-POLY WORLD</span></div>
     </section>}
 
@@ -140,15 +137,12 @@ export function App() {
 
     <dialog ref={scoreDialog} className="settings-dialog leaderboard-dialog" aria-labelledby="leaderboard-title" onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>
       <div className="dialog-heading"><div><span className="label">LOCAL RECORDS</span><h2 id="leaderboard-title">坚守排行榜</h2></div><button className="icon-button" onClick={() => scoreDialog.current?.close()} aria-label="关闭排行榜"><Icon name="close" /></button></div>
-      <p className="settings-intro">护甲规则榜 · 本机前 10 名 · 按难度记录</p><DifficultyTabs value={boardDifficulty} onChange={setBoardDifficulty} label="排行榜难度" /><LeaderboardTable entries={entries} difficulty={boardDifficulty} /><p className="board-footnote">正式模式结束后自动记录。<br />成绩保存在当前浏览器，清除网站数据会移除纪录。</p>
+      <p className="settings-intro">困难难度 · 本机前 10 名</p><LeaderboardTable entries={entries} difficulty={FIXED_DIFFICULTY} /><p className="board-footnote">正式模式结束后自动记录。<br />成绩保存在当前浏览器，清除网站数据会移除纪录。</p>
     </dialog>
 
     <dialog ref={dialog} className="settings-dialog" aria-labelledby="settings-title" onCancel={event => { event.preventDefault(); event.stopPropagation(); closeSettings(); }} onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>
       <div className="dialog-heading"><div><span className="label">FIELD PREFERENCES</span><h2 id="settings-title">哨站设置</h2></div><button className="icon-button" onClick={closeSettings} aria-label="关闭设置"><Icon name="close" /></button></div>
-      <p className="settings-intro">枪口跟随准星，镜头缓慢跟随视线。</p>
-      <label className="range-label" htmlFor="damping"><span>镜头阻尼<small>调整跟随速度，转动范围始终固定</small></span><b>{damping <= 2 ? '很强' : damping <= 3.5 ? '强' : '适中'}</b></label>
-      <input id="damping" type="range" min="1" max="5" step="0.1" value={6 - damping} onChange={event => { const value = 6 - Number(event.target.value); setDamping(value); game.current?.setDamping(value); }} />
-      <div className="range-ends"><span>跟随更快</span><span>阻尼更强</span></div>
+      <p className="settings-intro">枪口跟随准星，镜头以固定速度平滑跟随视线。</p>
       <div className="view-limits"><Icon name="aim" /><p>水平 ±4°<span>垂直 ±2.5°</span><small>始终朝向北侧公路，无法转身。</small></p></div>
       <label className="toggle-row"><span>游戏声音<small>枪声、命中与装填反馈</small></span><input type="checkbox" checked={state.sound} onChange={event => game.current?.setSound(event.target.checked)} /><i /></label>
       <label className="toggle-row"><span>粗颗粒像素<small>降低渲染分辨率，保留清晰的界面</small></span><input type="checkbox" checked={state.pixelated} onChange={event => game.current?.setPixelated(event.target.checked)} /><i /></label>

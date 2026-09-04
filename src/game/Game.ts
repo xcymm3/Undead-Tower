@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { CONFIG } from './config';
-import type { Difficulty, GameMode, GamePhase, GameSnapshot, RunResult } from './config';
+import { CONFIG, FIXED_DIFFICULTY } from './config';
+import type { GameMode, GamePhase, GameSnapshot, RunResult } from './config';
 import { dampView, pointerToNdc, weaponQuaternion } from './aim';
 import { GameAudio } from './audio';
 import { Firearm } from './firearm';
@@ -49,7 +49,6 @@ export class Game {
   private frameCount = 0;
   private fpsTime = 0;
   private fps = 60;
-  private damping: number = CONFIG.camera.damping;
   private pixelated = false;
   private disposed = false;
   private width = 1;
@@ -171,9 +170,9 @@ export class Game {
     if (this.phase === 'playing') { this.phase = 'paused'; this.publish(); }
   }
 
-  private prepare(mode: GameMode, difficulty: Difficulty) {
+  private prepare(mode: GameMode) {
     this.firearm.reset(); this.hitCount = 0; this.kills = 0;
-    this.encounter.reset(mode, difficulty);
+    this.encounter.reset(mode, FIXED_DIFFICULTY);
     this.spawns.reset();
     this.zombieField.sync(this.encounter);
     this.blood.reset();
@@ -185,16 +184,16 @@ export class Game {
     this.effects = [];
   }
 
-  begin(mode: GameMode, difficulty: Difficulty) {
-    this.prepare(mode, difficulty);
+  begin(mode: GameMode) {
+    this.prepare(mode);
     this.phase = 'ready';
     this.start();
   }
 
-  reset() { this.begin(this.encounter.mode, this.encounter.difficulty); }
+  reset() { this.begin(this.encounter.mode); }
 
   menu() {
-    this.prepare('practice', this.encounter.difficulty);
+    this.prepare('practice');
     this.phase = 'ready'; this.trigger = false; this.dirty = true;
     this.updateCrosshair(); this.publish();
   }
@@ -218,14 +217,13 @@ export class Game {
   }
   setSound(enabled: boolean) { this.audio.enabled = enabled; if (enabled) this.audio.unlock(); this.publish(); }
   setPixelated(enabled: boolean) { this.pixelated = enabled; this.resize(); this.publish(); }
-  setDamping(value: number) { this.damping = THREE.MathUtils.clamp(value, 1, 5); }
 
   private activeSurfaces() {
     return [...this.world.surfaces, this.zombieField];
   }
 
   private updateAim(delta: number) {
-    this.view.copy(dampView(this.view, this.phase === 'ready' ? new THREE.Vector2() : this.aim, delta, this.damping));
+    this.view.copy(dampView(this.view, this.phase === 'ready' ? new THREE.Vector2() : this.aim, delta));
     this.camera.rotation.set(-0.105 + this.view.y, this.view.x, 0, 'YXZ');
     this.camera.updateMatrixWorld(true);
     this.raycaster.setFromCamera(this.aim, this.camera);

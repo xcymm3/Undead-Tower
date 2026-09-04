@@ -125,11 +125,7 @@ h1 b { color: var(--color-accent); font-weight: inherit; }
 .dialog-heading { display: flex; justify-content: space-between; align-items: center; }
 .dialog-heading h2 { font-size: 24px; font-weight: 500; margin-top: 10px; letter-spacing: 2px; }
 .settings-intro { font-size: 11px; color: var(--color-muted); line-height: 1.8; margin: 18px 0 28px; }
-.range-label { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-.range-label small, .toggle-row small { font-size: 10px; color: var(--color-muted); margin-top: 7px; }
-.range-label b { font-size: 10px; color: var(--color-accent); font-weight: 400; }
-input[type='range'] { width: 100%; margin: 22px 0 7px; accent-color: var(--color-accent); cursor: pointer; }
-.range-ends { display: flex; justify-content: space-between; color: var(--color-dim); font-size: 9px; }
+.toggle-row small { font-size: 10px; color: var(--color-muted); margin-top: 7px; }
 .view-limits { display: flex; gap: 14px; align-items: center; padding: 17px; margin: 22px 0 8px; background: var(--color-panel-raised); }
 .view-limits svg { color: var(--color-accent); }
 .view-limits p { font-size: 11px; }
@@ -191,10 +187,6 @@ input[type='range'] { width: 100%; margin: 22px 0 7px; accent-color: var(--color
 .mode-radio { width: 10px; height: 10px; border: 1px solid var(--color-dim); flex-shrink: 0; }
 .mode-option[aria-pressed='true'] .mode-radio { background: var(--color-accent); border-color: var(--color-accent); }
 .deployment-detail { min-height: 144px; padding-top: var(--space-lg); }
-.difficulty-tabs { display: flex; gap: var(--space-xs); width: 100%; }
-.difficulty-tabs button { flex: 1; min-width: 0; min-height: 40px; border: 1px solid var(--color-rule); background: var(--color-clear); color: var(--color-muted); font-size: 12px; }
-.difficulty-tabs button:hover { background: var(--color-panel-raised); color: var(--color-ink); }
-.difficulty-tabs button[aria-pressed='true'] { color: var(--color-accent-ink); background: var(--color-accent); border-color: var(--color-accent); }
 .deployment-detail p { font-size: 10px; color: var(--color-muted); line-height: 1.9; margin-top: 12px; }
 .deployment-detail strong { font-weight: 400; color: var(--color-accent); }
 .practice-note { font-size: 12px; color: var(--color-ink); }
@@ -242,7 +234,6 @@ input[type='range'] { width: 100%; margin: 22px 0 7px; accent-color: var(--color
 .empty-leaderboard p { font-size: 13px; margin-top: 8px; }
 .empty-leaderboard small { font-size: 10px; color: var(--color-muted); line-height: 1.9; margin-top: 12px; white-space: normal; }
 .leaderboard-dialog { width: min(480px, calc(100% - 32px)); }
-.leaderboard-dialog .difficulty-tabs { margin-bottom: 16px; }
 @media (max-width: 1100px) and (min-width: 901px) { .mode-menu .intro-copy { left: 5%; } .mode-menu h1 { font-size: 98px; } .deployment-panel { right: 4%; width: 340px; padding: 24px; } }
 @media (max-width: 900px) {
   .intro.mode-menu { overflow-y: auto; }
@@ -270,7 +261,6 @@ input[type='range'] { width: 100%; margin: 22px 0 7px; accent-color: var(--color
   .deployment-panel { padding: 20px; }
   .deployment-panel h2 { font-size: 21px; }
   .mode-option { padding: 12px; gap: 12px; }
-  .difficulty-tabs button { min-height: 44px; }
   .deployment-panel .start-button { min-height: 56px; }
   .leaderboard-link { min-height: 44px; padding-top: 12px; }
   .survival-clock { top: 148px; left: auto; right: 18px; transform: none; }
