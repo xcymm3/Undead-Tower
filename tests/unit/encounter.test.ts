@@ -144,13 +144,13 @@ describe('僵尸批量模型', () => {
     }
   });
 
-  it('不同窗口宽度和镜头角度下，出生位置仍在屏幕两侧可瞄准的边缘区域', () => {
+  it('不同窗口宽度和镜头角度下，两侧出生位置内收并保留瞄准余量', () => {
     for (const aspect of [320 / 844, 1440 / 900, 1920 / 900]) for (const yaw of [-0.069, 0, 0.069]) for (const side of [0.2, 0.8]) {
       const camera = new PerspectiveCamera(61, aspect, 0.025, 220);
       camera.position.set(0, 4.8, 9); camera.rotation.set(-0.105, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
       const position = spawnAtScreenEdge(camera, () => side);
       const screen = new Vector3(position.x, 1, position.z).project(camera);
-      expect(Math.abs(screen.x)).toBeCloseTo(0.9, 8);
+      expect(Math.abs(screen.x)).toBeCloseTo(0.75, 8);
       expect(position.z).toBeLessThan(0);
       expect(Math.hypot(position.x, position.z - 9)).toBeGreaterThan(SURVIVAL.breachRadius);
     }

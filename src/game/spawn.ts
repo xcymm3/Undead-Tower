@@ -20,7 +20,8 @@ export function spawnAtScreenEdge(camera: PerspectiveCamera, random: () => numbe
   const depth = 22 + random() * 8;
   const center = new Vector3(0, 1, SURVIVAL.playerZ - depth).project(camera);
   const ray = new Raycaster();
-  ray.setFromCamera(new Vector2((side ?? (random() < 0.5 ? -1 : 1)) * 0.9, center.y), camera);
+  // 横向落在画面 12.5% / 87.5% 处，给两侧瞄准留出余量。
+  ray.setFromCamera(new Vector2((side ?? (random() < 0.5 ? -1 : 1)) * 0.75, center.y), camera);
   const point = ray.ray.intersectPlane(new Plane(new Vector3(0, 1, 0), -1), new Vector3())!;
   return { x: point.x, z: point.z };
 }
