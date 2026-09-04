@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { writeFile } from 'node:fs/promises';
 import { LEADERBOARD_KEY } from '../../src/game/leaderboard';
 
 const snapshot = (page: Page) => page.evaluate(() => window.__undeadTower!.snapshot());
@@ -39,10 +40,11 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   for (const zombie of arrivals) {
     expect(zombie).not.toHaveProperty('waypoint');
     expect(zombie).not.toHaveProperty('breachTarget');
-    if (zombie.heading !== undefined && Math.abs(zombie.avoidance) < 1e-8) {
-      expect(zombie.heading).toBeCloseTo(Math.atan2(-zombie.x, 9 - zombie.z), 5);
-    }
+    if (zombie.heading !== undefined) expect(Number.isFinite(zombie.heading)).toBe(true);
   }
+  expect((await snapshot(page)).blockedZombies).toEqual([]);
+  expect((await snapshot(page)).obstacles.length).toBeGreaterThan(180);
+  await expect(page.locator('.defense-legend')).toHaveCount(0);
   await page.screenshot({ path: 'test-results/survival-playing.png' });
   // 真实移动模型必须能被枪口射线击杀，成绩不能只验证零击杀的空局。
   for (let shot = 0; shot < 5 && (await snapshot(page)).kills === 0; shot++) {
@@ -52,35 +54,61 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   }
   expect((await snapshot(page)).kills).toBeGreaterThan(0);
   expect((await snapshot(page)).blood.bursts).toBeGreaterThan(0);
-  await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 45000 });
-  const ended = await snapshot(page);
-  expect(ended.phase).toBe('failed');
+  // 两秒动画短于慢机器上的多次浏览器往返；在页面 RAF 内采样，保留真实时间推进。
+  const sequence = await page.evaluate(() => new Promise<{
+    begin: ReturnType<NonNullable<typeof window.__undeadTower>['snapshot']>;
+    focus: ReturnType<NonNullable<typeof window.__undeadTower>['snapshot']>;
+    end: ReturnType<NonNullable<typeof window.__undeadTower>['snapshot']>;
+    inputPhase: string; earlyResult: boolean; culpritId: string | null; frame: string;
+  }>(resolve => {
+    type State = ReturnType<NonNullable<typeof window.__undeadTower>['snapshot']>;
+    let begin: State, focus: State, inputPhase = '', earlyResult = false, culpritId: string | null = null, frame = '';
+    const sample = () => {
+      const state = window.__undeadTower!.snapshot();
+      if (state.phase === 'breaching') {
+        if (!begin) {
+          begin = state;
+          window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyR' }));
+          window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' }));
+          document.querySelector('canvas')!.dispatchEvent(new PointerEvent('pointerdown', { button: 0 }));
+          inputPhase = window.__undeadTower!.snapshot().phase;
+        }
+        earlyResult ||= Boolean(document.querySelector('.result-screen'));
+        culpritId = document.querySelector('[data-testid="breached-zombie"]')?.getAttribute('data-zombie-id') ?? culpritId;
+        if (!focus && state.breachElapsed >= 1) {
+          focus = state;
+          frame = document.querySelector('canvas')!.toDataURL('image/png');
+        }
+      }
+      if (state.phase === 'failed') resolve({ begin, focus, end: state, inputPhase, earlyResult, culpritId, frame });
+      else requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+  }));
+  const breachedState = sequence.begin, focus = sequence.focus, ended = sequence.end;
+  expect(breachedState).toBeDefined(); expect(focus).toBeDefined();
+  expect(breachedState.breachElapsed).toBeLessThan(1);
+  expect(breachedState.defenseVisible).toBe(false);
+  expect(breachedState.weaponVisible).toBe(false);
+  expect(breachedState.audio.musicPlaying).toBe(false);
+  expect(breachedState.audio.failureCues).toBe(1);
+  expect(breachedState.blockedZombies).toEqual([]);
+  expect(sequence.earlyResult).toBe(false);
+  expect(sequence.culpritId).toBe(String(breachedState.breach!.id));
+  expect(sequence.inputPhase).toBe('breaching');
+  expect(focus.cameraPosition).not.toEqual(breachedState.cameraPosition);
+  expect(focus.cameraFov).toBe(43);
+  expect(focus.survived).toBe(breachedState.survived); expect(focus.shots).toBe(breachedState.shots);
+  expect(focus.targets.map(z => [z.id, z.x, z.z, z.health])).toEqual(breachedState.targets.map(z => [z.id, z.x, z.z, z.health]));
+  await writeFile('test-results/breach-feedback.png', Buffer.from(sequence.frame.split(',')[1], 'base64'));
+  await expect(page.locator('.result-screen')).toBeVisible({ timeout: 3000 });
+  expect(ended.phase).toBe('failed'); expect(ended.breachElapsed).toBe(2);
   expect(ended.nearest).toBeCloseTo(8, 6);
-  expect(ended.defenseVisible).toBe(true);
-  expect(ended.weaponVisible).toBe(false);
-  expect(ended.audio.musicPlaying).toBe(false);
-  const breached = ended.targets.filter(z => z.health > 0).sort((a, b) => Math.hypot(a.x, a.z - 9) - Math.hypot(b.x, b.z - 9))[0];
-  expect(breached.head.x).toBeGreaterThan(10);
-  expect(breached.head.x).toBeLessThan(1430);
-  expect(breached.head.y).toBeGreaterThan(0);
-  expect(breached.head.y).toBeLessThan(900);
-  expect(ended.breach!.id).toBe(breached.id);
-  await expect(page.getByTestId('breached-zombie')).toHaveAttribute('data-zombie-id', String(breached.id));
-  await page.screenshot({ path: 'test-results/breach-feedback.png' });
   expect(ended.result!.duration).toBeGreaterThan(1);
-  await page.mouse.click(20, 500);
-  await page.keyboard.press('r');
-  await page.keyboard.press('Escape');
-  expect((await snapshot(page)).phase).toBe('failed');
-  expect((await snapshot(page)).shots).toBe(ended.shots);
-  expect((await snapshot(page)).survived).toBe(ended.survived);
+  expect(ended.survived).toBe(breachedState.survived);
+  await expect(page.getByRole('heading', { name: '坚守排行榜' })).toBeVisible();
   await expect(page.getByTestId('personal-record')).toContainText('新纪录');
   await page.screenshot({ path: 'test-results/survival-result.png' });
-  await page.getByRole('button', { name: '查看突破位置' }).click();
-  await expect(page.getByTestId('breached-zombie')).toHaveAttribute('data-zombie-id', String(breached.id));
-  await page.waitForTimeout(300);
-  expect((await snapshot(page)).targets).toEqual(ended.targets);
-  await page.getByRole('button', { name: '查看结算' }).click();
   const stored = await page.evaluate(key => JSON.parse(localStorage.getItem(key)!), LEADERBOARD_KEY);
   expect(stored).toHaveLength(2);
   expect(stored[0].id).toBe(ended.result!.id);
@@ -97,6 +125,8 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect(reset.armorEffects.active).toBe(0);
   expect(reset.breach).toBeNull();
   expect(reset.weaponVisible).toBe(true);
+  expect(reset.cameraPosition).toEqual([0, 4.8, 9]);
+  expect(reset.cameraFov).toBe(61);
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: '返回主菜单' }).click();
   await page.reload();

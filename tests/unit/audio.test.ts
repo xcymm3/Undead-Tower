@@ -63,6 +63,17 @@ describe('统一音量与护甲声音', () => {
     audio.volume = 0.4; audio.resetMusic(); expect(audio.diagnostics().musicPlaying).toBe(false);
     audio.dispose(); audio.setPlaying(true); expect(audio.diagnostics().musicPlaying).toBe(false);
   });
+  it('失败声停止背景音乐并经过主音量，静音时不创建失败音源', () => {
+    const { nodes } = setup(); const audio = new GameAudio(); audio.unlock();
+    audio.volume = 0.37; audio.setPlaying(true);
+    const before = nodes.length; audio.failure();
+    expect(audio.diagnostics().musicPlaying).toBe(false);
+    expect(audio.diagnostics().failureCues).toBe(1);
+    expect(nodes[0].gain.value).toBe(0.37);
+    expect(nodes.slice(before).filter(n => n.connect.mock.calls.some(([target]) => target === nodes[0]))).toHaveLength(3);
+    audio.enabled = false; const mutedCount = nodes.length;
+    audio.failure(); expect(nodes).toHaveLength(mutedCount);
+  });
   it('死亡低吼有三种变化且最多三声重叠，静音不触发', () => {
     setup(); const audio = new GameAudio(); audio.unlock();
     for (let i = 0; i < 9; i++) audio.death();

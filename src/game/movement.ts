@@ -1,5 +1,6 @@
 import { CROWD, SURVIVAL } from './config';
 import type { Position, Zombie } from './encounter';
+import type { Navigation } from './navigation';
 
 const player = { x: SURVIVAL.playerX, z: SURVIVAL.playerZ };
 interface Leg { start: Position; vx: number; vz: number; duration: number; }
@@ -22,6 +23,7 @@ function breachTime(leg: Leg) {
 /** 先从同一帧位置计算所有方向，再统一移动，避免更新顺序造成单向推挤。 */
 export class CrowdMovement {
   private grid = new Map<string, Zombie[]>();
+  constructor(private navigation?: Navigation) {}
 
   private rebuild(zombies: Zombie[]) {
     this.grid.clear();
@@ -54,15 +56,24 @@ export class CrowdMovement {
     const motion: Motion = { zombie, legs: [], avoidance: 0, breachAt: Infinity };
     const position = { x: zombie.x, z: zombie.z };
     if (step > 0) {
-      const dx = player.x - position.x, dz = player.z - position.z;
+      const target = this.navigation ? this.navigation.waypoint(position) : player;
+      if (!target) return motion;
+      const dx = target.x - position.x, dz = target.z - position.z;
       const distance = Math.hypot(dx, dz);
       const ux = distance > 0 ? dx / distance : 0, uz = distance > 0 ? dz / distance : 0;
       const force = this.separation(zombie, uz, -ux);
       // 没有拥挤就立刻回到最短路线，不能因旧避让状态继续横向漂移。
       motion.avoidance = force === 0 ? 0 : (zombie.avoidance ?? 0) + (force - (zombie.avoidance ?? 0)) * (1 - Math.exp(-CROWD.steeringDamping * step));
-      const lateral = motion.avoidance * Math.min(CROWD.maxLateralSpeed, speed * CROWD.lateralFraction) * Math.max(0, Math.min(1, (distance - SURVIVAL.breachRadius) / CROWD.arrivalFade));
+      const remaining = Math.hypot(position.x - player.x, position.z - player.z) - SURVIVAL.breachRadius;
+      const lateral = motion.avoidance * Math.min(CROWD.maxLateralSpeed, speed * CROWD.lateralFraction) * Math.max(0, Math.min(1, remaining / CROWD.arrivalFade));
       const forward = Math.sqrt(Math.max(0, speed * speed - lateral * lateral));
-      motion.legs.push({ start: position, vx: ux * forward + uz * lateral, vz: uz * forward - ux * lateral, duration: Math.min(step, distance / speed) });
+      const leg = { start: position, vx: ux * forward + uz * lateral, vz: uz * forward - ux * lateral, duration: Math.min(step, distance / speed) };
+      if (this.navigation && !this.navigation.clear(position, { x: position.x + leg.vx * leg.duration, z: position.z + leg.vz * leg.duration })) {
+        // 静态碰撞优先于拥挤避让：取消横向力，沿已验证可通行的寻路线段前进。
+        motion.avoidance = 0; leg.vx = ux * speed; leg.vz = uz * speed;
+        if (!this.navigation.clear(position, { x: position.x + leg.vx * leg.duration, z: position.z + leg.vz * leg.duration })) return motion;
+      }
+      motion.legs.push(leg);
     }
     let elapsed = 0;
     for (const leg of motion.legs) { motion.breachAt = Math.min(motion.breachAt, elapsed + breachTime(leg)); elapsed += leg.duration; }

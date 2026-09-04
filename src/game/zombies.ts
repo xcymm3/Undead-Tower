@@ -40,7 +40,7 @@ const PARTS: Part[] = [
 ];
 const SHIRTS = [0x596450, 0x6c585a, 0x546877, 0x827157].map(color => new THREE.Color(color));
 const COLORS = PARTS.map(part => new THREE.Color(part.color));
-const BREACH_COLOR = new THREE.Color(0xff5f48);
+const BREACH_COLOR = new THREE.Color(0xffd297);
 
 /** 整个尸群共用一个 InstancedMesh；命中先按僵尸包围盒筛选，再检查实际方块。 */
 export class ZombieField extends THREE.InstancedMesh {
@@ -64,24 +64,33 @@ export class ZombieField extends THREE.InstancedMesh {
     this.receiveShadow = true;
   }
 
-  sync(encounter: Encounter) {
+  sync(encounter: Encounter, breachProgress = 0) {
     this.enemies = encounter.zombies;
     const ids = `${encounter.breachedId}|${this.enemies.map(z => `${z.id}:${z.kind}`).join(',')}`;
     const colorsChanged = ids !== this.previousIds;
     this.previousIds = ids;
     this.count = this.enemies.length * PARTS.length;
     this.enemies.forEach((zombie, index) => {
+      const culprit = zombie.id === encounter.breachedId;
+      const lunge = culprit ? Math.sin(Math.PI * Math.min(1, breachProgress / 0.8)) : 0;
       const moving = encounter.mode === 'survival' && zombie.health > 0;
-      const stride = moving ? Math.sin((encounter.elapsed - zombie.bornAt) * 5 + zombie.id * 2) : 0;
+      const stride = moving ? Math.sin((encounter.elapsed - zombie.bornAt + (culprit ? breachProgress * 1.4 : 0)) * 5 + zombie.id * 2) : 0;
       const downDuration = encounter.mode === 'practice' ? 3 : 0.85;
       const fall = zombie.health === 0 ? Math.min(Math.PI / 2, (downDuration - zombie.downTime) * 5) : 0;
       this.root.position.set(zombie.x, moving ? Math.abs(stride) * 0.025 : 0, zombie.z);
       const goal = { x: SURVIVAL.playerX, z: SURVIVAL.playerZ };
       this.root.rotation.set(-fall, encounter.mode === 'survival' ? zombie.heading ?? Math.atan2(goal.x - zombie.x, goal.z - zombie.z) : 0, 0, 'YXZ');
+      if (culprit) {
+        this.root.rotation.y = Math.atan2(goal.x - zombie.x, goal.z - zombie.z);
+        this.root.rotation.x += lunge * 0.16;
+        this.root.position.x += Math.sin(this.root.rotation.y) * lunge * 0.3;
+        this.root.position.z += Math.cos(this.root.rotation.y) * lunge * 0.3;
+      }
       this.root.updateMatrix();
       PARTS.forEach((part, partIndex) => {
         this.part.position.set(...part.position);
         this.part.position.z += stride * (part.limb ?? 0) * 0.12;
+        if (part.limb && Math.abs(part.limb) < 1) this.part.position.z += lunge * 0.28;
         this.part.rotation.set(stride * (part.limb ?? 0) * 0.14, 0, 0);
         this.part.scale.set(...part.size);
         if (part.kind && part.kind !== zombie.kind) this.part.scale.setScalar(0);
@@ -89,7 +98,11 @@ export class ZombieField extends THREE.InstancedMesh {
         this.partMatrix.multiplyMatrices(this.root.matrix, this.part.matrix);
         const instance = index * PARTS.length + partIndex;
         this.setMatrixAt(instance, this.partMatrix);
-        if (colorsChanged) this.setColorAt(instance, zombie.id === encounter.breachedId ? BREACH_COLOR : part.shirt ? SHIRTS[zombie.id % SHIRTS.length] : COLORS[partIndex]);
+        if (colorsChanged) {
+          const color = (part.shirt ? SHIRTS[zombie.id % SHIRTS.length] : COLORS[partIndex]).clone();
+          if (encounter.failed) { if (culprit) color.lerp(BREACH_COLOR, 0.18); else color.multiplyScalar(0.42); }
+          this.setColorAt(instance, color);
+        }
       });
     });
     this.instanceMatrix.needsUpdate = true;

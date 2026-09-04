@@ -10,9 +10,9 @@ test('音量即时生效，静音独立保存，刷新与重开不丢失偏好',
   expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.musicPlaying).toBe(false);
   const volume = page.getByRole('slider', { name: '总音量' });
   await volume.fill('37');
-  expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBeCloseTo(0.37);
+  await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBeCloseTo(0.37);
   await page.getByRole('checkbox', { name: '游戏声音' }).uncheck();
-  expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBe(0);
+  await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBe(0);
   await page.getByRole('button', { name: '返回哨站' }).click();
   expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.musicPlaying).toBe(false);
   await page.reload();
@@ -20,9 +20,9 @@ test('音量即时生效，静音独立保存，刷新与重开不丢失偏好',
   await expect(volume).toHaveValue('37');
   await expect(page.getByRole('checkbox', { name: '游戏声音' })).not.toBeChecked();
   await page.getByRole('checkbox', { name: '游戏声音' }).check();
-  expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBeCloseTo(0.37);
+  await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBeCloseTo(0.37);
   await volume.fill('0');
-  expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBe(0);
+  await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBe(0);
   await volume.fill('37');
   await page.screenshot({ path: 'test-results/audio-settings.png' });
   await page.getByRole('button', { name: '返回哨站' }).click();

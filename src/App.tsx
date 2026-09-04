@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Game } from './game/Game';
 import { WEAPONS } from './game/weapons';
-import { DIFFICULTIES, FIXED_DIFFICULTY, SURVIVAL } from './game/config';
+import { DIFFICULTIES, FIXED_DIFFICULTY } from './game/config';
 import type { GameMode, GameSnapshot } from './game/config';
 import { formatDuration, LeaderboardStore, personalRecord } from './game/leaderboard';
 import type { PersonalRecord } from './game/leaderboard';
-import { DeploymentPanel, LeaderboardTable, ResultPanel } from './ui/SessionPanels';
+import { BreachOverlay, DeploymentPanel, LeaderboardTable, ResultPanel } from './ui/SessionPanels';
 
 const initialState: GameSnapshot = { weaponsReady: false, weaponIndex: 0, requestedWeapon: 0, switching: false, reloadQueued: false, inventory: WEAPONS.map(gun => gun.capacity), phase: 'ready', mode: 'practice', difficulty: FIXED_DIFFICULTY, survived: 0, alive: 4, zombieCounts: { normal: 4, cone: 0, bucket: 0 }, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, volume: 1, breach: null, pixelated: false };
 
@@ -103,7 +103,7 @@ export function App() {
     </div>
     <div className="vignette" aria-hidden="true" />
 
-    <header className="topbar">
+    <header className="topbar" inert={state.phase === 'breaching'}>
       <div className="brand"><span className="brand-mark"><Icon name="tower" size={27} /></span><div>UNDEAD TOWER<small>灰松哨站 · PINE RIDGE</small></div></div>
       {state.phase !== 'ready' && <div className="compass" aria-label="朝向始终固定在北方附近"><div className="compass-ticks" style={{ transform: `translateX(${state.yaw * 3}px)` }}><span>345</span><i /><i /><b>N</b><i /><i /><span>015</span></div><span className="compass-notch" /><small>固定朝向</small></div>}
       <div className="top-actions">
@@ -128,10 +128,9 @@ export function App() {
       <div className="intro-foot"><span className="signal-dot" /> 固定哨位 · 僵尸生存 <span className="intro-foot-right">有限视角 / LOW-POLY WORLD</span></div>
     </section>}
 
-    {state.phase !== 'ready' && <div className="hud" aria-label="游戏状态">
-      {state.mode === 'survival' && <div className="defense-legend">金色弧线 · 最后防线 <span>僵尸越线即失败</span></div>}
+    {(state.phase === 'playing' || state.phase === 'paused') && <div className="hud" aria-label="游戏状态">
       <aside className="objective"><span className="label">{state.mode === 'practice' ? 'FIELD TRAINING' : `SURVIVAL / ${DIFFICULTIES[state.difficulty].label}`}</span><h2>{state.mode === 'practice' ? '僵尸练习靶场' : '守住北侧防线'}</h2><p><span className="tiny-square" /> {state.mode === 'practice' ? '僵尸静止站位，击倒后复位' : '留意各条通路，不要让僵尸接近'}</p><div className="objective-score"><span><b>{String(state.kills).padStart(2, '0')}</b> 击杀</span><span><b>{state.hits}</b> 命中</span><span><b>{state.shots ? Math.round(state.hits / state.shots * 100) : '—'}{state.shots > 0 && '%'}</b> 命中率</span></div></aside>
-      {state.mode === 'survival' && <><div className="survival-clock"><span>坚守时长</span><strong data-testid="survival-clock">{formatDuration(state.survived)}</strong></div><aside className="horde-status"><span className="label">INCOMING HORDE</span><p><b>{state.alive}</b> 只僵尸正在逼近</p><small>普通 {state.zombieCounts.normal} · 路障 {state.zombieCounts.cone} · 铁桶 {state.zombieCounts.bucket}</small><small>刷新 {state.spawnRate.toFixed(1)} / 秒 · 移速 {state.speed.toFixed(1)} m/s</small></aside><div className={`proximity ${state.nearest !== null && state.nearest < 14 ? 'danger' : ''}`}>{state.nearest === null ? '留意公路和林地，僵尸即将出现' : <>最近僵尸距防线 <b>{Math.max(0, state.nearest - SURVIVAL.breachRadius).toFixed(1)} m</b></>}</div></>}
+      {state.mode === 'survival' && <><div className="survival-clock"><span>坚守时长</span><strong data-testid="survival-clock">{formatDuration(state.survived)}</strong></div><aside className="horde-status"><span className="label">INCOMING HORDE</span><p><b>{state.alive}</b> 只僵尸正在逼近</p><small>普通 {state.zombieCounts.normal} · 路障 {state.zombieCounts.cone} · 铁桶 {state.zombieCounts.bucket}</small><small>刷新 {state.spawnRate.toFixed(1)} / 秒 · 移速 {state.speed.toFixed(1)} m/s</small></aside><div className={`proximity ${state.nearest !== null && state.nearest < 14 ? 'danger' : ''}`}>{state.nearest === null ? '留意公路和林地，僵尸即将出现' : state.nearest < 14 ? '僵尸逼近哨塔！' : '尸群正在接近'}</div></>}
       <div className="station"><Icon name="tower" size={24} /><div>04 <span>灰松哨站</span><small>{state.mode === 'practice' ? '练习模式 · 不计入排行榜' : `正式模式 · ${DIFFICULTIES[state.difficulty].label}难度`}</small></div></div>
       {feedback && state.phase === 'playing' && <div className={`hit-feedback ${feedback.head ? 'headshot' : ''}`} key={feedback.key}>{feedback.armorBroken ? '护甲击落' : feedback.head ? '精准命中' : feedback.killed ? '目标击倒' : '命中目标'}<small>{feedback.armorBroken ? 'ARMOR OFF · 继续射击' : feedback.head ? 'HEADSHOT' : feedback.killed ? 'TARGET DOWN' : 'TARGET HIT'}</small></div>}
       <div className={`ammo-panel ${state.ammo === 0 ? 'empty' : ''}`}><div className="weapon-label"><RifleIcon /><span data-testid="weapon-name">{weapon.label}<small>{weapon.short} · {weapon.automatic ? '按住连发' : '单次射击'}</small></span></div><div className="ammo-count"><strong data-testid="ammo">{String(state.ammo).padStart(2, '0')}</strong><span>/ {weapon.capacity}<small>哨站备弹 ∞</small></span></div><div className="ammo-bars" aria-hidden="true">{Array.from({ length: weapon.capacity }, (_, i) => <i key={i} className={i < state.ammo ? 'loaded' : ''} />)}</div><span className="reload-hint">{state.switching ? '切换中…' : pendingWeapon ? `动作结束后切换 · ${WEAPONS[state.requestedWeapon].label}` : state.reloadQueued ? '准备装填…' : state.reloading ? weapon.shellReload ? '逐发装填中…' : '正在更换弹匣…' : state.ammo === 0 ? '弹匣已空 · 按 R 换弹' : <><kbd>R</kbd> 换弹</>}</span></div>
@@ -142,6 +141,7 @@ export function App() {
 
     {state.phase === 'paused' && !settings && <section className="pause-screen" aria-label="暂停菜单"><div className="pause-content"><Icon name="tower" size={36} /><span className="label">WATCH ON HOLD</span><h2>哨站已暂停</h2><p>准备好后，继续守望前方。{state.mode === 'survival' && '坚守计时已暂停。'}</p><button className="start-button" onClick={() => game.current?.start()}>继续游戏 <Icon name="arrow" /></button><button className="text-button" onClick={() => { setFeedback(null); game.current?.reset(); }}>{state.mode === 'practice' ? '重新开始训练' : '重新开始坚守'}</button><button className="text-button" onClick={() => { setFeedback(null); game.current?.menu(); }}>返回主菜单</button><small>按 ESC 继续</small></div></section>}
 
+    {state.phase === 'breaching' && state.breach && <BreachOverlay breach={state.breach} />}
     {state.phase === 'failed' && state.result && <ResultPanel result={state.result} entries={entries} saved={saved} record={record} breach={state.breach} onRetry={() => game.current?.reset()} onMenu={() => game.current?.menu()} />}
 
     <dialog ref={scoreDialog} className="settings-dialog leaderboard-dialog" aria-labelledby="leaderboard-title" onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>

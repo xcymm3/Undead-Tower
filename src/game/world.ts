@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { batchStaticBoxes, box, cube, material, seededRandom } from './geometry';
+import type { Obstacle } from './navigation';
 
 function sign(parent: THREE.Object3D, text: string, subtitle: string, x: number, y: number, z: number, width = 5) {
   const canvas = document.createElement('canvas');
@@ -45,6 +46,7 @@ function barrier(scene: THREE.Scene, x: number, z: number, angle = 0) {
   box(group, [3.8, 0.4, 0.9], [0, 0.2, 0], 0x7d8272);
   box(group, [3.5, 0.9, 0.55], [0, 0.73, 0], 0xb1ae8b);
   for (let i = 0; i < 7; i++) box(group, [0.27, 0.35, 0.01], [-1.42 + i * 0.47, 0.9, 0.284], i % 2 ? 0xc7af6f : 0x424b42);
+  return group;
 }
 
 function pickup(scene: THREE.Scene, x: number, z: number) {
@@ -66,9 +68,16 @@ function pickup(scene: THREE.Scene, x: number, z: number) {
     hub.rotation.z = Math.PI / 2; hub.position.copy(wheel.position); group.add(hub);
   }
   for (const sx of [-0.95, 0.95]) box(group, [0.26, 0.24, 0.03], [sx, 1.4, 2.54], 0xa9644e);
+  return group;
 }
 
 export function createWorld(scene: THREE.Scene) {
+  const obstacles: Obstacle[] = [];
+  const solid = (object: THREE.Object3D, id: string) => {
+    object.updateWorldMatrix(true, true);
+    const bounds = new THREE.Box3().setFromObject(object);
+    obstacles.push({ id, minX: bounds.min.x, maxX: bounds.max.x, minZ: bounds.min.z, maxZ: bounds.max.z });
+  };
   scene.background = new THREE.Color(0xb1c7bd);
   scene.fog = new THREE.Fog(0xb1c7bd, 38, 140);
   scene.add(new THREE.HemisphereLight(0xe0ecde, 0x657154, 2.7));
@@ -97,6 +106,7 @@ export function createWorld(scene: THREE.Scene) {
     const x = side * (17 + random() * 70);
     const z = -10 - random() * 135;
     const height = 7 + random() * 11;
+    obstacles.push({ id: `tree-${i}`, minX: x - 0.25, maxX: x + 0.25, minZ: z - 0.25, maxZ: z + 0.25 });
     transform.position.set(x, height * 0.26, z); transform.rotation.set(0, 0, 0); transform.scale.set(0.5, height * 0.55, 0.5); transform.updateMatrix(); trunks.setMatrixAt(i, transform.matrix);
     for (let j = 0; j < 3; j++) {
       transform.position.set(x, height * (0.46 + j * 0.2), z);
@@ -121,6 +131,7 @@ export function createWorld(scene: THREE.Scene) {
     const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(1, 0), material(0x8c9580));
     rock.position.set((i % 2 ? -1 : 1) * (8 + random() * 35), 0.35, -5 - random() * 75);
     rock.scale.set(0.7 + random() * 1.2, 0.55 + random(), 0.7 + random()); rock.rotation.set(random(), random(), 0); rock.castShadow = true; scene.add(rock);
+    solid(rock, `rock-${i}`);
   }
   for (let i = 0; i < 9; i++) {
     const mountain = new THREE.Mesh(new THREE.ConeGeometry(22 + random() * 17, 24 + random() * 24, 5), material(0x8ba99b));
@@ -133,14 +144,14 @@ export function createWorld(scene: THREE.Scene) {
     cloud.castShadow = false;
   }
 
-  building(scene, -13.5, -26);
-  pickup(scene, 10.2, -19);
-  barrier(scene, -3, -12, -0.08);
-  barrier(scene, 4.5, -26, 0.11);
-  barrier(scene, -1.5, -40);
+  solid(building(scene, -13.5, -26), 'station');
+  solid(pickup(scene, 10.2, -19), 'pickup');
+  solid(barrier(scene, -3, -12, -0.08), 'barrier-near');
+  solid(barrier(scene, 4.5, -26, 0.11), 'barrier-east');
+  solid(barrier(scene, -1.5, -40), 'barrier-north');
   // 路障横杆保持高于靶标，避免遮挡射击验收。
-  box(scene, [0.3, 5.8, 0.3], [-5.5, 2.9, -42], 0x586c5e);
-  box(scene, [0.3, 5.8, 0.3], [7.5, 2.9, -42], 0x586c5e);
+  solid(box(scene, [0.3, 5.8, 0.3], [-5.5, 2.9, -42], 0x586c5e), 'gate-west');
+  solid(box(scene, [0.3, 5.8, 0.3], [7.5, 2.9, -42], 0x586c5e), 'gate-east');
   box(scene, [13.3, 0.18, 0.25], [1, 5.7, -42], 0x596c5e);
   sign(scene, 'RESTRICTED AREA', 'CHECKPOINT 04', 1, 5.0, -41.8, 6);
   for (let i = 0; i < 10; i++) {
@@ -149,6 +160,7 @@ export function createWorld(scene: THREE.Scene) {
     for (const y of [0.6, 1.2, 1.8, 2.4]) box(scene, [0.035, 0.035, 4.5], [15, y, z - 2.25], 0x829484);
     const diagonal = box(scene, [0.028, 2.5, 0.028], [15, 1.2, z - 2.2], 0x829484); diagonal.rotation.x = 0.8;
   }
+  obstacles.push({ id: 'fence', minX: 14.95, maxX: 15.05, minZ: -57, maxZ: -11.95 });
   // 前景哨塔提供明确的固定站位和空间层次。
   box(scene, [11, 0.24, 7], [0, 2.45, 8], 0x6d6f54);
   for (let i = 0; i < 12; i++) box(scene, [0.86, 0.06, 7], [-4.9 + i * 0.9, 2.60, 8], i % 2 ? 0x82836a : 0x787b60);
@@ -166,5 +178,5 @@ export function createWorld(scene: THREE.Scene) {
   batchStaticBoxes(scene, new Set());
   const surfaces: THREE.Object3D[] = [];
   scene.traverse(obj => { if (obj instanceof THREE.Mesh && obj !== sunDisc && obj !== grasses) surfaces.push(obj); });
-  return { surfaces };
+  return { surfaces, obstacles };
 }

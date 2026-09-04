@@ -20,6 +20,7 @@ export class GameAudio {
   private deaths = new Map<number, AudioBuffer>();
   private deathSources = new Set<AudioBufferSourceNode>();
   private deathCues = 0;
+  private failureCues = 0;
   private muted = false;
   private level = 1;
   private armorCues = 0;
@@ -128,6 +129,14 @@ export class GameAudio {
     this.tone(140, 44, 0.17, 0.12);
   }
 
+  failure() {
+    this.failureCues++;
+    this.setPlaying(false);
+    this.tone(140, 35, 1.2, 0.12, 'sine');
+    this.tone(480, 75, 0.45, 0.055, 'triangle');
+    this.tone(72, 38, 1.8, 0.025, 'sawtooth');
+  }
+
   tone(from: number, to: number, duration: number, volume = 0.035, type: OscillatorType = 'triangle', delay = 0) {
     const ctx = this.context;
     if (!ctx || !this.master || !this.enabled || this.level === 0 || ctx.state !== 'running') return;
@@ -179,6 +188,6 @@ export class GameAudio {
     this.duckMusic(source.buffer.duration);
   }
 
-  diagnostics() { return { enabled: this.enabled, volume: this.volume, gain: this.master?.gain.value ?? (this.muted ? 0 : this.level), armorCues: this.armorCues, lastArmorCue: this.lastArmorCue, deathCues: this.deathCues, activeDeaths: this.deathSources.size, musicPlaying: Boolean(this.musicSource), musicLevel: MUSIC_LEVEL, musicDucked: Boolean(this.musicSource && this.context && this.context.currentTime < this.duckUntil), duckedMusicLevel: DUCKED_MUSIC_LEVEL }; }
+  diagnostics() { return { enabled: this.enabled, volume: this.volume, gain: this.master?.gain.value ?? (this.muted ? 0 : this.level), armorCues: this.armorCues, lastArmorCue: this.lastArmorCue, deathCues: this.deathCues, failureCues: this.failureCues, activeDeaths: this.deathSources.size, musicPlaying: Boolean(this.musicSource), musicLevel: MUSIC_LEVEL, musicDucked: Boolean(this.musicSource && this.context && this.context.currentTime < this.duckUntil), duckedMusicLevel: DUCKED_MUSIC_LEVEL }; }
   dispose() { this.disposed = true; this.setPlaying(false); this.deathSources.clear(); void this.context?.close().catch(() => {}); }
 }

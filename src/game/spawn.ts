@@ -4,7 +4,7 @@ import type { Position, SpawnPosition } from './encounter';
 
 interface SpawnZone { id: string; label: string; center?: Position; spread?: Position; side?: -1 | 1; }
 
-// 八个出生区域轮换；出生后直接朝玩家前进，不再指定绕行路径或随机终点。
+// 八个出生区域轮换；这里只选入口，实际移动由障碍导航决定，不指定随机终点。
 export const SPAWN_ZONES: readonly SpawnZone[] = [
   { id: 'north-road', label: '远端公路', center: { x: 1.4, z: -58 }, spread: { x: 0.25, z: 3 } },
   { id: 'west-road', label: '公路左侧', center: { x: -5.9, z: -47 }, spread: { x: 0.3, z: 2 } },

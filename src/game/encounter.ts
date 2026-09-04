@@ -1,6 +1,7 @@
 import { ARMOR_SPAWNS, CONFIG, FIXED_DIFFICULTY, PRESSURE, SURVIVAL, ZOMBIE_TYPES } from './config';
 import type { Difficulty, GameMode, ZombieKind } from './config';
 import { CrowdMovement } from './movement';
+import type { Navigation } from './navigation';
 
 export interface Position { x: number; z: number; }
 export interface SpawnPosition extends Position { spawnZone?: string; }
@@ -24,7 +25,7 @@ export function spawnIntegral(_difficulty: Difficulty, from: number, to: number)
   return Math.max(0, primitive(to) - primitive(from));
 }
 
-/** 到防线的最短直线路程，不预测拥挤避让。 */
+/** 到失败半径的直线距离下界，不包含绕障路程或拥挤避让。 */
 export function distanceToBreach(zombie: SpawnPosition) {
   return Math.max(0, Math.hypot(zombie.x - SURVIVAL.playerX, zombie.z - SURVIVAL.playerZ) - SURVIVAL.breachRadius);
 }
@@ -45,6 +46,7 @@ export class Encounter {
   private movement = new CrowdMovement();
 
   constructor() { this.reset('practice', FIXED_DIFFICULTY); }
+  setNavigation(navigation: Navigation) { this.movement = new CrowdMovement(navigation); }
 
   reset(mode: GameMode, difficulty: Difficulty) {
     this.mode = mode; this.difficulty = difficulty;
@@ -101,7 +103,7 @@ export class Encounter {
     return { killed, armorHit, armorBroken };
   }
 
-  update(delta: number, spawnPosition: () => SpawnPosition) {
+  update(delta: number, spawnPosition: () => SpawnPosition | null) {
     if (this.failed || !Number.isFinite(delta) || delta <= 0) return;
     // 小步推进可防止快移速跨过失败半径，也确保新生僵尸只移动其出生后的时间。
     let remaining = delta;
@@ -127,7 +129,9 @@ export class Encounter {
       while (this.spawnCredit >= 1 - 1e-9) {
         this.spawnCredit = Math.max(0, this.spawnCredit - 1);
         if (this.zombies.length < SURVIVAL.maxZombies) {
-          this.zombies.push(this.makeZombie(spawnPosition()));
+          const position = spawnPosition();
+          if (!position) continue;
+          this.zombies.push(this.makeZombie(position));
           this.totalSpawned++;
         }
       }
