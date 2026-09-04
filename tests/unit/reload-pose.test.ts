@@ -3,7 +3,7 @@ import { reloadPose } from '../../src/game/reloadPose';
 import { createWeapon } from '../../src/game/weapon';
 
 describe('换弹动作', () => {
-  it('抽出、脱手、插入与复位使用独立弹匣，空仓才释放枪机', () => {
+  it('抽出、掉落、插入与复位使用独立弹匣，空仓才释放枪机', () => {
     expect(reloadPose(0.3).magazine[1]).toBeLessThan(-0.55);
     expect(reloadPose(0.39).oldMagazineVisible).toBe(true);
     expect(reloadPose(0.39).magazineVisible).toBe(false);
@@ -16,10 +16,9 @@ describe('换弹动作', () => {
   it('相同进度得到相同姿态，部件复位且不在帧间新增模型', () => {
     const weapon = createWeapon(); const count = weapon.root.children.length;
     weapon.animateReload(0.4, true);
-    const position = weapon.magazine.position.toArray(); const hand = weapon.leftHand.position.toArray();
+    const position = weapon.magazine.position.toArray();
     weapon.animateReload(0.4, true);
     expect(weapon.magazine.position.toArray()).toEqual(position);
-    expect(weapon.leftHand.position.toArray()).toEqual(hand);
     weapon.animateReload(null, false);
     expect(weapon.magazine.position.toArray()).toEqual([0, -0.255, -0.4]);
     expect(weapon.oldMagazine.visible).toBe(false); expect(weapon.magazine.visible).toBe(true);

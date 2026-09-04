@@ -35,60 +35,14 @@ export function createWeapon() {
   for (let i = 0; i < 3; i++) box(magazine, [0.13, 0.013, 0.16], [0, 0.045 - i * 0.06, 0.01], 0x444f43);
   const oldMagazine = magazine.clone(); root.add(oldMagazine); oldMagazine.visible = false;
   box(root, [0.10, 0.22, 0.12], [0, -0.18, 0.045], 0x29332f).rotation.x = -0.25;
-  // 清晰可见的右手、食指和袖口；手随整把枪共同旋转。
-  box(root, [0.18, 0.20, 0.17], [0.105, -0.21, 0.065], 0xb99470);
-  box(root, [0.065, 0.058, 0.20], [0.15, -0.10, -0.046], 0xc6a07c);
-  for (let i = 0; i < 3; i++) box(root, [0.035, 0.036, 0.15], [0.202, -0.16 - i * 0.047, 0.038], 0xc6a07c);
-  box(root, [0.135, 0.09, 0.12], [0.065, -0.30, 0.13], 0x263d36);
-  box(root, [0.19, 0.23, 0.25], [0.10, -0.36, 0.19], 0x64725b).rotation.x = -0.35;
-  box(root, [0.22, 0.24, 0.38], [0.16, -0.48, 0.34], 0x4d614e).rotation.x = -0.3;
-  box(root, [0.015, 0.12, 0.17], [0.277, -0.43, 0.32], 0x829074);
-
-  // 左手带独立腕部与两段手臂，弹匣槽、弹匣和枪机各自可动。
-  const leftHand = new THREE.Group(); root.add(leftHand);
-  box(leftHand, [0.15, 0.12, 0.16], [0, 0, 0], 0xb99470);
-  box(leftHand, [0.045, 0.07, 0.10], [0.08, 0.035, -0.01], 0xc6a07c);
-  for (let i = 0; i < 3; i++) box(leftHand, [0.035, 0.045, 0.15], [0.04 - i * 0.041, 0.065, -0.01], 0xc6a07c);
-  const armRoot = new THREE.Group();
-  const upperArm = box(armRoot, [0.088, 1, 0.099], [0, 0, 0], 0x4d614e);
-  const forearm = box(armRoot, [0.073, 1, 0.083], [0, 0, 0], 0x64725b);
-  upperArm.castShadow = false; upperArm.receiveShadow = false;
-  forearm.castShadow = false; forearm.receiveShadow = false;
-  const yAxis = new THREE.Vector3(0, 1, 0);
-  const shoulder = new THREE.Vector3(0.08, -0.80, -0.98);
-  const elbow = new THREE.Vector3();
-  const wrist = new THREE.Vector3();
-  const axis = new THREE.Vector3();
-  const bend = new THREE.Vector3();
-  const span = new THREE.Vector3();
-  const link = (mesh: THREE.Mesh, from: THREE.Vector3, to: THREE.Vector3) => {
-    span.subVectors(to, from);
-    mesh.position.copy(from).addScaledVector(span, 0.5);
-    mesh.scale.y = span.length();
-    mesh.quaternion.setFromUnitVectors(yAxis, span.normalize());
-  };
+  // 悬浮枪械自行完成退匣、装填与枪机动作。
   const animateReload = (progress: number | null, empty: boolean) => {
     const pose = reloadPose(progress, empty);
     magazine.position.set(...pose.magazine); magazine.rotation.x = pose.magazineTilt; magazine.visible = pose.magazineVisible;
     oldMagazine.position.set(...pose.oldMagazine); oldMagazine.rotation.set(...pose.oldRotation); oldMagazine.visible = pose.oldMagazineVisible;
-    leftHand.position.set(...pose.hand); leftHand.rotation.set(0, 0, pose.bolt * -0.35);
     chargingHandle.position.z = -0.09 + (empty && progress !== null && progress < 0.9 ? 0.065 : 0);
     boltRelease.position.x = -0.111 + pose.bolt * 0.018;
     return pose;
-  };
-  const updateArm = () => {
-    armRoot.visible = root.visible;
-    if (!root.parent) return;
-    root.parent.worldToLocal(leftHand.getWorldPosition(wrist));
-    // 肩部固定在镜头下方，双段手臂随腕部求解，避免整条手臂跟着枪翻转。
-    axis.subVectors(wrist, shoulder);
-    const distance = Math.max(0.001, axis.length()); axis.divideScalar(distance);
-    const upper = 0.38, lower = 0.44;
-    const reach = Math.min(distance, upper + lower - 0.001);
-    const along = (upper * upper - lower * lower + reach * reach) / (2 * reach);
-    bend.set(-1, -0.4, 0.1).addScaledVector(axis, -bend.dot(axis)).normalize();
-    elbow.copy(shoulder).addScaledVector(axis, along).addScaledVector(bend, Math.sqrt(Math.max(0, upper * upper - along * along)));
-    link(upperArm, shoulder, elbow); link(forearm, elbow, wrist);
   };
   animateReload(null, false);
 
@@ -112,5 +66,5 @@ export function createWeapon() {
   root.traverse(obj => {
     if (obj instanceof THREE.Mesh) { obj.castShadow = false; obj.receiveShadow = false; }
   });
-  return { root, armRoot, muzzle, flash, light, magazine, oldMagazine, leftHand, chargingHandle, animateReload, updateArm };
+  return { root, muzzle, flash, light, magazine, oldMagazine, chargingHandle, animateReload };
 }

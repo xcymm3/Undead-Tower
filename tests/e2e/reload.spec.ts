@@ -16,7 +16,7 @@ async function freezeAt(page: Page, progress: number) {
   }, progress);
 }
 
-test('快速换弹的弹匣与左手动画可见，暂停冻结，空仓释放枪机后恢复射击', async ({ page }) => {
+test('悬浮枪械的快速换弹动作可见，暂停冻结，空仓释放枪机后恢复射击', async ({ page }) => {
   test.setTimeout(45000);
   await page.goto('/'); await page.getByRole('button', { name: '进入哨站' }).click();
   await page.mouse.move(720, 450); await page.waitForTimeout(400);
@@ -44,7 +44,7 @@ test('快速换弹的弹匣与左手动画可见，暂停冻结，空仓释放�
   expect(ui).toBeCloseTo(removed.reload.progress, 6);
   await page.keyboard.press('Escape'); await freezeAt(page, 0.56);
   const inserted = await snapshot(page);
-  expect(inserted.reload.hand).not.toEqual(removed.reload.hand);
+  expect(inserted.reload.magazine).not.toEqual(removed.reload.magazine);
   await page.screenshot({ path: 'test-results/reload-insert.png' });
   await page.keyboard.press('Escape');
   await expect.poll(async () => (await snapshot(page)).reloading).toBe(false);
