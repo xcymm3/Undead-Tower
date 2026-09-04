@@ -427,6 +427,8 @@ export class Game {
       this.shadowTime = time;
     }
     this.renderer.render(this.scene, this.camera);
+    // 特写取景与首帧材质准备可能耗时；从首帧呈现后重新计时，避免吞掉两秒动画。
+    if (!wasBreaching && this.phase === 'breaching') this.previousTime = 0;
     this.renderCount++;
     if (time - this.publishTime > 200) { this.publishTime = time; this.publish(); }
   };
