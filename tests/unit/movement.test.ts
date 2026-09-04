@@ -1,19 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { PerspectiveCamera, Vector3 } from 'three';
-import { CONFIG, CROWD } from '../../src/game/config';
+import { Matrix4, PerspectiveCamera, Vector3 } from 'three';
+import { CROWD } from '../../src/game/config';
 import { Encounter, distanceToBreach } from '../../src/game/encounter';
 import type { Position, Zombie } from '../../src/game/encounter';
 import { seededRandom } from '../../src/game/geometry';
 import { CrowdMovement } from '../../src/game/movement';
-import { sampleBreachTarget, SpawnDirector } from '../../src/game/spawn';
+import { SpawnDirector } from '../../src/game/spawn';
+import { ZombieField } from '../../src/game/zombies';
 
-const zombie = (id: number, x: number, z: number, breachTarget: Position = { x: 0, z: 1 }): Zombie => ({ id, x, z, breachTarget, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
+const zombie = (id: number, x: number, z: number): Zombie => ({ id, x, z, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
 const radius = (p: Position) => Math.hypot(p.x, p.z - 9);
 
-describe('随机圆弧突破与轻微避让', () => {
+describe('直线追击与拥挤避让', () => {
   it('记录首个实际越线者，同步越线时稳定选择最小 ID，重开清空', () => {
     for (const reversed of [false, true]) {
-      const crowd = [zombie(9, 0, 0), zombie(2, 0, 0), zombie(1, 0, -10)].map(z => ({ ...z, waypoint: { x: 0, z: 1 } }));
+      const crowd = [zombie(9, 0, 0), zombie(2, 0, 0), zombie(1, 0, -10)];
       const result = new CrowdMovement().advance(reversed ? crowd.reverse() : crowd, 1, 2);
       expect(result.failed).toBe(true);
       expect(result.breachedId).toBe(2);
@@ -25,50 +26,36 @@ describe('随机圆弧突破与轻微避让', () => {
     encounter.reset('survival', 'hard');
     expect(encounter.breachedId).toBeNull();
   });
-  it('突破点位于 8 米圆弧，窄屏和镜头极限角度下头部仍可见', () => {
-    for (const aspect of [320 / 844, 1440 / 900, 1920 / 900]) {
-      const camera = new PerspectiveCamera(CONFIG.camera.fov, aspect, 0.025, 220);
-      camera.position.set(0, 4.8, 9);
-      for (const random of [0, 0.25, 0.5, 0.75, 1]) {
-        const target = sampleBreachTarget(camera, () => random);
-        expect(radius(target)).toBeCloseTo(8, 10);
-        expect(target.z).toBeLessThan(9);
-        for (const yaw of [-CONFIG.camera.yawLimit, CONFIG.camera.yawLimit]) for (const pitch of [-CONFIG.camera.pitchLimit, CONFIG.camera.pitchLimit]) {
-          camera.rotation.set(-0.105 + pitch, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
-          const head = new Vector3(target.x, 1.83, target.z).project(camera);
-          expect(Math.abs(head.x)).toBeLessThan(0.94);
-          expect(Math.abs(head.y)).toBeLessThan(0.94);
-        }
+  it('不同方向的孤立僵尸全程沿最短直线朝玩家前进，在最近防线交点停止', () => {
+    for (const start of [{ x: -12, z: -20 }, { x: 0, z: -40 }, { x: 15, z: -18 }]) {
+      const z = zombie(0, start.x, start.z), movement = new CrowdMovement();
+      const initialDistance = radius(start), ux = -start.x / initialDistance, uz = (9 - start.z) / initialDistance;
+      expect(distanceToBreach(z)).toBeCloseTo(initialDistance - 8, 10);
+      let duration = 0, failed = false;
+      for (let i = 0; i < 2000 && !failed; i++) {
+        const result = movement.advance([z], 1 / 60, 1.5);
+        duration += result.duration; failed = result.failed;
+        expect((z.x - start.x) * uz - (z.z - start.z) * ux).toBeCloseTo(0, 9);
+        expect(z.heading).toBeCloseTo(Math.atan2(ux, uz), 9);
+        expect(z.avoidance).toBe(0);
       }
+      expect(failed).toBe(true);
+      expect(duration).toBeCloseTo((initialDistance - 8) / 1.5, 8);
+      expect(z.x).toBeCloseTo(start.x * 8 / initialDistance, 8);
+      expect(z.z).toBeCloseTo(9 + (start.z - 9) * 8 / initialDistance, 8);
     }
   });
 
-  it('同一出生区也得到不同终点，分配终点不改变原出生区域和安全通路', () => {
+  it('出生区域保留随机位置，不再携带随机突破点或中途路径点', () => {
     const camera = new PerspectiveCamera(61, 1.6, 0.025, 220);
     camera.position.set(0, 4.8, 9); camera.rotation.x = -0.105; camera.updateMatrixWorld();
-    const a = new SpawnDirector(seededRandom(42), seededRandom(3));
-    const b = new SpawnDirector(seededRandom(42), seededRandom(4));
-    const targets: number[] = [];
-    for (let i = 0; i < 64; i++) {
-      const first = a.next(camera), second = b.next(camera);
-      expect({ ...first, breachTarget: undefined }).toEqual({ ...second, breachTarget: undefined });
-      if (first.spawnZone === 'north-road') targets.push(first.breachTarget!.x);
-    }
-    expect(new Set(targets).size).toBe(8);
-    expect(Math.max(...targets) - Math.min(...targets)).toBeGreaterThan(3);
-  });
-
-  it('同一出发位置的僵尸分别到达不同突破点，剩余路径以各自目标计算', () => {
-    const points = [-0.5, 0, 0.5].map(angle => ({ x: 8 * Math.sin(angle), z: 9 - 8 * Math.cos(angle) }));
-    for (const target of points) {
-      const z = zombie(0, 0, -6, target);
-      expect(distanceToBreach(z)).toBeCloseTo(Math.hypot(target.x, target.z + 6), 8);
-      const movement = new CrowdMovement();
-      let failed = false;
-      for (let i = 0; i < 500 && !failed; i++) failed = movement.advance([z], 1 / 30, 1.5).failed;
-      expect(failed).toBe(true);
-      expect(z.x).toBeCloseTo(target.x, 7);
-      expect(z.z).toBeCloseTo(target.z, 7);
+    const director = new SpawnDirector(seededRandom(42));
+    const spawns = Array.from({ length: 64 }, () => director.next(camera));
+    expect(new Set(spawns.map(p => p.spawnZone)).size).toBe(8);
+    expect(new Set(spawns.filter(p => p.spawnZone === 'north-road').map(p => p.x)).size).toBe(8);
+    for (const spawn of spawns) {
+      expect(spawn).not.toHaveProperty('waypoint');
+      expect(spawn).not.toHaveProperty('breachTarget');
     }
   });
 
@@ -80,7 +67,7 @@ describe('随机圆弧突破与轻微避让', () => {
       movement.advance(crowd, 1 / 60, 1.5);
       crowd.forEach((z, index) => {
         const p = before[index], dx = z.x - p.x, dz = z.z - p.z;
-        const gx = -p.x, gz = 1 - p.z, length = Math.hypot(gx, gz);
+        const gx = -p.x, gz = 9 - p.z, length = Math.hypot(gx, gz);
         expect(Math.hypot(dx, dz)).toBeCloseTo(1.5 / 60, 10);
         expect(Math.abs(dx * gz / length - dz * gx / length)).toBeLessThanOrEqual(CROWD.maxLateralSpeed / 60 + 1e-9);
         expect(dx * gx + dz * gz).toBeGreaterThan(0);
@@ -105,33 +92,40 @@ describe('随机圆弧突破与轻微避让', () => {
     expect(corpse.z).toBe(-7);
   });
 
-  it('通过路径点前保持原安全路线，不被邻居推入建筑通道外', () => {
-    const crowd = [zombie(0, -6, -20), zombie(1, -6, -20)];
-    crowd.forEach(z => { z.waypoint = { x: -6, z: -7 }; });
-    const movement = new CrowdMovement();
-    for (let i = 0; i < 120; i++) movement.advance(crowd, 1 / 60, 1.5);
-    expect(crowd.map(z => z.x)).toEqual([-6, -6]);
-    expect(crowd.every(z => z.waypoint && !z.avoidance)).toBe(true);
+  it('离开拥挤范围后立刻恢复直线，不保留横向漂移', () => {
+    const a = zombie(0, -0.1, -10), b = zombie(1, 0.1, -10), movement = new CrowdMovement();
+    movement.advance([a, b], 0.5, 1.5);
+    expect(Math.abs(a.avoidance!)).toBeGreaterThan(0);
+    const before = { x: a.x, z: a.z };
+    b.health = 0;
+    movement.advance([a, b], 0.1, 1.5);
+    expect(a.avoidance).toBe(0);
+    expect((a.x - before.x) * (9 - before.z) + (a.z - before.z) * before.x).toBeCloseTo(0, 10);
   });
 
-  it('经过路径点和切入圆弧能在同一帧完成，高速时仍在第一次越线处冻结全队', () => {
-    const a = zombie(0, 0, -5); a.waypoint = { x: 0, z: -1 };
-    const b = zombie(1, 5, -20);
-    const movement = new CrowdMovement();
-    const result = movement.advance([a, b], 1, 100);
+  it('实例模型正面始终对齐实际移动方向，拥挤时也不横着滑行', () => {
+    const encounter = new Encounter(); encounter.reset('survival', 'hard');
+    encounter.zombies = [zombie(0, -5, -15), zombie(1, -5.1, -15)];
+    const field = new ZombieField(), matrix = new Matrix4();
+    const before = { ...encounter.zombies[0] };
+    new CrowdMovement().advance(encounter.zombies, 0.1, 1.5);
+    field.sync(encounter);
+    field.getMatrixAt(0, matrix);
+    const forward = new Vector3(0, 0, 1).transformDirection(matrix);
+    const current = encounter.zombies[0];
+    const displacement = new Vector3(current.x - before.x, 0, current.z - before.z).normalize();
+    expect(forward.dot(displacement)).toBeCloseTo(1, 7);
+    field.dispose();
+  });
+
+  it('高速时在第一次越线处冻结全队，朝向与实际位移一致', () => {
+    const a = zombie(0, 0, -5), b = zombie(1, 5, -20);
+    const result = new CrowdMovement().advance([a, b], 1, 100);
     expect(result.failed).toBe(true);
     expect(result.duration).toBeCloseTo(0.06, 8);
     expect(radius(a)).toBeCloseTo(8, 8);
-    expect(a.waypoint).toBeUndefined();
     expect(Math.hypot(b.x - 5, b.z + 20)).toBeCloseTo(6, 8);
-  });
-
-  it('实际转向线段穿过防线就失败，即使随机目标还在另一侧', () => {
-    const z = zombie(0, 7, 0, { x: -4, z: 9 - Math.sqrt(48) });
-    const motion = new CrowdMovement().advance([z], 10, 30);
-    expect(motion.failed).toBe(true);
-    expect(radius(z)).toBeCloseTo(8, 8);
-    expect(z.x).toBeGreaterThan(z.breachTarget!.x + 1);
+    expect(b.heading).toBeCloseTo(Math.atan2(b.x - 5, b.z + 20), 10);
   });
 
   it('常见帧率下密集僵尸均可到达防线，不在终点附近绕圈或僵持', () => {

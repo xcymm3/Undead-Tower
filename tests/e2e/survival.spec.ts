@@ -36,15 +36,12 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   const arrivals = (await snapshot(page)).targets;
   expect(new Set(arrivals.map(z => z.spawnZone)).size).toBe(8);
   expect(arrivals.some(z => z.spawnZone === 'north-road')).toBe(true);
-  expect(new Set(arrivals.map(z => z.breachTarget!.x.toFixed(5))).size).toBeGreaterThanOrEqual(7);
   for (const zombie of arrivals) {
-    expect(Math.hypot(zombie.breachTarget!.x, zombie.breachTarget!.z - 9)).toBeCloseTo(8, 8);
-    expect(zombie.breachTarget!.z).toBeLessThan(9);
-  }
-  await expect.poll(async () => (await snapshot(page)).targets.some(z => z.health > 0 && !z.waypoint), { timeout: 15000 }).toBe(true);
-  for (const original of arrivals) {
-    const current = (await snapshot(page)).targets.find(z => z.id === original.id);
-    if (current) expect(current.breachTarget).toEqual(original.breachTarget);
+    expect(zombie).not.toHaveProperty('waypoint');
+    expect(zombie).not.toHaveProperty('breachTarget');
+    if (zombie.heading !== undefined && Math.abs(zombie.avoidance) < 1e-8) {
+      expect(zombie.heading).toBeCloseTo(Math.atan2(-zombie.x, 9 - zombie.z), 5);
+    }
   }
   await page.screenshot({ path: 'test-results/survival-playing.png' });
   // 真实移动模型必须能被枪口射线击杀，成绩不能只验证零击杀的空局。

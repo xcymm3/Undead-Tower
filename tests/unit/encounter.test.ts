@@ -89,15 +89,14 @@ describe('练习与正式模式', () => {
     expect(encounter.totalSpawned).toBe(0);
   });
 
-  it('侧边僵尸先进入前方射击区，经过路径点后继续逼近并准确触发失败', () => {
+  it('侧边僵尸沿直线逼近并在最近防线处准确触发失败', () => {
     const encounter = new Encounter(); encounter.reset('survival', 'hard');
-    encounter.zombies.push({ id: 99, x: 10, z: -12, waypoint: { x: 2, z: -6 }, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
+    encounter.zombies.push({ id: 99, x: 10, z: -12, kind: 'normal', health: 100, armorHealth: 0, maxHealth: 100, downTime: 0, bornAt: 0 });
     encounter.update(1, farSpawn);
     expect(encounter.zombies[0].x).toBeLessThan(10);
     expect(encounter.zombies[0].z).toBeGreaterThan(-12);
     encounter.update(8, farSpawn);
-    expect(encounter.zombies[0].waypoint).toBeUndefined();
-    expect(encounter.zombies[0].x).toBeLessThan(2);
+    expect(encounter.zombies[0].x).toBeLessThan(6);
     expect(encounter.failed).toBe(false);
     encounter.update(20, farSpawn);
     expect(encounter.failed).toBe(true);
@@ -136,21 +135,22 @@ describe('僵尸批量模型', () => {
       camera.position.set(0, 4.8, 9); camera.rotation.set(-0.105, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
       const director = new SpawnDirector(seededRandom(44));
       const spawns = Array.from({ length: 24 }, () => director.next(camera));
-      expect(new Set(spawns.map(s => s.spawnZone))).toEqual(new Set(['north-road', 'west-woods', 'east-woods']));
+      const zones = new Set(spawns.map(s => s.spawnZone));
+      for (const required of ['north-road', 'west-woods', 'east-woods']) expect(zones.has(required)).toBe(true);
       for (const spawn of spawns) {
-        expect(Math.abs(new Vector3(spawn.x, 1, spawn.z).project(camera).x)).toBeLessThanOrEqual(1.026);
-        expect(Math.abs(new Vector3(spawn.waypoint!.x, 1, spawn.waypoint!.z).project(camera).x)).toBeLessThan(0.92);
+        expect(Math.abs(new Vector3(spawn.x, 1, spawn.z).project(camera).x)).toBeLessThanOrEqual(0.92);
+        expect(spawn).not.toHaveProperty('waypoint');
       }
     }
   });
 
-  it('不同窗口宽度和镜头角度下，出生位置仍在真实屏幕两侧边缘', () => {
+  it('不同窗口宽度和镜头角度下，出生位置仍在屏幕两侧可瞄准的边缘区域', () => {
     for (const aspect of [320 / 844, 1440 / 900, 1920 / 900]) for (const yaw of [-0.069, 0, 0.069]) for (const side of [0.2, 0.8]) {
       const camera = new PerspectiveCamera(61, aspect, 0.025, 220);
       camera.position.set(0, 4.8, 9); camera.rotation.set(-0.105, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
       const position = spawnAtScreenEdge(camera, () => side);
       const screen = new Vector3(position.x, 1, position.z).project(camera);
-      expect(Math.abs(screen.x)).toBeCloseTo(1.025, 8);
+      expect(Math.abs(screen.x)).toBeCloseTo(0.9, 8);
       expect(position.z).toBeLessThan(0);
       expect(Math.hypot(position.x, position.z - 9)).toBeGreaterThan(SURVIVAL.breachRadius);
     }

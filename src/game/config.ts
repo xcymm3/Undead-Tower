@@ -22,7 +22,7 @@ export const DIFFICULTIES = {
   hard: { label: '困难', description: '开局即按比例加入路障与铁桶，铁桶爆头需 4 枪' },
 } as const;
 export const SURVIVAL = { maxSpawnRate: 10, maxZombies: 256, breachRadius: 8, playerX: 0, playerZ: 9 } as const;
-export const CROWD = { arcHalfAngle: 35 * Math.PI / 180, viewMargin: 0.75, separationRadius: 1.35, maxLateralSpeed: 0.32, lateralFraction: 0.2, steeringDamping: 5, arrivalFade: 2 } as const;
+export const CROWD = { separationRadius: 1.35, maxLateralSpeed: 0.32, lateralFraction: 0.2, steeringDamping: 5, arrivalFade: 2 } as const;
 export interface RunResult {
   id: string;
   difficulty: Difficulty;

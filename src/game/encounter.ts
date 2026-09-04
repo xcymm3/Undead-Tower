@@ -3,7 +3,7 @@ import type { Difficulty, GameMode, ZombieKind } from './config';
 import { CrowdMovement } from './movement';
 
 export interface Position { x: number; z: number; }
-export interface SpawnPosition extends Position { waypoint?: Position; breachTarget?: Position; spawnZone?: string; }
+export interface SpawnPosition extends Position { spawnZone?: string; }
 export interface Zombie extends SpawnPosition { id: number; kind: ZombieKind; health: number; maxHealth: number; armorHealth: number; downTime: number; bornAt: number; avoidance?: number; heading?: number; }
 export const PRACTICE_POSITIONS: Position[] = [{ x: -5.8, z: -9.5 }, { x: 0.15, z: -17 }, { x: 5.4, z: -21 }, { x: -1, z: -31 }];
 
@@ -24,17 +24,9 @@ export function spawnIntegral(_difficulty: Difficulty, from: number, to: number)
   return Math.max(0, primitive(to) - primitive(from));
 }
 
-/** 当前路径的预计剩余路程，不预测避让；失败必须按实际移动线段判定。 */
+/** 到防线的最短直线路程，不预测拥挤避让。 */
 export function distanceToBreach(zombie: SpawnPosition) {
-  if (zombie.breachTarget) {
-    const goal = zombie.waypoint ?? zombie;
-    return (zombie.waypoint ? Math.hypot(zombie.x - goal.x, zombie.z - goal.z) : 0) + Math.hypot(goal.x - zombie.breachTarget.x, goal.z - zombie.breachTarget.z);
-  }
-  const goal = zombie.waypoint;
-  const distance = goal
-    ? Math.hypot(zombie.x - goal.x, zombie.z - goal.z) + Math.hypot(goal.x - SURVIVAL.playerX, goal.z - SURVIVAL.playerZ)
-    : Math.hypot(zombie.x - SURVIVAL.playerX, zombie.z - SURVIVAL.playerZ);
-  return Math.max(0, distance - SURVIVAL.breachRadius);
+  return Math.max(0, Math.hypot(zombie.x - SURVIVAL.playerX, zombie.z - SURVIVAL.playerZ) - SURVIVAL.breachRadius);
 }
 
 export class Encounter {

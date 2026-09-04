@@ -3,7 +3,7 @@ import type { Position, Zombie } from './encounter';
 
 const player = { x: SURVIVAL.playerX, z: SURVIVAL.playerZ };
 interface Leg { start: Position; vx: number; vz: number; duration: number; }
-interface Motion { zombie: Zombie; legs: Leg[]; clearWaypointAt: number; avoidance: number; breachAt: number; }
+interface Motion { zombie: Zombie; legs: Leg[]; avoidance: number; breachAt: number; }
 
 /** 连续检测每条实际移动线段首次进入失败圆的时间，而非依赖剩余路径估算。 */
 function breachTime(leg: Leg) {
@@ -51,27 +51,18 @@ export class CrowdMovement {
   }
 
   private plan(zombie: Zombie, step: number, speed: number): Motion {
-    const motion: Motion = { zombie, legs: [], clearWaypointAt: Infinity, avoidance: 0, breachAt: Infinity };
-    let position = { x: zombie.x, z: zombie.z }, remaining = step;
-    if (zombie.waypoint) {
-      const dx = zombie.waypoint.x - position.x, dz = zombie.waypoint.z - position.z;
-      const distance = Math.hypot(dx, dz);
-      motion.clearWaypointAt = distance / speed;
-      const duration = Math.min(remaining, motion.clearWaypointAt);
-      if (distance > 0) motion.legs.push({ start: position, vx: dx / distance * speed, vz: dz / distance * speed, duration });
-      remaining -= duration;
-      position = zombie.waypoint;
-    }
-    if (remaining > 0) {
-      const goal = zombie.breachTarget ?? player;
-      const dx = goal.x - position.x, dz = goal.z - position.z;
+    const motion: Motion = { zombie, legs: [], avoidance: 0, breachAt: Infinity };
+    const position = { x: zombie.x, z: zombie.z };
+    if (step > 0) {
+      const dx = player.x - position.x, dz = player.z - position.z;
       const distance = Math.hypot(dx, dz);
       const ux = distance > 0 ? dx / distance : 0, uz = distance > 0 ? dz / distance : 0;
-      const force = zombie.waypoint ? 0 : this.separation(zombie, uz, -ux);
-      motion.avoidance = (zombie.avoidance ?? 0) + (force - (zombie.avoidance ?? 0)) * (1 - Math.exp(-CROWD.steeringDamping * step));
-      const lateral = motion.avoidance * Math.min(CROWD.maxLateralSpeed, speed * CROWD.lateralFraction) * Math.min(1, distance / CROWD.arrivalFade);
+      const force = this.separation(zombie, uz, -ux);
+      // 没有拥挤就立刻回到最短路线，不能因旧避让状态继续横向漂移。
+      motion.avoidance = force === 0 ? 0 : (zombie.avoidance ?? 0) + (force - (zombie.avoidance ?? 0)) * (1 - Math.exp(-CROWD.steeringDamping * step));
+      const lateral = motion.avoidance * Math.min(CROWD.maxLateralSpeed, speed * CROWD.lateralFraction) * Math.max(0, Math.min(1, (distance - SURVIVAL.breachRadius) / CROWD.arrivalFade));
       const forward = Math.sqrt(Math.max(0, speed * speed - lateral * lateral));
-      motion.legs.push({ start: position, vx: ux * forward + uz * lateral, vz: uz * forward - ux * lateral, duration: Math.min(remaining, distance / speed) });
+      motion.legs.push({ start: position, vx: ux * forward + uz * lateral, vz: uz * forward - ux * lateral, duration: Math.min(step, distance / speed) });
     }
     let elapsed = 0;
     for (const leg of motion.legs) { motion.breachAt = Math.min(motion.breachAt, elapsed + breachTime(leg)); elapsed += leg.duration; }
@@ -97,7 +88,6 @@ export class CrowdMovement {
         remaining -= time;
         if (remaining <= 0) break;
       }
-      if (duration + 1e-8 >= motion.clearWaypointAt) zombie.waypoint = undefined;
       zombie.avoidance = motion.avoidance;
     }
     return { duration, failed, breachedId };

@@ -398,7 +398,7 @@ export class Game {
       blood: this.blood.diagnostics(),
       armorEffects: this.armorEffects.diagnostics(), audio: this.audio.diagnostics(), breach: this.breachFeedback(), defenseVisible: this.defense.visible,
       reload: { progress: this.firearm.reloadProgress, remaining: this.firearm.reloadRemaining, empty: this.firearm.reloadEmpty, magazine: this.weapon.magazine.position.toArray(), magazineVisible: this.weapon.magazine.visible, oldMagazineVisible: this.weapon.oldMagazine.visible, hand: this.weapon.leftHand.position.toArray(), bolt: this.weapon.chargingHandle.position.z },
-      targets: this.encounter.zombies.map(z => ({ id: z.id, kind: z.kind, maxHealth: z.maxHealth, armorHealth: z.armorHealth, bodyHealth: z.health - z.armorHealth, spawnZone: z.spawnZone, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, breachTarget: z.breachTarget ? { ...z.breachTarget } : undefined, waypoint: z.waypoint ? { ...z.waypoint } : undefined, avoidance: z.avoidance ?? 0, heading: z.heading, head: project(new THREE.Vector3(z.x, 1.83, z.z)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
+      targets: this.encounter.zombies.map(z => ({ id: z.id, kind: z.kind, maxHealth: z.maxHealth, armorHealth: z.armorHealth, bodyHealth: z.health - z.armorHealth, spawnZone: z.spawnZone, health: z.health, x: z.x, z: z.z, bornAt: z.bornAt, avoidance: z.avoidance ?? 0, heading: z.heading, head: project(new THREE.Vector3(z.x, 1.83, z.z)), chest: project(new THREE.Vector3(z.x, 1.25, z.z + 0.2)) })),
     };
   }
 

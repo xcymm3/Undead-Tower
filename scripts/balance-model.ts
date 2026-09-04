@@ -20,7 +20,7 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
   const firearm = new Firearm();
   const camera = new PerspectiveCamera(CONFIG.camera.fov, 1440 / 900, 0.025, 220);
   camera.position.set(0, CONFIG.camera.height, 9); camera.rotation.set(-0.105, 0, 0, 'YXZ'); camera.updateMatrixWorld();
-  const spawns = new SpawnDirector(seededRandom(seed), seededRandom(seed ^ 0x51a7));
+  const spawns = new SpawnDirector(seededRandom(seed));
   const randomShot = seededRandom(seed + 98171);
   const project = new Vector3();
   const dt = 1 / fps;

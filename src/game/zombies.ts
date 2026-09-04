@@ -76,7 +76,7 @@ export class ZombieField extends THREE.InstancedMesh {
       const downDuration = encounter.mode === 'practice' ? 3 : 0.85;
       const fall = zombie.health === 0 ? Math.min(Math.PI / 2, (downDuration - zombie.downTime) * 5) : 0;
       this.root.position.set(zombie.x, moving ? Math.abs(stride) * 0.025 : 0, zombie.z);
-      const goal = zombie.waypoint ?? zombie.breachTarget ?? { x: SURVIVAL.playerX, z: SURVIVAL.playerZ };
+      const goal = { x: SURVIVAL.playerX, z: SURVIVAL.playerZ };
       this.root.rotation.set(-fall, encounter.mode === 'survival' ? zombie.heading ?? Math.atan2(goal.x - zombie.x, goal.z - zombie.z) : 0, 0, 'YXZ');
       this.root.updateMatrix();
       PARTS.forEach((part, partIndex) => {
