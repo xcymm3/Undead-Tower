@@ -75,6 +75,10 @@ let record;
 try {
   session = await start();
   const { page } = session;
+  await page.getByRole('button', { name: '游戏设置' }).click();
+  await expect(page.getByRole('slider')).toHaveCount(1);
+  await page.getByRole('slider', { name: '总音量' }).fill('37');
+  await page.getByRole('button', { name: '返回哨站' }).click();
   console.log('实际 portable EXE 已离线启动；验证练习、开火、装填、暂停与全屏');
   await page.getByRole('button', { name: '进入哨站' }).click();
   await expect(page.getByRole('heading', { name: '僵尸练习靶场' })).toBeVisible();
@@ -82,9 +86,12 @@ try {
   const bounds = await page.locator('canvas').boundingBox();
   await page.mouse.click(bounds.x + bounds.width * 0.55, bounds.y + bounds.height * 0.45);
   await expect(page.getByTestId('ammo')).toHaveText('29');
+  const reloadStarted = Date.now();
   await page.keyboard.press('r');
   await expect(page.getByText('正在更换弹匣…')).toBeVisible();
   await expect(page.getByTestId('ammo')).toHaveText('30', { timeout: 4000 });
+  const reloadMs = Date.now() - reloadStarted;
+  assert.ok(reloadMs < 1400, `Expected fast reload, observed ${reloadMs} ms`);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: '哨站已暂停' })).toBeVisible();
   await page.getByRole('button', { name: '返回主菜单', exact: true }).click();
@@ -92,14 +99,16 @@ try {
   await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(true);
   await page.getByRole('button', { name: '退出全屏' }).click();
   await page.getByRole('button', { name: '正式模式' }).click();
-  // 兼容保留的旧 EXE 和以后固定困难的新构建。
-  const difficulty = page.getByRole('group', { name: '选择难度' });
-  if (await difficulty.count()) await difficulty.getByRole('button', { name: '困难', exact: true }).click();
+  await expect(page.getByRole('group', { name: '选择难度' })).toHaveCount(0);
+  await expect(page.locator('.practice-note')).toContainText('困难难度');
   await page.getByRole('button', { name: '开始坚守' }).click();
   await expect(page.locator('.horde-status')).toContainText('铁桶 1', { timeout: 16000 });
   await page.screenshot({ path: path.join(evidence, 'portable-game.png') });
   await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 45000 });
+  await expect(page.getByTestId('breached-zombie')).toBeVisible();
+  await page.screenshot({ path: path.join(evidence, 'portable-breach.png') });
   await expect(page.locator('.record-notice')).toContainText('已保存');
+  await expect(page.getByTestId('personal-record')).toContainText('个人纪录已建立');
   record = await page.evaluate(() => {
     const key = Object.keys(localStorage).find(key => key.startsWith('undead-tower.leaderboard.') && localStorage.getItem(key) !== '[]');
     return { key, entries: JSON.parse(localStorage.getItem(key)) };
@@ -119,16 +128,18 @@ try {
   portableDir = movedDir;
   console.log('首次正常退出；将 EXE 连同数据文件夹搬迁，再次离线启动验证成绩');
   session = await start();
+  await session.page.getByRole('button', { name: '游戏设置' }).click();
+  await expect(session.page.getByRole('slider', { name: '总音量' })).toHaveValue('37');
+  await session.page.getByRole('button', { name: '返回哨站' }).click();
   await session.page.getByRole('button', { name: '查看排行榜' }).click();
-  const boardDifficulty = session.page.getByRole('group', { name: '排行榜难度' });
-  if (await boardDifficulty.count()) await boardDifficulty.getByRole('button', { name: '困难', exact: true }).click();
+  await expect(session.page.getByRole('group', { name: '排行榜难度' })).toHaveCount(0);
   await expect(session.page.getByRole('table')).toBeVisible();
   assert.deepEqual(await session.page.evaluate(key => JSON.parse(localStorage.getItem(key)), record.key), record.entries);
   await session.page.screenshot({ path: path.join(evidence, 'portable-persisted.png') });
   await stop(session); session = null;
   assert.deepEqual(errors, []);
   assert.deepEqual([...requests].filter(url => !url.startsWith('undead://game/')), []);
-  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'fire and reload', 'pause', 'fullscreen', 'early armored zombies', 'natural defeat', 'leaderboard saved', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
+  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, reloadMs, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'fire and fast reload', 'pause', 'fullscreen', 'fixed hard difficulty', 'early armored zombies', 'natural defeat and breach marker', 'personal record feedback', 'leaderboard saved', 'volume setting persists after relocation', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
   console.log(`Portable 验证通过，证据：${evidence}`);
 } catch (error) {
   if (session?.page && !session.page.isClosed()) await session.page.screenshot({ path: path.join(evidence, 'failed.png') }).catch(() => {});

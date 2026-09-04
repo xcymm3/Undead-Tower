@@ -1,5 +1,17 @@
 # Undead Tower 验收记录
 
+## Windows portable EXE（0.4.0，2026-09-04）
+
+- 已将全部战斗体验改动和最新直线追击修复同步到 `release/Undead-Tower-0.4.0-portable-x64.exe`，103,208,533 字节。旧 0.3.0 文件保留。
+- `npm run dist:portable` 与 `npm run test:portable` 通过。实际成品离线启动并重新加载，所有资源来自包内 `undead://game/`，没有渲染错误、Node API 或开发诊断入口。
+- 验证开火与快速换弹、暂停/全屏、固定困难、开局护甲刷新、自然失败的突破者标记、个人纪录与排行榜保存。将 EXE 和数据目录移至另一中文路径后重新启动，成绩及 37% 音量设置仍保留，两次正常退出。测试使用独立副本，未修改交付目录下的玩家数据。
+- SHA-256：`b9595a032f4cdd11ba4f8814fd3cc1601bd0d6c68870ed35fae3c6a7767de6a1`；同目录附带 `.sha256` 校验文件。Windows x64 未签名便携版。
+- 当前成品验证数据见 [portable-validation.json](portable-validation.json)。下方“未打入 EXE”的描述仅记录当时状态，本轮已全部同步。
+
+![0.4.0 便携版对局](screenshots/portable-game-0.4.0.png)
+
+![0.4.0 便携版突破者反馈](screenshots/portable-breach-0.4.0.png)
+
 ## 直线追击与拥挤避让（2026-09-04）
 
 - 移除中途路径点与随机圆弧目标；孤立僵尸沿到玩家的最短直线前进，身体正面与实际位移方向一致。
@@ -70,7 +82,7 @@
 - 真实输入验证练习开火消耗弹药、R 装填、Esc 暂停、UI 全屏；困难模式约 11 秒前出现铁桶，随后自然失败并保存成绩。已查看成品对局截图，持枪、场景、僵尸和 HUD 显示正常，页面异常为零。
 - 正常退出后，将测试 EXE 与 `Undead Tower Data` 一起移动到另一中文目录，再次离线启动，困难排行榜中同一条成绩可读。两次启动均正常退出；测试数据不写入交付目录。
 - 构建时校验 Electron 官方 npm 包附带的运行环境 SHA-256，包内包含前端、字体、Electron、Chromium 的许可说明。发布文件 SHA-256 为 `3421037cfde0b10fcd74329891d16430ffd70e05b096164c543cb042427479a1`，校验文件与 EXE 放在同一目录。
-- 结果见 [成品验证数据](portable-validation.json)，操作与重建见 [PORTABLE.md](PORTABLE.md)。实际测试环境为本机 Windows 11 x64；其他电脑的性能和驱动兼容性尚未实机验证。
+- 历史截图如下；当前版本成品数据见 [成品验证数据](portable-validation.json)，操作与重建见 [PORTABLE.md](PORTABLE.md)。实际测试环境为本机 Windows 11 x64；其他电脑的性能和驱动兼容性尚未实机验证。
 
 ![Windows 便携版实际对局](screenshots/portable-game.png)
 

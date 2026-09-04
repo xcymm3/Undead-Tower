@@ -1,6 +1,7 @@
 {
-  "source": "D:\\mydoc\\React\\undead-tower\\release\\Undead-Tower-0.3.0-portable-x64.exe",
-  "bytes": 103201923,
+  "version": "0.4.0",
+  "source": "D:\\mydoc\\React\\undead-tower\\release\\Undead-Tower-0.4.0-portable-x64.exe",
+  "bytes": 103208533,
   "offline": true,
   "errors": [],
   "requests": [
@@ -9,34 +10,38 @@
     "undead://game/assets/barlow-condensed-latin-700-normal-v1xN8_Wq.woff2",
     "undead://game/assets/ibm-plex-mono-latin-500-normal-DSY6xOcd.woff2",
     "undead://game/",
-    "undead://game/assets/index-CdfbQjgm.js",
-    "undead://game/assets/three-CWlhWnO1.js",
-    "undead://game/assets/index-CJ8tqRaT.css"
+    "undead://game/assets/index-BbHPz7sp.js",
+    "undead://game/assets/three-BxRLIvVH.js",
+    "undead://game/assets/index-DebxRlTE.css"
   ],
   "record": {
     "key": "undead-tower.leaderboard.armor-v3",
     "entries": [
       {
-        "id": "bfc5c35b-51a4-4ac6-aea5-5d5484cd182c",
+        "id": "5ec8be53-37cb-42a1-9051-c594674875eb",
         "difficulty": "hard",
-        "duration": 20.017622118976174,
+        "duration": 20.30006320890636,
         "kills": 0,
         "shots": 0,
         "hits": 0,
-        "endedAt": "2026-09-03T10:04:58.327Z"
+        "endedAt": "2026-09-04T03:10:32.587Z"
       }
     ]
   },
+  "reloadMs": 1038,
   "movedDataPersists": true,
   "checks": [
     "production WebGL startup",
     "no renderer Node API or dev diagnostics",
-    "fire and reload",
+    "fire and fast reload",
     "pause",
     "fullscreen",
+    "fixed hard difficulty",
     "early armored zombies",
-    "natural defeat",
+    "natural defeat and breach marker",
+    "personal record feedback",
     "leaderboard saved",
+    "volume setting persists after relocation",
     "portable relocation and relaunch",
     "clean exit"
   ]
