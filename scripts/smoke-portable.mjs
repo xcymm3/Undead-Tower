@@ -9,7 +9,7 @@ import { chromium, expect } from '@playwright/test';
 
 const project = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const { version } = JSON.parse(await readFile(path.join(project, 'package.json'), 'utf8'));
-const source = path.resolve(process.argv[2] || path.join(project, 'release', `Undead-Tower-${version}-portable-x64.exe`));
+const source = path.resolve(process.argv[2] || path.join(project, 'release', `Undead Tower ${version}.exe`));
 const evidence = path.join(project, 'test-results', `portable-${Date.now()}`);
 let portableDir = path.join(evidence, '初次运行');
 await mkdir(portableDir, { recursive: true });
@@ -48,6 +48,7 @@ async function start() {
     await page.waitForURL('undead://game/');
     await context.setOffline(true);
     await page.reload();
+    await expect(page).toHaveTitle('Undead Tower');
     await expect(page.getByRole('button', { name: '进入哨站' })).toBeEnabled({ timeout: 20000 });
     assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
     assert.equal(await page.evaluate(() => typeof window.__undeadTower), 'undefined');
@@ -92,6 +93,29 @@ try {
   await expect(page.getByTestId('ammo')).toHaveText('30', { timeout: 4000 });
   const reloadMs = Date.now() - reloadStarted;
   assert.ok(reloadMs < 1400, `Expected fast reload, observed ${reloadMs} ms`);
+  const guns = [
+    { label: '步枪', capacity: 30 }, { label: 'P90 冲锋枪', capacity: 50 },
+    { label: '半自动手枪', capacity: 12 }, { label: '左轮手枪', capacity: 6 },
+    { label: '泵动霰弹枪', capacity: 6 }, { label: '栓动狙击枪', capacity: 5 },
+  ];
+  for (const [index, gun] of guns.entries()) {
+    await page.keyboard.press(String(index + 1));
+    await expect(page.getByTestId('weapon-name')).toContainText(gun.label);
+    await expect(page.locator('.reload-hint')).toHaveText(/R\s*换弹/);
+    await expect(page.getByTestId('ammo')).toHaveText(String(gun.capacity).padStart(2, '0'));
+    await page.mouse.click(bounds.x + bounds.width * 0.55, bounds.y + bounds.height * 0.45);
+    await expect(page.getByTestId('ammo')).toHaveText(String(gun.capacity - 1).padStart(2, '0'));
+    await page.keyboard.press('r');
+    await expect(page.getByTestId('ammo')).toHaveText(String(gun.capacity).padStart(2, '0'), { timeout: 5000 });
+    await expect(page.locator('.reload-hint')).toHaveText(/R\s*换弹/);
+    await page.screenshot({ path: path.join(evidence, `portable-weapon-${index + 1}.png`) });
+  }
+  await page.mouse.wheel(0, 150);
+  await expect(page.getByTestId('weapon-name')).toContainText('步枪');
+  await expect(page.locator('.reload-hint')).toHaveText(/R\s*换弹/);
+  await page.mouse.wheel(0, -150);
+  await expect(page.getByTestId('weapon-name')).toContainText('栓动狙击枪');
+  await expect(page.locator('.reload-hint')).toHaveText(/R\s*换弹/);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: '哨站已暂停' })).toBeVisible();
   await page.getByRole('button', { name: '返回主菜单', exact: true }).click();
@@ -101,12 +125,34 @@ try {
   await page.getByRole('button', { name: '正式模式' }).click();
   await expect(page.getByRole('group', { name: '选择难度' })).toHaveCount(0);
   await expect(page.locator('.practice-note')).toContainText('困难难度');
+  // 在开局前安装观察器，避免截图或 CDP 往返错过特写开头。
+  await page.evaluate(() => { window.__portableCinematic = new Promise(resolve => {
+    const deadline = performance.now() + 60000;
+    let started = null, culprit = null;
+    const observe = () => {
+      const now = performance.now();
+      if (document.querySelector('.breach-review')) {
+        started ??= now;
+        culprit ??= document.querySelector('[data-testid="breached-zombie"]')?.textContent;
+      }
+      if (document.querySelector('.result-screen')) {
+        resolve({ durationMs: started === null ? 0 : now - started, culprit });
+      } else if (now > deadline) resolve({ error: '未在时限内自然失败' });
+      else requestAnimationFrame(observe);
+    };
+    observe();
+  }); });
   await page.getByRole('button', { name: '开始坚守' }).click();
+  await expect(page.locator('.horde-status')).toContainText('移速 1.4 m/s');
   await expect(page.locator('.horde-status')).toContainText('铁桶 1', { timeout: 16000 });
+  await expect(page.locator('.horde-status')).toContainText('移速 1.4 m/s');
   await page.screenshot({ path: path.join(evidence, 'portable-game.png') });
-  await expect(page.getByRole('heading', { name: '防线失守' })).toBeVisible({ timeout: 45000 });
-  await expect(page.getByTestId('breached-zombie')).toBeVisible();
-  await page.screenshot({ path: path.join(evidence, 'portable-breach.png') });
+  console.log('六枪开火、装填、数字键与滚轮切换通过；等待自然失败与两秒特写');
+  const cinematic = await page.evaluate(() => window.__portableCinematic);
+  assert.equal(cinematic.error, undefined);
+  assert.ok(cinematic.durationMs >= 1800 && cinematic.durationMs < 3000, `Unexpected cinematic: ${cinematic.durationMs} ms`);
+  assert.ok(cinematic.culprit?.includes('突破者'));
+  await expect(page.getByRole('region', { name: '游戏结束' })).toBeVisible();
   await expect(page.locator('.record-notice')).toContainText('已保存');
   await expect(page.getByTestId('personal-record')).toContainText('个人纪录已建立');
   record = await page.evaluate(() => {
@@ -139,7 +185,7 @@ try {
   await stop(session); session = null;
   assert.deepEqual(errors, []);
   assert.deepEqual([...requests].filter(url => !url.startsWith('undead://game/')), []);
-  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, reloadMs, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'fire and fast reload', 'pause', 'fullscreen', 'fixed hard difficulty', 'early armored zombies', 'natural defeat and breach marker', 'personal record feedback', 'leaderboard saved', 'volume setting persists after relocation', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
+  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, reloadMs, cinematic, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'six weapons fire and reload', 'digit and wheel switching', 'pause', 'fullscreen', 'fixed hard difficulty and 1.4 m/s speed', 'early armored zombies', 'natural defeat and two-second culprit cinematic', 'personal record feedback', 'leaderboard saved', 'volume setting persists after relocation', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
   console.log(`Portable 验证通过，证据：${evidence}`);
 } catch (error) {
   if (session?.page && !session.page.isClosed()) await session.page.screenshot({ path: path.join(evidence, 'failed.png') }).catch(() => {});
