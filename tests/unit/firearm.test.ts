@@ -14,7 +14,7 @@ describe('射击与装填', () => {
   });
   it('空弹匣不会产生额外射击，换弹期间禁止开火', () => {
     const gun = new Firearm();
-    for (let i = 0; i < 30; i++) { expect(gun.fire()).toBe(true); gun.update(0.12); }
+    for (let i = 0; i < 30; i++) { expect(gun.fire()).toBe(true); gun.update(CONFIG.weapon.interval); }
     expect(gun.fire()).toBe(false);
     expect(gun.ammo).toBe(0);
     expect(gun.reload()).toBe(true);

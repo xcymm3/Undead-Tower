@@ -15,7 +15,7 @@ describe('独立弹匣与协调切枪', () => {
   });
   it('装填不被切枪截断，完成后收枪；新请求覆盖排队目标', () => {
     const a = new Arsenal(); a.fire(); a.reload();
-    expect(a.reloadQueued).toBe(true); a.update(0.12); expect(a.gun.reloading).toBe(true);
+    expect(a.reloadQueued).toBe(true); a.update(WEAPONS[0].fireDuration); expect(a.gun.reloading).toBe(true);
     a.request(3); a.request(5); a.update(0.4);
     expect(a.active).toBe(0); expect(a.switching).toBe(false); expect(a.fire()).toBe(false);
     a.update(0.4); expect(a.gun.ammo).toBe(30); expect(a.switching).toBe(true);
@@ -30,8 +30,8 @@ describe('独立弹匣与协调切枪', () => {
   });
   it('霰弹枪每完成一轮装填只补一发，中途不会整匣补满', () => {
     const gun = new Firearm(WEAPONS[4]); gun.ammo = 2; gun.reload();
-    gun.update(0.479); expect(gun.ammo).toBe(2);
+    gun.update(gun.definition.reloadDuration - 0.001); expect(gun.ammo).toBe(2);
     gun.update(0.001); expect(gun.ammo).toBe(3); expect(gun.reloading).toBe(true);
-    gun.update(1.44); expect(gun.ammo).toBe(6); expect(gun.reloading).toBe(false);
+    gun.update(gun.definition.reloadDuration * 3); expect(gun.ammo).toBe(6); expect(gun.reloading).toBe(false);
   });
 });
