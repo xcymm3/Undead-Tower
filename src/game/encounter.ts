@@ -87,10 +87,10 @@ export class Encounter {
     return Number.isFinite(nearest) ? nearest : null;
   }
 
-  hit(id: number, head: boolean) {
+  hit(id: number, head: boolean, hitDamage?: number) {
     const zombie = this.zombies.find(z => z.id === id && z.health > 0);
     if (!zombie || this.failed) return null;
-    const damage = head ? CONFIG.target.headDamage : CONFIG.target.bodyDamage;
+    const damage = hitDamage ?? (head ? CONFIG.target.headDamage : CONFIG.target.bodyDamage);
     const armorHit = zombie.armorHealth > 0 ? zombie.kind : null;
     zombie.armorHealth = Math.max(0, zombie.armorHealth - damage);
     zombie.health = Math.max(0, zombie.health - damage);

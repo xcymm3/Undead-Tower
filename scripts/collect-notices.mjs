@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 const packages = ['react', 'react-dom', 'scheduler', 'three', '@fontsource/ibm-plex-mono', '@fontsource/barlow-condensed'];
 const notices = ['Undead Tower — bundled frontend and font license notices\n\nElectron and Chromium notices are also included beside the extracted application executable.'];
+notices.push(await readFile(new URL('../public/models/weapons/README.md', import.meta.url), 'utf8'));
 for (const name of packages) {
   const root = new URL(`../node_modules/${name}/`, import.meta.url);
   const { version } = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));

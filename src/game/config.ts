@@ -33,6 +33,7 @@ export interface RunResult {
   endedAt: string;
 }
 export interface GameSnapshot {
+  weaponsReady: boolean; weaponIndex: number; requestedWeapon: number; switching: boolean; reloadQueued: boolean; inventory: number[];
   phase: GamePhase;
   mode: GameMode;
   difficulty: Difficulty;

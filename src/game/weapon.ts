@@ -1,70 +1,145 @@
 import * as THREE from 'three';
-import { box } from './geometry';
-import { reloadPose } from './reloadPose';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { WEAPONS } from './weapons';
+import type { WeaponDefinition } from './weapons';
 
-export function createWeapon() {
-  const root = new THREE.Group();
-  root.scale.setScalar(0.52);
-  // 枪身采用 -Z 前向；枪管与瞄准轴严格同轴。
-  box(root, [0.19, 0.24, 0.63], [0, 0, -0.26], 0x303838);
-  box(root, [0.16, 0.09, 0.65], [0, 0.155, -0.29], 0x505955);
-  box(root, [0.15, 0.20, 0.39], [0, -0.01, -0.76], 0x526051);
-  for (let i = 0; i < 5; i++) {
-    box(root, [0.17, 0.018, 0.034], [0, 0.19, -0.37 - i * 0.095], 0x202929);
-    box(root, [0.008, 0.045, 0.037], [0.078, 0.01, -0.66 - i * 0.055], 0x202a2a);
+type Pose = { node: THREE.Object3D; position: THREE.Vector3; quaternion: THREE.Quaternion; scale: THREE.Vector3 };
+const smooth = (t: number) => { t = THREE.MathUtils.clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+export type WeaponAnimation = 'idle' | 'fire' | 'reload';
+// FBX 导出的 Blender 材质在 Three.js 中只有白色漫反射；按原部件名重建本地配色。
+const MATERIAL_COLORS: Record<string, number> = {
+  Metal: 0x647078, DarkMetal: 0x3b464d, DarkerMetal: 0x30383e,
+  Black: 0x20292c, Barrels: 0x343f45, Barrel: 0x343f45, Muzzle: 0x242e33,
+  Magazine: 0x38444a, Trigger: 0x899397, LightWood: 0x9c6945, DarkWood: 0x583b29, Wood: 0x7d5135,
+  BulletYellow: 0xcaa34c, BulletOrange: 0xb37845, BulletTip: 0xb58d57, BulletRed: 0x984038, Green: 0x53624b,
+  'Material.001': 0x263438, 'Material.002': 0x697b74, 'Material.003': 0x4b5b50, 'Material.004': 0x303d36,
+};
+
+export function prepareWeapon(model: THREE.Group, definition: WeaponDefinition) {
+  // 原资源的左轮网格与弹药骨骼同名，否则 AnimationMixer 会错误地移动整个网格。
+  model.traverse(node => { if (node instanceof THREE.Mesh && node.name === 'Bullets') node.name = 'RevolverMesh'; });
+  const fireSource = model.animations.find(clip => clip.name.endsWith('|FireWOBullet'))
+    ?? model.animations.find(clip => clip.name.includes('Armature|Fire'))!;
+  const reloadSource = model.animations.find(clip => clip.name.endsWith('|Reload'))!;
+  if (!fireSource || !reloadSource) throw new Error(`缺少枪械动画：${definition.id}`);
+  const mixer = new THREE.AnimationMixer(model);
+  const initial = mixer.clipAction(fireSource); initial.play(); mixer.update(0); model.updateMatrixWorld(true);
+  const rest: Pose[] = [];
+  model.traverse(node => rest.push({ node, position: node.position.clone(), quaternion: node.quaternion.clone(), scale: node.scale.clone() }));
+  mixer.stopAllAction();
+  const restore = () => rest.forEach(p => { p.node.position.copy(p.position); p.node.quaternion.copy(p.quaternion); p.node.scale.copy(p.scale); });
+  restore(); model.updateMatrixWorld(true);
+  const boneNames = new Set<string>(); model.traverse(node => { if (node instanceof THREE.Bone) boneNames.add(node.name); });
+  const clip = (source: THREE.AnimationClip, firing: boolean) => new THREE.AnimationClip(source.name, source.duration,
+    source.tracks.filter(track => { const name = track.name.slice(0, track.name.lastIndexOf('.')); return boneNames.has(name) && (!firing || name !== 'Control'); }).map(track => track.clone()));
+  const clips = { fire: clip(fireSource, true), reload: clip(reloadSource, false) };
+  // 原包把泵柄/枪栓运动放在 Reload 中；射击后也复用这些局部轨迹，不带动弹匣。
+  const cycleBone = definition.id === 'shotgun' ? 'Reload' : definition.id === 'sniper' ? 'Handle' : null;
+  if (cycleBone) for (const track of reloadSource.tracks.filter(track => track.name.startsWith(`${cycleBone}.`))) {
+    const cycle = track.clone();
+    cycle.times = Float32Array.from(track.times, t => clips.fire.duration * (0.18 + 0.72 * t / reloadSource.duration));
+    clips.fire.tracks = clips.fire.tracks.filter(existing => existing.name !== cycle.name);
+    clips.fire.tracks.push(cycle);
   }
-  box(root, [0.065, 0.065, 0.42], [0, 0, -1.13], 0x252c2d);
-  box(root, [0.095, 0.09, 0.15], [0, 0, -1.395], 0x424a47);
-  box(root, [0.049, 0.047, 0.008], [0, 0, -1.474], 0x141a1a);
-  box(root, [0.05, 0.145, 0.047], [0, 0.115, -1.19], 0x303938);
-  box(root, [0.024, 0.034, 0.024], [0, 0.202, -1.19], 0xbab599);
-  // 机匣、抛壳口、拉机柄、机械照门、枪托。
-  box(root, [0.012, 0.065, 0.16], [0.102, 0.06, -0.22], 0x161e1e);
-  const chargingHandle = box(root, [0.075, 0.027, 0.03], [0.133, 0.086, -0.09], 0x7b8277);
-  const boltRelease = box(root, [0.03, 0.05, 0.055], [-0.111, 0.018, -0.16], 0x7b8277);
-  box(root, [0.025, 0.09, 0.045], [-0.066, 0.228, -0.02], 0x283130);
-  box(root, [0.025, 0.09, 0.045], [0.066, 0.228, -0.02], 0x283130);
-  box(root, [0.13, 0.032, 0.045], [0, 0.186, -0.02], 0x283130);
-  box(root, [0.12, 0.12, 0.18], [0, 0.07, 0.13], 0x626c57);
-  box(root, [0.14, 0.18, 0.06], [0, 0.065, 0.25], 0x222b2b);
-  const magazine = new THREE.Group(); root.add(magazine);
-  magazine.position.set(0, -0.255, -0.40);
-  magazine.rotation.x = -0.15;
-  box(magazine, [0.125, 0.36, 0.20], [0, 0, 0], 0x646b58);
-  box(magazine, [0.135, 0.035, 0.215], [0, -0.17, 0], 0x333d35);
-  for (let i = 0; i < 3; i++) box(magazine, [0.13, 0.013, 0.16], [0, 0.045 - i * 0.06, 0.01], 0x444f43);
-  const oldMagazine = magazine.clone(); root.add(oldMagazine); oldMagazine.visible = false;
-  box(root, [0.10, 0.22, 0.12], [0, -0.18, 0.045], 0x29332f).rotation.x = -0.25;
-  // 悬浮枪械自行完成退匣、装填与枪机动作。
-  const animateReload = (progress: number | null, empty: boolean) => {
-    const pose = reloadPose(progress, empty);
-    magazine.position.set(...pose.magazine); magazine.rotation.x = pose.magazineTilt; magazine.visible = pose.magazineVisible;
-    oldMagazine.position.set(...pose.oldMagazine); oldMagazine.rotation.set(...pose.oldRotation); oldMagazine.visible = pose.oldMagazineVisible;
-    chargingHandle.position.z = -0.09 + (empty && progress !== null && progress < 0.9 ? 0.065 : 0);
-    boltRelease.position.x = -0.111 + pose.bolt * 0.018;
-    return pose;
-  };
-  animateReload(null, false);
-
-  const muzzle = new THREE.Object3D();
-  muzzle.position.set(0, 0, -1.49);
-  root.add(muzzle);
-  const flash = new THREE.Group();
-  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffdd86, transparent: true, opacity: 0.95, depthWrite: false });
-  const flashMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.15, 0), flashMat);
-  flashMesh.scale.set(0.75, 0.75, 2.6);
-  flashMesh.position.z = -0.13;
-  flash.add(flashMesh);
-  const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.085, 0), new THREE.MeshBasicMaterial({ color: 0xfff7d5 }));
-  core.scale.z = 3;
-  core.position.z = -0.08;
-  flash.add(core);
-  flash.visible = false;
-  muzzle.add(flash);
-  const light = new THREE.PointLight(0xffc36b, 0, 8, 2);
-  muzzle.add(light);
-  root.traverse(obj => {
-    if (obj instanceof THREE.Mesh) { obj.castShadow = false; obj.receiveShadow = false; }
+  const actions = { fire: mixer.clipAction(clips.fire), reload: mixer.clipAction(clips.reload) };
+  const points: THREE.Vector3[] = [], axisRotation = new THREE.Matrix4().makeRotationY(definition.rotationY);
+  const oldMaterials = new Set<THREE.Material>();
+  model.traverse(node => {
+    if (!(node instanceof THREE.Mesh)) return;
+    const geometry = node.geometry;
+    for (let i = 0; i < geometry.attributes.position.count; i++) {
+      // 发射物/快速装填器在原始待机中藏在远处，不能参与枪身尺寸或枪口的计算。
+      if (node instanceof THREE.SkinnedMesh) {
+        let bodyWeight = 0;
+        for (let j = 0; j < 4; j++) {
+          const bone = node.skeleton.bones[geometry.attributes.skinIndex.getComponent(i, j)];
+          if (bone && !['Bullet', 'Bullets', 'Quick'].includes(bone.name)) bodyWeight += geometry.attributes.skinWeight.getComponent(i, j);
+        }
+        if (bodyWeight < 0.5) continue;
+      }
+      points.push(node.getVertexPosition(i, new THREE.Vector3()).applyMatrix4(node.matrixWorld).applyMatrix4(axisRotation));
+    }
+    const convert = (material: THREE.Material) => {
+      oldMaterials.add(material);
+      const result = new THREE.MeshStandardMaterial({ name: material.name, color: MATERIAL_COLORS[material.name] ?? 0x59636a,
+        roughness: /Wood|Green|Material/.test(material.name) ? 0.9 : 0.55,
+        metalness: /Wood|Green|Material/.test(material.name) ? 0 : 0.28, flatShading: true });
+      return result;
+    };
+    node.material = Array.isArray(node.material) ? node.material.map(convert) : convert(node.material);
+    node.castShadow = false; node.receiveShadow = false; node.frustumCulled = false;
   });
-  return { root, muzzle, flash, light, magazine, oldMagazine, chargingHandle, animateReload };
+  oldMaterials.forEach(material => material.dispose());
+  const bounds = new THREE.Box3().setFromPoints(points), length = bounds.max.z - bounds.min.z;
+  const front = new THREE.Box3().setFromPoints(points.filter(p => p.z < bounds.min.z + length * 0.015)).getCenter(new THREE.Vector3());
+  const scale = definition.length / length;
+  const holder = new THREE.Group(), orientation = new THREE.Group();
+  orientation.rotation.y = definition.rotationY; orientation.add(model); holder.add(orientation);
+  holder.scale.setScalar(scale);
+  const muzzleZ = -definition.length * 0.72;
+  holder.position.set(-front.x * scale, -front.y * scale, muzzleZ - front.z * scale);
+  let lastKind = '', lastProgress = -1;
+  const sample = (kind: WeaponAnimation, progress = 0) => {
+    if (lastKind === kind && lastProgress === progress) return;
+    lastKind = kind; lastProgress = progress;
+    mixer.stopAllAction(); restore();
+    if (kind !== 'idle') {
+      const action = actions[kind]; action.reset().setLoop(THREE.LoopOnce, 1); action.clampWhenFinished = true;
+      action.play(); action.paused = true; action.time = THREE.MathUtils.clamp(progress, 0, 1) * clips[kind].duration; mixer.update(0);
+      // 片段两端回到统一待机姿态，消除不同导出动作间的位姿跳变。
+      const weight = smooth(progress / 0.08) * smooth((1 - progress) / 0.12);
+      if (weight === 0) restore();
+      else rest.forEach(p => {
+        p.node.position.lerp(p.position, 1 - weight);
+        // 从当前采样姿态向待机插值，避免 slerpQuaternions 的目标别名覆盖动画旋转。
+        p.node.quaternion.slerp(p.quaternion, 1 - weight);
+        p.node.scale.lerp(p.scale, 1 - weight);
+      });
+    }
+    model.updateMatrixWorld(true);
+  };
+  sample('idle');
+  return { holder, model, sample, muzzleZ, clips, mixer, rest, diagnostics: () => ({ kind: lastKind, progress: lastProgress, bones: rest.filter(p => p.node instanceof THREE.Bone).map(p => ({ name: p.node.name, position: p.node.position.toArray(), quaternion: p.node.quaternion.toArray() })) }) };
+}
+
+export class WeaponView {
+  readonly root = new THREE.Group();
+  readonly muzzle = new THREE.Object3D();
+  readonly flash = new THREE.Group();
+  readonly light = new THREE.PointLight(0xffc36b, 0, 8, 2);
+  readonly ready: Promise<void>;
+  private rigs: ReturnType<typeof prepareWeapon>[] = [];
+  private active = 0;
+  private disposed = false;
+  loaded = false;
+  constructor() {
+    this.root.add(this.muzzle); this.muzzle.add(this.flash, this.light);
+    const flame = new THREE.Mesh(new THREE.OctahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xffdd86, depthWrite: false }));
+    flame.scale.set(0.75, 0.75, 2.6); flame.position.z = -0.065; this.flash.add(flame); this.flash.visible = false;
+    const loader = new FBXLoader();
+    this.ready = Promise.all(WEAPONS.map(async definition => {
+      const model = await loader.loadAsync(`${import.meta.env.BASE_URL}models/weapons/${definition.model}.fbx`);
+      const rig = prepareWeapon(model, definition);
+      if (this.disposed) { disposeModel(rig.holder); return null; }
+      rig.holder.visible = false; this.root.add(rig.holder); return rig;
+    })).then(rigs => {
+      if (this.disposed) return;
+      this.rigs = rigs.filter(rig => rig !== null); this.loaded = true; this.select(0);
+    });
+  }
+  select(index: number) {
+    this.active = index;
+    this.rigs.forEach((rig, i) => { rig.holder.visible = i === index; if (i === index) rig.sample('idle'); });
+    this.muzzle.position.set(0, 0, this.rigs[index]?.muzzleZ ?? -0.65);
+    this.flash.visible = false; this.light.intensity = 0;
+  }
+  animate(kind: WeaponAnimation, progress: number) { this.rigs[this.active]?.sample(kind, progress); }
+  diagnostics() { return { loaded: this.loaded, model: WEAPONS[this.active].model, visibleModels: this.rigs.filter(rig => rig.holder.visible).length, ...this.rigs[this.active]?.diagnostics() }; }
+  dispose() { this.disposed = true; this.rigs.forEach(rig => {
+    rig.mixer.stopAllAction(); rig.mixer.uncacheRoot(rig.model);
+    rig.model.traverse(node => { if (node instanceof THREE.SkinnedMesh) node.skeleton.dispose(); });
+  }); }
+}
+function disposeModel(root: THREE.Object3D) {
+  root.traverse(node => { if (node instanceof THREE.Mesh) { if (node instanceof THREE.SkinnedMesh) node.skeleton.dispose(); node.geometry.dispose(); (Array.isArray(node.material) ? node.material : [node.material]).forEach(m => m.dispose()); } });
 }

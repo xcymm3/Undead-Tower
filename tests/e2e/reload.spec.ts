@@ -1,62 +1,85 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-
+import { WEAPONS } from '../../src/game/weapons';
 const snapshot = (page: Page) => page.evaluate(() => window.__undeadTower!.snapshot());
 async function freezeAt(page: Page, progress: number) {
   await page.evaluate(async threshold => {
-    const deadline = performance.now() + 3000;
+    const deadline = performance.now() + 4000;
     while (performance.now() < deadline) {
       const state = window.__undeadTower!.snapshot();
-      if (state.reloading && state.reload.progress >= threshold) {
-        window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' })); return;
-      }
+      if (state.reloading && state.reload.progress >= threshold) { window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' })); return; }
       await new Promise(requestAnimationFrame);
     }
     throw new Error('未捕获换弹阶段');
   }, progress);
 }
 
-test('悬浮枪械的快速换弹动作可见，暂停冻结，空仓释放枪机后恢复射击', async ({ page }) => {
-  test.setTimeout(45000);
+test('六种悬浮枪械数字键切换、独立弹量、换弹动画与暂停协调', async ({ page }) => {
+  test.setTimeout(90000);
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto('/'); await page.getByRole('button', { name: '进入哨站' }).click();
-  await page.mouse.move(720, 450); await page.waitForTimeout(400);
-  await page.screenshot({ path: 'test-results/weapon-clear-view.png' });
-  await page.mouse.click(720, 450);
-  const timing = await page.evaluate(async () => {
-    const start = performance.now();
-    window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyR' }));
-    const remaining = window.__undeadTower!.snapshot().reload.remaining;
-    while (window.__undeadTower!.snapshot().reloading && performance.now() - start < 3000) await new Promise(requestAnimationFrame);
-    return { remaining, elapsed: (performance.now() - start) / 1000 };
-  });
-  expect(timing.remaining).toBe(0.775); expect(timing.elapsed).toBeGreaterThan(0.7); expect(timing.elapsed).toBeLessThan(1.3);
-  expect((await snapshot(page)).ammo).toBe(30);
-
-  // 暂停通过真实输入触发；仅在证据截图中隐藏暂停遮罩以看清模型姿态。
+  await page.mouse.move(720, 450); await page.waitForTimeout(250);
   await page.addStyleTag({ content: '.pause-screen { visibility: hidden; }' });
-  await page.mouse.click(720, 450); await page.keyboard.press('r'); await freezeAt(page, 0.28);
-  const removed = await snapshot(page);
-  expect(removed.reload.magazine[1]).toBeLessThan(-0.5);
-  await page.screenshot({ path: 'test-results/reload-remove.png' });
-  await page.waitForTimeout(250);
-  expect((await snapshot(page)).reload).toEqual(removed.reload);
-  const ui = await page.locator('.game-shell').evaluate(el => Number((el as HTMLElement).style.getPropertyValue('--reload-progress')));
-  expect(ui).toBeCloseTo(removed.reload.progress, 6);
-  await page.keyboard.press('Escape'); await freezeAt(page, 0.56);
-  const inserted = await snapshot(page);
-  expect(inserted.reload.magazine).not.toEqual(removed.reload.magazine);
-  await page.screenshot({ path: 'test-results/reload-insert.png' });
-  await page.keyboard.press('Escape');
-  await expect.poll(async () => (await snapshot(page)).reloading).toBe(false);
-  expect((await snapshot(page)).reload.magazine).toEqual([0, -0.255, -0.4]);
+  for (let i = 0; i < WEAPONS.length; i++) {
+    await page.keyboard.press(`Digit${i + 1}`);
+    await expect.poll(async () => { const s = await snapshot(page); return s.weaponIndex === i && !s.switching; }).toBe(true);
+    const idle = await snapshot(page);
+    expect(idle.weaponAnimation.loaded).toBe(true); expect(idle.weaponAnimation.visibleModels).toBe(1);
+    await expect(page.getByTestId('weapon-name')).toContainText(WEAPONS[i].label);
+    await page.screenshot({ path: `test-results/weapon-${WEAPONS[i].id}.png` });
+    // 每把枪在待机时枪口和中心瞄准射线保持一致。
+    const ray = idle.aimPoint.map((v, index) => v - idle.muzzle[index]), length = Math.hypot(...ray);
+    expect(ray.reduce((sum, v, index) => sum + v / length * idle.barrelDirection[index], 0)).toBeCloseTo(1, 7);
+    await page.mouse.click(720, 450);
+    expect((await snapshot(page)).ammo).toBe(WEAPONS[i].capacity - 1);
+    await page.keyboard.press('r'); await freezeAt(page, 0.4);
+    const during = await snapshot(page);
+    expect(during.weaponAnimation.kind).toBe('reload');
+    expect(during.weaponAnimation.bones).not.toEqual(idle.weaponAnimation.bones);
+    await page.screenshot({ path: `test-results/weapon-${WEAPONS[i].id}-reload.png` });
+    await page.waitForTimeout(150); expect((await snapshot(page)).weaponAnimation).toEqual(during.weaponAnimation);
+    await page.keyboard.press('Escape');
+    await expect.poll(async () => (await snapshot(page)).reloading).toBe(false);
+    expect((await snapshot(page)).ammo).toBe(WEAPONS[i].capacity);
+    expect((await snapshot(page)).weaponAnimation.kind).toBe('idle');
+  }
+  await page.mouse.wheel(0, 300);
+  await expect.poll(async () => (await snapshot(page)).weaponIndex).toBe(0);
+  await expect.poll(async () => (await snapshot(page)).switching).toBe(false);
+  await page.mouse.click(720, 450);
+  await page.keyboard.press('Digit2');
+  await expect.poll(async () => (await snapshot(page)).weaponIndex).toBe(1);
+  await expect.poll(async () => (await snapshot(page)).switching).toBe(false);
+  await page.keyboard.press('Digit1');
+  await expect.poll(async () => (await snapshot(page)).weaponIndex).toBe(0);
+  expect((await snapshot(page)).ammo).toBe(29);
+  expect(errors).toEqual([]);
+});
 
-  await page.mouse.down();
-  await expect.poll(async () => (await snapshot(page)).ammo, { timeout: 6000 }).toBe(0);
-  await page.mouse.up(); await page.keyboard.press('r'); await freezeAt(page, 0.85);
-  const empty = await snapshot(page); expect(empty.reload.empty).toBe(true); expect(empty.reload.bolt).toBeGreaterThan(-0.09);
-  await page.screenshot({ path: 'test-results/reload-bolt.png' });
+test('半自动不连发，换弹排队切枪、快速改选与切枪暂停不丢失状态', async ({ page }) => {
+  await page.goto('/'); await page.getByRole('button', { name: '进入哨站' }).click();
+  await page.keyboard.press('Digit3');
+  await expect.poll(async () => { const s = await snapshot(page); return s.weaponIndex === 2 && !s.switching; }).toBe(true);
+  await page.mouse.move(720, 450); await page.mouse.down(); await page.waitForTimeout(650); await page.mouse.up();
+  expect((await snapshot(page)).ammo).toBe(11); expect((await snapshot(page)).shots).toBe(1);
+  await page.keyboard.press('r');
+  await page.evaluate(async () => {
+    while (!window.__undeadTower!.snapshot().reloading) await new Promise(requestAnimationFrame);
+    for (const code of ['Digit2', 'Digit4', 'Digit6']) window.dispatchEvent(new KeyboardEvent('keydown', { code }));
+  });
+  await freezeAt(page, 0.4);
+  const queued = await snapshot(page);
+  expect(queued.weaponIndex).toBe(2); expect(queued.requestedWeapon).toBe(5); expect(queued.switching).toBe(false);
   await page.keyboard.press('Escape');
-  await expect.poll(async () => (await snapshot(page)).ammo).toBe(30);
-  expect((await snapshot(page)).reload.oldMagazineVisible).toBe(false);
-  await page.mouse.click(720, 450); expect((await snapshot(page)).ammo).toBe(29);
+  await expect.poll(async () => { const s = await snapshot(page); return s.weaponIndex === 5 && !s.switching; }).toBe(true);
+  expect((await snapshot(page)).inventory[2]).toBe(12);
+  await page.mouse.wheel(0, -300);
+  await page.evaluate(async () => {
+    while (!window.__undeadTower!.snapshot().switching) await new Promise(requestAnimationFrame);
+    window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' }));
+  });
+  const paused = await snapshot(page); await page.waitForTimeout(200);
+  expect((await snapshot(page)).switchProgress).toBe(paused.switchProgress);
+  await page.keyboard.press('Escape');
+  await expect.poll(async () => { const s = await snapshot(page); return s.weaponIndex === 4 && !s.switching; }).toBe(true);
 });
