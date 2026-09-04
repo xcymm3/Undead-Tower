@@ -1,8 +1,13 @@
 const { app, BrowserWindow, dialog, Menu, protocol, session } = require('electron');
-const { mkdirSync, readFileSync } = require('node:fs');
+const { mkdirSync, readFileSync, writeFileSync } = require('node:fs');
 const path = require('node:path');
 
 const GAME_URL = 'undead://game/';
+const hiddenSmoke = app.commandLine.hasSwitch('undead-smoke-hidden');
+const reportError = (title, message) => {
+  if (hiddenSmoke) console.error(`${title}: ${message}`);
+  else dialog.showErrorBox(title, message);
+};
 protocol.registerSchemesAsPrivileged([{ scheme: 'undead', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 
 // NSIS 便携启动器会解压到临时目录；成绩必须保存在原 EXE 旁，不能跟随临时目录消失。
@@ -15,7 +20,7 @@ try {
   app.setPath('crashDumps', path.join(dataDir, 'CrashDumps'));
   app.setAppLogsPath(path.join(dataDir, 'Logs'));
 } catch (error) {
-  dialog.showErrorBox('Undead Tower 无法保存数据', `请把游戏放在可以写入的文件夹后重试。\n\n${dataDir}\n${error.message}`);
+  reportError('Undead Tower 无法保存数据', `请把游戏放在可以写入的文件夹后重试。\n\n${dataDir}\n${error.message}`);
   app.exit(1);
 }
 
@@ -23,7 +28,10 @@ let window;
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on('second-instance', () => { if (window) { if (window.isMinimized()) window.restore(); window.show(); window.focus(); } });
+  app.on('second-instance', (_event, argv) => {
+    if (hiddenSmoke || argv.includes('--undead-smoke-hidden')) return;
+    if (window) { if (window.isMinimized()) window.restore(); window.show(); window.focus(); }
+  });
   app.whenReady().then(async () => {
     app.setAppUserModelId('com.undeadtower.game');
     Menu.setApplicationMenu(null);
@@ -43,22 +51,38 @@ if (!app.requestSingleInstanceLock()) {
         return new Response(request.method === 'HEAD' ? null : body, { headers: { 'Content-Type': mime[path.extname(file)] || 'application/octet-stream', 'Content-Security-Policy': csp, 'X-Content-Type-Options': 'nosniff' } });
       } catch { return new Response(null, { status: 404 }); }
     });
-    session.defaultSession.setPermissionRequestHandler((_contents, permission, callback) => callback(permission === 'fullscreen'));
-    session.defaultSession.setPermissionCheckHandler((_contents, permission) => permission === 'fullscreen');
+    session.defaultSession.setPermissionRequestHandler((_contents, permission, callback) => callback(!hiddenSmoke && permission === 'fullscreen'));
+    session.defaultSession.setPermissionCheckHandler((_contents, permission) => !hiddenSmoke && permission === 'fullscreen');
     window = new BrowserWindow({
       title: 'Undead Tower', width: 1440, height: 900, minWidth: 960, minHeight: 640,
       backgroundColor: '#1d2624', show: false, autoHideMenuBar: true,
+      skipTaskbar: hiddenSmoke, focusable: !hiddenSmoke, fullscreenable: !hiddenSmoke,
       icon: path.join(__dirname, 'icon.ico'),
-      webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, backgroundThrottling: true },
+      webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, backgroundThrottling: !hiddenSmoke, offscreen: hiddenSmoke },
     });
+    if (hiddenSmoke) {
+      // 只对显式静默验收启用离屏渲染；普通玩家仍使用正常后台暂停规则。
+      window.webContents.setAudioMuted(true);
+      window.webContents.setFrameRate(30);
+      let showEvents = 0, focusEvents = 0;
+      const report = () => writeFileSync(path.join(dataDir, 'hidden-smoke.json'), JSON.stringify({
+        visible: window.isVisible(), focused: window.isFocused(),
+        offscreen: window.webContents.isOffscreen(), muted: window.webContents.isAudioMuted(),
+        showEvents, focusEvents,
+      }));
+      window.on('show', () => { showEvents++; report(); });
+      window.on('focus', () => { focusEvents++; report(); });
+      window.webContents.on('did-finish-load', report);
+      window.on('close', report);
+    }
     window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
     window.webContents.on('will-navigate', (event, url) => { if (!url.startsWith(GAME_URL)) event.preventDefault(); });
     window.webContents.on('before-input-event', (event, input) => {
-      if (input.type === 'keyDown' && input.key === 'F11') { event.preventDefault(); window.setFullScreen(!window.isFullScreen()); }
+      if (input.type === 'keyDown' && input.key === 'F11') { event.preventDefault(); if (!hiddenSmoke) window.setFullScreen(!window.isFullScreen()); }
     });
-    window.once('ready-to-show', () => window.show());
+    if (!hiddenSmoke) window.once('ready-to-show', () => window.show());
     window.on('closed', () => { window = null; });
     await window.loadURL(GAME_URL);
-  }).catch(error => { dialog.showErrorBox('Undead Tower 启动失败', error.message); app.quit(); });
+  }).catch(error => { reportError('Undead Tower 启动失败', error.message); app.quit(); });
   app.on('window-all-closed', () => app.quit());
 }

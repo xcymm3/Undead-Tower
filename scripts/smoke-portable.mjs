@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { copyFile, mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises';
@@ -9,15 +10,29 @@ import { chromium, expect } from '@playwright/test';
 
 const project = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const { version } = JSON.parse(await readFile(path.join(project, 'package.json'), 'utf8'));
-const source = path.resolve(process.argv[2] || path.join(project, 'release', `Undead Tower Rogue ${version}.exe`));
+const desktop = process.argv.includes('--desktop');
+const source = desktop ? path.join(project, 'node_modules/electron/dist/electron.exe')
+  : path.resolve(process.argv[2] || path.join(project, 'release', `Undead Tower Rogue ${version}.exe`));
+// 先核对打包时生成的凭据。旧 EXE 会忽略新参数并弹窗，绝不能试着启动它。
+if (!desktop) {
+  const manifest = await readFile(`${source}.smoke.json`, 'utf8').then(JSON.parse).catch(() => null);
+  assert.ok(manifest?.hiddenSmoke === true, '此 EXE 缺少静默验收凭据，已阻止启动；下次打包后再验收');
+  assert.equal(createHash('sha256').update(await readFile(source)).digest('hex'), manifest.sha256, 'EXE 与静默验收凭据不匹配，已阻止启动');
+}
 const evidence = path.join(project, 'test-results', `portable-${Date.now()}`);
 let portableDir = path.join(evidence, '初次运行');
 await mkdir(portableDir, { recursive: true });
 const filename = path.basename(source);
-await copyFile(source, path.join(portableDir, filename));
+if (!desktop) await copyFile(source, path.join(portableDir, filename));
 const errors = [];
 const requests = new Set();
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const hiddenChecks = [];
+async function checkHidden() {
+  const state = JSON.parse(await readFile(path.join(portableDir, 'Undead Tower Data', 'hidden-smoke.json'), 'utf8'));
+  assert.deepEqual(state, { visible: false, focused: false, offscreen: true, muted: true, showEvents: 0, focusEvents: 0 });
+  hiddenChecks.push(state);
+}
 
 async function start() {
   const server = createServer();
@@ -27,7 +42,9 @@ async function start() {
   await new Promise(resolve => server.close(resolve));
   const env = { ...process.env };
   delete env.ELECTRON_RUN_AS_NODE;
-  const child = spawn(path.join(portableDir, filename), [`--remote-debugging-port=${port}`, '--remote-debugging-address=127.0.0.1'], { cwd: portableDir, env, windowsHide: true, stdio: 'ignore' });
+  env.PORTABLE_EXECUTABLE_DIR = portableDir;
+  const args = [...(desktop ? [project] : []), '--undead-smoke-hidden', `--remote-debugging-port=${port}`, '--remote-debugging-address=127.0.0.1'];
+  const child = spawn(desktop ? source : path.join(portableDir, filename), args, { cwd: portableDir, env, windowsHide: true, stdio: 'ignore' });
   let launchError;
   child.on('error', error => { launchError = error; });
   let browser;
@@ -53,6 +70,7 @@ async function start() {
     assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
     assert.equal(await page.evaluate(() => typeof window.__undeadTower), 'undefined');
     assert.equal(await page.evaluate(() => window.isSecureContext), true);
+    await checkHidden();
     return { child, browser, page };
   } catch (error) {
     await stop({ child, browser });
@@ -80,7 +98,7 @@ try {
   await expect(page.getByRole('slider')).toHaveCount(1);
   await page.getByRole('slider', { name: '总音量' }).fill('37');
   await page.getByRole('button', { name: '返回哨站' }).click();
-  console.log('实际 portable EXE 已离线启动；验证练习、开火、装填、暂停与全屏');
+  console.log(`${desktop ? '桌面入口' : '实际 portable EXE'} 已离屏静默启动；验证练习、开火、装填与暂停`);
   await page.getByRole('button', { name: '进入哨站' }).click();
   await expect(page.getByRole('heading', { name: '僵尸练习靶场' })).toBeVisible();
   await expect(page.getByTestId('ammo')).toHaveText('30');
@@ -119,9 +137,9 @@ try {
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: '哨站已暂停' })).toBeVisible();
   await page.getByRole('button', { name: '返回主菜单', exact: true }).click();
-  await page.getByRole('button', { name: '进入全屏' }).click();
-  await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(true);
-  await page.getByRole('button', { name: '退出全屏' }).click();
+  // 静默验收不请求原生全屏；F11 在该模式下必须保持隐藏。
+  await page.keyboard.press('F11');
+  assert.equal(await page.evaluate(() => Boolean(document.fullscreenElement)), false);
   await page.getByRole('button', { name: '正式模式' }).click();
   await expect(page.getByRole('group', { name: '选择难度' })).toHaveCount(0);
   await page.getByRole('button', { name: '选择半自动手枪' }).click();
@@ -177,6 +195,7 @@ try {
   assert.ok(record.entries[0].duration > 10);
   await page.screenshot({ path: path.join(evidence, 'portable-result.png') });
   await stop(session); session = null;
+  await checkHidden();
   assert.ok((await stat(path.join(portableDir, 'Undead Tower Data', 'Browser', 'Local Storage'))).isDirectory());
 
   // 移动的目录由本脚本新建，且源和目标都限定在本次测试证据目录内。
@@ -196,10 +215,11 @@ try {
   assert.deepEqual(await session.page.evaluate(key => JSON.parse(localStorage.getItem(key)), record.key), record.entries);
   await session.page.screenshot({ path: path.join(evidence, 'portable-persisted.png') });
   await stop(session); session = null;
+  await checkHidden();
   assert.deepEqual(errors, []);
   assert.deepEqual([...requests].filter(url => !url.startsWith('undead://game/')), []);
-  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, reloadMs, cinematic, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'six practice weapons fire and reload', 'practice digit and wheel switching', 'pause', 'fullscreen', 'rogue pistol selection and switching restriction', 'wave countdown and fixed first-wave quota', '1.4 m/s base speed', 'natural defeat and two-second culprit cinematic', 'personal record feedback', 'rogue wave leaderboard saved', 'volume setting persists after relocation', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
-  console.log(`Portable 验证通过，证据：${evidence}`);
+  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, desktop, bytes: (await stat(source)).size, offline: true, hiddenChecks, skipped: ['native visible fullscreen'], errors, requests: [...requests], record, reloadMs, cinematic, movedDataPersists: true, checks: ['production WebGL startup', 'hidden unfocused muted offscreen window', 'no renderer Node API or dev diagnostics', 'six practice weapons fire and reload', 'practice digit and wheel switching', 'pause', 'F11 stays hidden', 'rogue pistol selection and switching restriction', 'wave countdown and fixed first-wave quota', '1.4 m/s base speed', 'natural defeat and two-second culprit cinematic', 'personal record feedback', 'rogue wave leaderboard saved', 'volume setting persists after relocation', 'data relocation and relaunch', 'clean exit'] }, null, 2));
+  console.log(`静默验收通过，证据：${evidence}`);
 } catch (error) {
   if (session?.page && !session.page.isClosed()) await session.page.screenshot({ path: path.join(evidence, 'failed.png') }).catch(() => {});
   throw error;
