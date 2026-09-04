@@ -1,80 +1,45 @@
 import { expect, test } from '@playwright/test';
 
-test('真实对局开局按比例生成护甲僵尸，路障和铁桶分别需要2次与4次爆头', async ({ page }) => {
-  test.setTimeout(80000);
-  const errors: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
+test('三类高级僵尸模型、命中、护甲脱落与巨人体型', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: '正式模式' }).click();
-  await page.getByRole('button', { name: '开始坚守' }).click();
-  // 通过真实输入守到铁桶出生；不改游戏时钟、不注入僵尸、不修改生命值。
-  const appearance = await page.evaluate(async () => {
-    const canvas = document.querySelector('canvas')!;
-    const blocked = new Map<number, number>();
-    const first: Record<string, number> = {};
-    const deadline = performance.now() + 60000;
-    while (performance.now() < deadline) {
-      const state = window.__undeadTower!.snapshot();
-      if (state.phase !== 'playing') return { first, phase: state.phase };
-      for (const zombie of state.targets) first[zombie.kind] ??= zombie.bornAt;
-      if (state.targets.some(z => z.kind === 'bucket') && state.targets.some(z => z.kind === 'cone' && z.health === 200)) return { first, phase: state.phase };
-      if (state.ammo === 0 && !state.reloading) window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyR' }));
-      const target = state.targets.filter(z => z.kind === 'normal' && z.health > 0 && z.head.x > 20 && z.head.x < innerWidth - 20 && (blocked.get(z.id) ?? 0) < performance.now()).sort((a, b) => Math.hypot(a.x, a.z - 9) - Math.hypot(b.x, b.z - 9))[0];
-      if (target && !state.reloading && state.ammo > 0) {
-        canvas.dispatchEvent(new PointerEvent('pointerdown', { clientX: target.head.x, clientY: target.head.y, button: 0, bubbles: true }));
-        window.dispatchEvent(new PointerEvent('pointerup', { button: 0 }));
-        if (window.__undeadTower!.snapshot().lastShot?.hitTarget !== target.id) blocked.set(target.id, performance.now() + 500);
+  await expect(page.getByRole('button',{name:'进入哨站'})).toBeEnabled();
+  // 独立视觉夹具使用正式模块，原游戏停在静态标题页，不修改正式对局。
+  const checks = await page.evaluate(async () => {
+    const moduleAt = (url: string) => import(/* @vite-ignore */ url);
+    const THREE = await moduleAt('/node_modules/.vite/deps/three.js') as typeof import('three');
+    const { ZombieField } = await moduleAt('/src/game/zombies.ts') as typeof import('../../src/game/zombies');
+    const { Encounter } = await moduleAt('/src/game/encounter.ts') as typeof import('../../src/game/encounter');
+    const { ZOMBIE_TYPES } = await moduleAt('/src/game/config.ts') as typeof import('../../src/game/config');
+    const { ArmorEffects } = await moduleAt('/src/game/armorEffects.ts') as typeof import('../../src/game/armorEffects');
+    const scene = new THREE.Scene(); scene.background = new THREE.Color(0x263b35);
+    const camera = new THREE.PerspectiveCamera(52, innerWidth/innerHeight,.1,100); camera.position.set(0,5.2,13); camera.lookAt(0,2,-6);
+    const renderer = new THREE.WebGLRenderer({antialias:false}); renderer.setSize(innerWidth,innerHeight);
+    renderer.domElement.style.cssText='position:fixed;inset:0;z-index:100'; document.body.appendChild(renderer.domElement);
+    scene.add(new THREE.HemisphereLight(0xfff0d0,0x425744,3)); const light=new THREE.DirectionalLight(0xffffff,2); light.position.set(-4,10,8); scene.add(light);
+    const floor=new THREE.Mesh(new THREE.PlaneGeometry(80,80),new THREE.MeshStandardMaterial({color:0x788363})); floor.rotation.x=-Math.PI/2; scene.add(floor);
+    const encounter=new Encounter(); encounter.reset('survival','hard');
+    encounter.zombies=(['football','giant','wizard'] as const).map((kind,id)=>({id,kind,x:(id-1)*4,z:-6,health:ZOMBIE_TYPES[kind].health,maxHealth:ZOMBIE_TYPES[kind].health,armorHealth:ZOMBIE_TYPES[kind].armor,downTime:0,bornAt:0}));
+    encounter.elapsed=.2;
+    const field=new ZombieField(), effects=new ArmorEffects(); scene.add(field,effects); field.sync(encounter); scene.updateMatrixWorld(true);
+    const hits=encounter.zombies.map(z=>{
+      const ray=new THREE.Raycaster(new THREE.Vector3(z.x,1.83*(z.kind==='giant'?2.5:1),10),new THREE.Vector3(0,0,-1));
+      return field.decode(ray.intersectObject(field)[0]);
+    });
+    renderer.render(scene,camera);
+    // 保存闭包仅用于本测试页面的视觉切换，绝不进入游戏源码或生产包。
+    window.__enemyFixture = () => {
+      for(const z of encounter.zombies.filter(z=>z.armorHealth>0)) {
+        const armor=field.captureArmor(z.id,z.kind); encounter.hit(z.id,false,z.armorHealth); effects.release(armor,new THREE.Vector3(0,0,-1));
       }
-      await new Promise(resolve => setTimeout(resolve, 165));
-    }
-    return { first, phase: 'timeout' };
+      effects.update(.12); field.sync(encounter); renderer.render(scene,camera);
+      return {kinds:encounter.zombies.map(z=>z.kind),health:encounter.zombies.map(z=>z.health),effects:effects.diagnostics().active};
+    };
+    return hits;
   });
-  expect(appearance.phase).toBe('playing');
-  expect(appearance.first.cone).toBeGreaterThan(5);
-  expect(appearance.first.cone).toBeLessThan(6);
-  expect(appearance.first.bucket).toBeGreaterThan(appearance.first.cone);
-  expect(appearance.first.bucket).toBeLessThan(11);
-  await page.waitForTimeout(800);
-  await page.screenshot({ path: 'test-results/armored-horde.png' });
-  for (const [kind, health, shots] of [['cone', 200, 2], ['bucket', 400, 4]] as const) {
-    const target = await page.evaluate(kind => window.__undeadTower!.snapshot().targets.find(z => z.kind === kind && z.health > 0)!, kind);
-    expect(target.maxHealth).toBe(health);
-    let confirmedHits = 0;
-    const deadline = Date.now() + 15000;
-    // 提前出生的护甲怪可能仍在屏幕边缘或建筑后，等实际射线命中后再计伤害。
-    while (confirmedHits < shots && Date.now() < deadline) {
-      const state = await page.evaluate(() => window.__undeadTower!.snapshot());
-      expect(state.phase).toBe('playing');
-      if (state.ammo === 0 || state.reloading) { await page.keyboard.press('r'); await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).reloading).toBe(false); }
-      const result = await page.evaluate(id => {
-        const before = window.__undeadTower!.snapshot();
-        const target = before.targets.find(z => z.id === id)!;
-        if (target.head.x < 20 || target.head.x > innerWidth - 20 || target.head.y < 20 || target.head.y > innerHeight - 20) return { health: target.health, hit: false };
-        const canvas = document.querySelector('canvas')!;
-        canvas.dispatchEvent(new PointerEvent('pointerdown', { clientX: target.head.x, clientY: target.head.y, button: 0, bubbles: true }));
-        window.dispatchEvent(new PointerEvent('pointerup', { button: 0 }));
-        const after = window.__undeadTower!.snapshot();
-        return { health: after.targets.find(z => z.id === id)!.health, hit: after.shots > before.shots && after.lastShot?.hitTarget === id };
-      }, target.id);
-      if (result.hit) confirmedHits++;
-      expect(result.health).toBe(health - confirmedHits * 100);
-      if (result.hit && confirmedHits === shots - 1) {
-        const stripped = await page.evaluate(() => window.__undeadTower!.snapshot());
-        const survivor = stripped.targets.find(z => z.id === target.id)!;
-        expect(survivor.kind).toBe('normal');
-        expect(survivor.armorHealth).toBe(0);
-        expect(survivor.bodyHealth).toBe(100);
-        expect(stripped.armorEffects.active).toBeGreaterThan(0);
-        expect(stripped.audio.lastArmorCue).toEqual({ kind, broken: true });
-        const positions = stripped.armorEffects.positions;
-        await page.waitForTimeout(120);
-        expect((await page.evaluate(() => window.__undeadTower!.snapshot())).armorEffects.positions).not.toEqual(positions);
-        await page.screenshot({ path: `test-results/${kind}-armor-off.png` });
-      }
-      await page.waitForTimeout(180);
-    }
-    expect(confirmedHits).toBe(shots);
-  }
-  await page.keyboard.press('Escape');
-  expect(errors).toEqual([]);
+  expect(checks).toEqual([{id:0,head:true},{id:1,head:true},{id:2,head:true}]);
+  await page.screenshot({path:'test-results/rogue-enemies.png'});
+  const stripped=await page.evaluate(()=>window.__enemyFixture());
+  expect(stripped.kinds).toEqual(['football','giant','wizard']); expect(stripped.health).toEqual([100,3000,2000]); expect(stripped.effects).toBeGreaterThan(0);
+  await page.screenshot({path:'test-results/rogue-armor-off.png'});
 });
+declare global { interface Window { __enemyFixture: () => { kinds: string[]; health: number[]; effects: number }; } }

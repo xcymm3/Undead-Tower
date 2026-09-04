@@ -10,7 +10,7 @@ export class Firearm {
   reloadEmpty = false;
   private reloadTotal = 0;
   private reloadStartAmmo = 0;
-  constructor(readonly definition: WeaponDefinition = WEAPONS[0]) { this.ammo = definition.capacity; }
+  constructor(public definition: WeaponDefinition = WEAPONS[0]) { this.definition = { ...definition }; this.ammo = definition.capacity; }
   get reloading() { return this.reloadRemaining > 0; }
   get reloadProgress() { return this.reloading ? 1 - this.reloadRemaining / this.reloadTotal : 1; }
   get animationProgress() {

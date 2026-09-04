@@ -33,8 +33,8 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
   let maxAlive = 0;
   let observedSpawns = 0;
   const firstAppearance: Partial<Record<ZombieKind, number>> = {};
-  const spawned = { normal: 0, cone: 0, bucket: 0 };
-  const kills = { normal: 0, cone: 0, bucket: 0 };
+  const spawned = { normal: 0, cone: 0, bucket: 0, football: 0, giant: 0, wizard: 0 };
+  const kills = { normal: 0, cone: 0, bucket: 0, football: 0, giant: 0, wizard: 0 };
   const originalKinds = new Map<number, ZombieKind>();
   while (!encounter.failed && encounter.elapsed < 360) {
     firearm.update(dt);

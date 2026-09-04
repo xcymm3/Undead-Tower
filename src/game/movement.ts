@@ -1,4 +1,4 @@
-import { CROWD, SURVIVAL } from './config';
+import { CROWD, SURVIVAL, zombieSpeed, zombieScale } from './config';
 import type { Position, Zombie } from './encounter';
 import type { Navigation } from './navigation';
 
@@ -23,7 +23,7 @@ function breachTime(leg: Leg) {
 /** 先从同一帧位置计算所有方向，再统一移动，避免更新顺序造成单向推挤。 */
 export class CrowdMovement {
   private grid = new Map<string, Zombie[]>();
-  constructor(private navigation?: Navigation) {}
+  constructor(private navigation?: Navigation, private giantNavigation?: Navigation) {}
 
   private rebuild(zombies: Zombie[]) {
     this.grid.clear();
@@ -37,26 +37,29 @@ export class CrowdMovement {
   private separation(zombie: Zombie, tx: number, tz: number) {
     const cx = Math.floor(zombie.x / CROWD.separationRadius), cz = Math.floor(zombie.z / CROWD.separationRadius);
     let force = 0;
-    for (let ix = cx - 1; ix <= cx + 1; ix++) for (let iz = cz - 1; iz <= cz + 1; iz++) {
+    for (let ix = cx - 3; ix <= cx + 3; ix++) for (let iz = cz - 3; iz <= cz + 3; iz++) {
       for (const other of this.grid.get(`${ix},${iz}`) ?? []) {
         if (other.id === zombie.id) continue;
         const dx = zombie.x - other.x, dz = zombie.z - other.z;
         const distance = Math.hypot(dx, dz);
-        if (distance >= CROWD.separationRadius) continue;
+        const separation = CROWD.separationRadius * (zombieScale(zombie.kind) + zombieScale(other.kind)) / 2;
+        if (distance >= separation) continue;
         const lateral = distance > 1e-8 ? (dx * tx + dz * tz) / distance : 0;
         // 完全重叠或首尾排队时也能分开；按 ID 固定选择方向，不用逐帧随机摇摆。
         const side = Math.abs(lateral) < 0.1 ? (zombie.id < other.id ? -1 : 1) : lateral;
-        force += side * (1 - distance / CROWD.separationRadius);
+        force += side * (1 - distance / separation);
       }
     }
     return Math.max(-1, Math.min(1, force));
   }
 
   private plan(zombie: Zombie, step: number, speed: number): Motion {
+    const navigation = zombie.kind === 'giant' ? this.giantNavigation ?? this.navigation : this.navigation;
+    speed *= zombieSpeed(zombie.kind);
     const motion: Motion = { zombie, legs: [], avoidance: 0, breachAt: Infinity };
     const position = { x: zombie.x, z: zombie.z };
     if (step > 0) {
-      const target = this.navigation ? this.navigation.waypoint(position) : player;
+      const target = navigation ? navigation.waypoint(position) : player;
       if (!target) return motion;
       const dx = target.x - position.x, dz = target.z - position.z;
       const distance = Math.hypot(dx, dz);
@@ -68,10 +71,10 @@ export class CrowdMovement {
       const lateral = motion.avoidance * Math.min(CROWD.maxLateralSpeed, speed * CROWD.lateralFraction) * Math.max(0, Math.min(1, remaining / CROWD.arrivalFade));
       const forward = Math.sqrt(Math.max(0, speed * speed - lateral * lateral));
       const leg = { start: position, vx: ux * forward + uz * lateral, vz: uz * forward - ux * lateral, duration: Math.min(step, distance / speed) };
-      if (this.navigation && !this.navigation.clear(position, { x: position.x + leg.vx * leg.duration, z: position.z + leg.vz * leg.duration })) {
+      if (navigation && !navigation.clear(position, { x: position.x + leg.vx * leg.duration, z: position.z + leg.vz * leg.duration })) {
         // 静态碰撞优先于拥挤避让：取消横向力，沿已验证可通行的寻路线段前进。
         motion.avoidance = 0; leg.vx = ux * speed; leg.vz = uz * speed;
-        if (!this.navigation.clear(position, { x: position.x + leg.vx * leg.duration, z: position.z + leg.vz * leg.duration })) return motion;
+        if (!navigation.clear(position, { x: position.x + leg.vx * leg.duration, z: position.z + leg.vz * leg.duration })) return motion;
       }
       motion.legs.push(leg);
     }

@@ -13,9 +13,9 @@ export class Navigation {
   private blocked = new Uint8Array(WIDTH * HEIGHT);
   private distance = new Float64Array(WIDTH * HEIGHT).fill(Infinity);
   private next = new Int32Array(WIDTH * HEIGHT).fill(-1);
-  constructor(readonly obstacles: readonly Obstacle[]) {
+  constructor(readonly obstacles: readonly Obstacle[], readonly radius: number = NAV_RADIUS) {
     for (const obstacle of obstacles) {
-      const o = { id: obstacle.id, minX: obstacle.minX - NAV_RADIUS, maxX: obstacle.maxX + NAV_RADIUS, minZ: obstacle.minZ - NAV_RADIUS, maxZ: obstacle.maxZ + NAV_RADIUS };
+      const o = { id: obstacle.id, minX: obstacle.minX - radius, maxX: obstacle.maxX + radius, minZ: obstacle.minZ - radius, maxZ: obstacle.maxZ + radius };
       for (let x = Math.floor(o.minX / HASH); x <= Math.floor(o.maxX / HASH); x++) for (let z = Math.floor(o.minZ / HASH); z <= Math.floor(o.maxZ / HASH); z++) {
         const key = `${x},${z}`, bucket = this.buckets.get(key);
         if (bucket) bucket.push(o); else this.buckets.set(key, [o]);

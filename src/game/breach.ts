@@ -1,3 +1,4 @@
+import { zombieScale } from './config';
 import * as THREE from 'three';
 import type { Zombie } from './encounter';
 
@@ -14,7 +15,8 @@ export class BreachSequence {
   get progress() { return Math.min(1, this.elapsed / BREACH_DURATION); }
   begin(camera: THREE.PerspectiveCamera, zombie: Zombie, surfaces: THREE.Object3D[] = []) {
     this.elapsed = 0; this.origin.copy(camera.position); this.rotation.copy(camera.quaternion); this.originalFov = camera.fov;
-    this.target.set(zombie.x, 1.45, zombie.z);
+    const scale = zombieScale(zombie.kind);
+    this.target.set(zombie.x, 1.45 * scale, zombie.z);
     const approach = new THREE.Vector3(camera.position.x - zombie.x, 0, camera.position.z - zombie.z).normalize();
     const ray = new THREE.Raycaster(), direction = new THREE.Vector3(), candidate = new THREE.Vector3();
     const clear = (a: THREE.Vector3, b: THREE.Vector3) => {
@@ -23,12 +25,12 @@ export class BreachSequence {
       return ray.intersectObjects(surfaces, false).length === 0;
     };
     // 侧面突破时，固定低机位会被哨塔平台、沙袋或立柱挡住；先验证镜头路径和取景。
-    const focusPoints = [new THREE.Vector3(zombie.x, 1.85, zombie.z), new THREE.Vector3(zombie.x, 1.15, zombie.z),
-      new THREE.Vector3(zombie.x - 0.35, 1.55, zombie.z), new THREE.Vector3(zombie.x + 0.35, 1.55, zombie.z),
-      new THREE.Vector3(zombie.x, 1.75, zombie.z).addScaledVector(approach, 0.65),
-      new THREE.Vector3(zombie.x, 1.10, zombie.z).addScaledVector(approach, 0.55)];
+    const focusPoints = [new THREE.Vector3(zombie.x, 1.85 * scale, zombie.z), new THREE.Vector3(zombie.x, 1.15 * scale, zombie.z),
+      new THREE.Vector3(zombie.x - 0.35 * scale, 1.55 * scale, zombie.z), new THREE.Vector3(zombie.x + 0.35 * scale, 1.55 * scale, zombie.z),
+      new THREE.Vector3(zombie.x, 1.75 * scale, zombie.z).addScaledVector(approach, 0.65),
+      new THREE.Vector3(zombie.x, 1.10 * scale, zombie.z).addScaledVector(approach, 0.55)];
     this.destination.copy(this.origin);
-    search: for (const distance of [4.2, 3.2, 2.4]) for (const angle of [0, -Math.PI / 8, Math.PI / 8, -Math.PI / 4, Math.PI / 4]) for (const height of [3.1, 4.2, 5.2]) {
+    search: for (const distance of [4.2, 3.2, 2.4]) for (const angle of [0, -Math.PI / 8, Math.PI / 8, -Math.PI / 4, Math.PI / 4]) for (const height of [3.1, 4.2, 5.2, 6.5]) {
       candidate.copy(approach).applyAxisAngle(THREE.Object3D.DEFAULT_UP, angle).multiplyScalar(distance).add(this.target); candidate.y = height;
       if (clear(this.origin, candidate) && focusPoints.every(point => clear(candidate, point))) { this.destination.copy(candidate); break search; }
     }

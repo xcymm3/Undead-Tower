@@ -1,3 +1,4 @@
+import type { RogueResult, RogueSnapshot } from './rogue';
 export const CONFIG = {
   camera: { fov: 61, height: 4.8, yawLimit: 4 * Math.PI / 180, pitchLimit: 2.5 * Math.PI / 180, damping: 5 },
   weapon: { capacity: 30, interval: 0.15, reloadDuration: 0.775, range: 180 },
@@ -7,13 +8,16 @@ export const CONFIG = {
 export type GameMode = 'practice' | 'survival';
 export type Difficulty = 'easy' | 'normal' | 'hard';
 export const FIXED_DIFFICULTY = 'hard' satisfies Difficulty;
-export type ZombieKind = 'normal' | 'cone' | 'bucket';
-export type GamePhase = 'ready' | 'playing' | 'paused' | 'breaching' | 'failed';
+export type ZombieKind = 'normal' | 'cone' | 'bucket' | 'football' | 'giant' | 'wizard';
+export type GamePhase = 'ready' | 'playing' | 'paused' | 'breaching' | 'failed' | 'countdown' | 'upgrade';
 export const PRESSURE = { spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.4 } as const;
 export const ZOMBIE_TYPES = {
   normal: { label: '普通僵尸', health: 100, armor: 0 },
   cone: { label: '路障僵尸', health: 200, armor: 100 },
   bucket: { label: '铁桶僵尸', health: 400, armor: 300 },
+  football: { label: '橄榄球僵尸', health: 400, armor: 300 },
+  giant: { label: '巨人僵尸', health: 4000, armor: 1000 },
+  wizard: { label: '巫师僵尸', health: 2000, armor: 0 },
 } as const;
 export const ARMOR_SPAWNS = { normalPerCone: 3, conesPerBucket: 2 } as const;
 export const DIFFICULTIES = {
@@ -23,7 +27,10 @@ export const DIFFICULTIES = {
 } as const;
 export const SURVIVAL = { maxSpawnRate: 10, maxZombies: 256, breachRadius: 8, playerX: 0, playerZ: 9 } as const;
 export const CROWD = { separationRadius: 1.35, maxLateralSpeed: 0.32, lateralFraction: 0.2, steeringDamping: 5, arrivalFade: 2 } as const;
+export const zombieSpeed = (kind: ZombieKind) => kind === 'football' ? 2 : kind === 'giant' ? .5 : 1;
+export const zombieScale = (kind: ZombieKind) => kind === 'giant' ? 2.5 : 1;
 export interface RunResult {
+  rogue?: RogueResult;
   id: string;
   difficulty: Difficulty;
   duration: number;
@@ -33,6 +40,7 @@ export interface RunResult {
   endedAt: string;
 }
 export interface GameSnapshot {
+  rogue?: RogueSnapshot;
   weaponsReady: boolean; weaponIndex: number; requestedWeapon: number; switching: boolean; reloadQueued: boolean; inventory: number[];
   phase: GamePhase;
   mode: GameMode;

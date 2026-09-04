@@ -1,13 +1,15 @@
+import { ROGUE_KEY } from './game/rogue';
+import { UpgradePanel } from './ui/UpgradePanel';
 import { useEffect, useRef, useState } from 'react';
 import { Game } from './game/Game';
 import { WEAPONS } from './game/weapons';
-import { DIFFICULTIES, FIXED_DIFFICULTY } from './game/config';
+import { FIXED_DIFFICULTY } from './game/config';
 import type { GameMode, GameSnapshot } from './game/config';
 import { formatDuration, LeaderboardStore, personalRecord } from './game/leaderboard';
 import type { PersonalRecord } from './game/leaderboard';
 import { BreachOverlay, DeploymentPanel, LeaderboardTable, ResultPanel } from './ui/SessionPanels';
 
-const initialState: GameSnapshot = { weaponsReady: false, weaponIndex: 0, requestedWeapon: 0, switching: false, reloadQueued: false, inventory: WEAPONS.map(gun => gun.capacity), phase: 'ready', mode: 'practice', difficulty: FIXED_DIFFICULTY, survived: 0, alive: 4, zombieCounts: { normal: 4, cone: 0, bucket: 0 }, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, volume: 1, breach: null, pixelated: false };
+const initialState: GameSnapshot = { weaponsReady: false, weaponIndex: 0, requestedWeapon: 0, switching: false, reloadQueued: false, inventory: WEAPONS.map(gun => gun.capacity), phase: 'ready', mode: 'practice', difficulty: FIXED_DIFFICULTY, survived: 0, alive: 4, zombieCounts: { normal: 4, cone: 0, bucket: 0, football: 0, giant: 0, wizard: 0 }, nearest: null, spawnRate: 0, speed: 0, result: null, ammo: 30, reloading: false, shots: 0, hits: 0, kills: 0, fps: 0, yaw: 0, pitch: 0, sound: true, volume: 1, breach: null, pixelated: false };
 
 function Icon({ name, size = 18 }: { name: 'tower' | 'aim' | 'sound' | 'mute' | 'settings' | 'expand' | 'pause' | 'arrow' | 'close'; size?: number }) {
   const paths = {
@@ -42,7 +44,7 @@ export function App() {
   const [fullscreen, setFullscreen] = useState(false);
   const [mode, setMode] = useState<GameMode>('practice');
   const scoreDialog = useRef<HTMLDialogElement>(null);
-  const [leaderboard] = useState(() => new LeaderboardStore());
+  const [leaderboard] = useState(() => new LeaderboardStore(undefined, ROGUE_KEY));
   const [entries, setEntries] = useState(() => leaderboard.read());
   const [saved, setSaved] = useState(leaderboard.persistent);
 
@@ -77,7 +79,7 @@ export function App() {
   }, [leaderboard]);
 
   const openSettings = () => {
-    resumeAfterSettings.current = state.phase === 'playing';
+    resumeAfterSettings.current = state.phase === 'playing' || state.phase === 'countdown';
     game.current?.pause();
     setSettings(true);
     dialog.current?.showModal();
@@ -94,7 +96,7 @@ export function App() {
     } catch { setError('当前窗口不支持全屏，请在独立浏览器中打开游戏。'); }
   };
 
-  const weapon = WEAPONS[state.weaponIndex];
+  const weapon = state.rogue?.stats ?? WEAPONS[state.weaponIndex];
   const pendingWeapon = state.requestedWeapon !== state.weaponIndex;
 
   return <main className={`game-shell phase-${state.phase}`}>
@@ -107,7 +109,7 @@ export function App() {
       <div className="brand"><span className="brand-mark"><Icon name="tower" size={27} /></span><div>UNDEAD TOWER<small>灰松哨站 · PINE RIDGE</small></div></div>
       {state.phase !== 'ready' && <div className="compass" aria-label="朝向始终固定在北方附近"><div className="compass-ticks" style={{ transform: `translateX(${state.yaw * 3}px)` }}><span>345</span><i /><i /><b>N</b><i /><i /><span>015</span></div><span className="compass-notch" /><small>固定朝向</small></div>}
       <div className="top-actions">
-        <span className="build-label">SURVIVAL <b>ARSENAL</b></span>
+        <span className="build-label">ROGUE <b>PISTOL</b></span>
         <button className="icon-button sound-button" onClick={() => game.current?.setSound(!state.sound)} aria-label={state.sound ? '关闭声音' : '开启声音'} title={state.sound ? '关闭声音 · M' : '开启声音 · M'}><Icon name={state.sound ? 'sound' : 'mute'} /></button>
         <button className="icon-button" onClick={toggleFullscreen} aria-label={fullscreen ? '退出全屏' : '进入全屏'} title="切换全屏"><Icon name="expand" /></button>
         <button className="icon-button" onClick={openSettings} aria-label="游戏设置" title="游戏设置"><Icon name="settings" /></button>
@@ -120,8 +122,8 @@ export function App() {
         <div className="field-tag"><span /> 灰松哨站 / 尸群正在逼近</div>
         <h1 id="game-title">UNDEAD<br /><span>TOWER</span><b>.</b></h1>
         <p className="intro-line">一座哨塔。一个方向。守住这里。</p>
-        <p className="intro-description">森林边缘有了动静。<br />六种枪械随时切换，看看你能坚守多久。</p>
-        <div className="intro-controls"><span><kbd>鼠标</kbd> 瞄准</span><span><kbd>左键</kbd> 开火</span><span><kbd>R</kbd> 换弹</span><span><kbd>1–6 / 滚轮</kbd> 切枪</span></div>
+        <p className="intro-description">森林边缘有了动静。<br />一把手枪，逐波升级。看看你能守住多少波。</p>
+        <div className="intro-controls"><span><kbd>鼠标</kbd> 瞄准</span><span><kbd>左键</kbd> 开火</span><span><kbd>R</kbd> 换弹</span><span><kbd>1–6 / 滚轮</kbd> 练习切枪</span></div>
       </div>
       <DeploymentPanel mode={mode} onMode={setMode} onStart={() => { setFeedback(null); game.current?.begin(mode); }} disabled={Boolean(error) || !state.weaponsReady} onLeaderboard={() => { setEntries(leaderboard.read()); scoreDialog.current?.showModal(); }} />
       {!state.weaponsReady && !error && <div className="weapon-loading" role="status">正在准备六款枪械…</div>}
@@ -129,24 +131,26 @@ export function App() {
     </section>}
 
     {(state.phase === 'playing' || state.phase === 'paused') && <div className="hud" aria-label="游戏状态">
-      <aside className="objective"><span className="label">{state.mode === 'practice' ? 'FIELD TRAINING' : `SURVIVAL / ${DIFFICULTIES[state.difficulty].label}`}</span><h2>{state.mode === 'practice' ? '僵尸练习靶场' : '守住北侧防线'}</h2><p><span className="tiny-square" /> {state.mode === 'practice' ? '僵尸静止站位，击倒后复位' : '留意各条通路，不要让僵尸接近'}</p><div className="objective-score"><span><b>{String(state.kills).padStart(2, '0')}</b> 击杀</span><span><b>{state.hits}</b> 命中</span><span><b>{state.shots ? Math.round(state.hits / state.shots * 100) : '—'}{state.shots > 0 && '%'}</b> 命中率</span></div></aside>
-      {state.mode === 'survival' && <><div className="survival-clock"><span>坚守时长</span><strong data-testid="survival-clock">{formatDuration(state.survived)}</strong></div><aside className="horde-status"><span className="label">INCOMING HORDE</span><p><b>{state.alive}</b> 只僵尸正在逼近</p><small>普通 {state.zombieCounts.normal} · 路障 {state.zombieCounts.cone} · 铁桶 {state.zombieCounts.bucket}</small><small>刷新 {state.spawnRate.toFixed(1)} / 秒 · 移速 {state.speed.toFixed(1)} m/s</small></aside><div className={`proximity ${state.nearest !== null && state.nearest < 14 ? 'danger' : ''}`}>{state.nearest === null ? '留意公路和林地，僵尸即将出现' : state.nearest < 14 ? '僵尸逼近哨塔！' : '尸群正在接近'}</div></>}
-      <div className="station"><Icon name="tower" size={24} /><div>04 <span>灰松哨站</span><small>{state.mode === 'practice' ? '练习模式 · 不计入排行榜' : `正式模式 · ${DIFFICULTIES[state.difficulty].label}难度`}</small></div></div>
+      <aside className="objective"><span className="label">{state.mode === 'practice' ? 'FIELD TRAINING' : `ROGUE / WAVE ${state.rogue?.wave ?? 1}`}</span><h2>{state.mode === 'practice' ? '僵尸练习靶场' : '守住北侧防线'}</h2><p><span className="tiny-square" /> {state.mode === 'practice' ? '僵尸静止站位，击倒后复位' : '留意各条通路，不要让僵尸接近'}</p><div className="objective-score"><span><b>{String(state.kills).padStart(2, '0')}</b> 击杀</span><span><b>{state.hits}</b> 命中</span><span><b>{state.shots ? Math.round(state.hits / state.shots * 100) : '—'}{state.shots > 0 && '%'}</b> 命中率</span></div></aside>
+      {state.mode === 'survival' && <><div className="survival-clock"><span>已通过 {state.rogue?.completed ?? 0} 波</span><strong data-testid="wave-number">第 {state.rogue?.wave ?? 1} 波</strong><small data-testid="survival-clock">{formatDuration(state.survived)}</small></div><aside className="horde-status"><span className="label">INCOMING HORDE</span><p data-testid="wave-remaining">本波剩余 <b>{state.rogue?.remaining ?? state.alive}</b> / {state.rogue?.total ?? state.alive}</p><small>普通 {state.zombieCounts.normal} · 路障 {state.zombieCounts.cone} · 铁桶 {state.zombieCounts.bucket}</small><small>橄榄球 {state.zombieCounts.football} · 巨人 {state.zombieCounts.giant} · 巫师 {state.zombieCounts.wizard}</small><small>刷新 {state.spawnRate.toFixed(1)} / 秒 · 基础移速 {state.speed.toFixed(1)} m/s</small></aside><div className={`proximity ${state.nearest !== null && state.nearest < 14 ? 'danger' : ''}`}>{state.nearest === null ? '留意公路和林地，僵尸即将出现' : state.nearest < 14 ? '僵尸逼近哨塔！' : '尸群正在接近'}</div></>}
+      <div className="station"><Icon name="tower" size={24} /><div>04 <span>灰松哨站</span><small>{state.mode === 'practice' ? '练习模式 · 不计入排行榜' : '正式模式 · 手枪肉鸽'}</small></div></div>
       {feedback && state.phase === 'playing' && <div className={`hit-feedback ${feedback.head ? 'headshot' : ''}`} key={feedback.key}>{feedback.armorBroken ? '护甲击落' : feedback.head ? '精准命中' : feedback.killed ? '目标击倒' : '命中目标'}<small>{feedback.armorBroken ? 'ARMOR OFF · 继续射击' : feedback.head ? 'HEADSHOT' : feedback.killed ? 'TARGET DOWN' : 'TARGET HIT'}</small></div>}
       <div className={`ammo-panel ${state.ammo === 0 ? 'empty' : ''}`}><div className="weapon-label"><RifleIcon /><span data-testid="weapon-name">{weapon.label}<small>{weapon.short} · {weapon.automatic ? '按住连发' : '单次射击'}</small></span></div><div className="ammo-count"><strong data-testid="ammo">{String(state.ammo).padStart(2, '0')}</strong><span>/ {weapon.capacity}<small>哨站备弹 ∞</small></span></div><div className="ammo-bars" aria-hidden="true">{Array.from({ length: weapon.capacity }, (_, i) => <i key={i} className={i < state.ammo ? 'loaded' : ''} />)}</div><span className="reload-hint">{state.switching ? '切换中…' : pendingWeapon ? `动作结束后切换 · ${WEAPONS[state.requestedWeapon].label}` : state.reloadQueued ? '准备装填…' : state.reloading ? weapon.shellReload ? '逐发装填中…' : '正在更换弹匣…' : state.ammo === 0 ? '弹匣已空 · 按 R 换弹' : <><kbd>R</kbd> 换弹</>}</span></div>
-      <div className="weapon-slots" role="group" aria-label="切换武器">{WEAPONS.map((gun, index) => <button key={gun.id} disabled={state.phase !== 'playing'} aria-label={`切换到${gun.label}`} aria-pressed={index === state.weaponIndex} data-pending={pendingWeapon && index === state.requestedWeapon} onClick={() => game.current?.switchWeapon(index)} title={`${index + 1} · ${gun.label}`}><kbd>{index + 1}</kbd><span>{gun.short}</span><small>{state.inventory[index]}</small></button>)}<p>数字键 1–6 / 滚轮切换</p></div>
+      {state.mode === 'practice' && <div className="weapon-slots" role="group" aria-label="切换武器">{WEAPONS.map((gun, index) => <button key={gun.id} disabled={state.phase !== 'playing'} aria-label={`切换到${gun.label}`} aria-pressed={index === state.weaponIndex} data-pending={pendingWeapon && index === state.requestedWeapon} onClick={() => game.current?.switchWeapon(index)} title={`${index + 1} · ${gun.label}`}><kbd>{index + 1}</kbd><span>{gun.short}</span><small>{state.inventory[index]}</small></button>)}<p>数字键 1–6 / 滚轮切换</p></div>}
       {state.reloading && <div className="reload-progress" role="status"><span>装填中</span><i /></div>}
       <footer className="play-footer"><div><span className="signal-dot" /><span>{state.fps} FPS</span><span className="footer-divider" /><span>视角 {Math.abs(state.yaw).toFixed(1)}° / 4.0°</span></div><div><span><kbd>鼠标</kbd> 瞄准</span><span><kbd>左键</kbd> {weapon.automatic ? '按住连发' : '单次射击'}</span><span><kbd>ESC</kbd> 暂停</span></div></footer>
     </div>}
 
     {state.phase === 'paused' && !settings && <section className="pause-screen" aria-label="暂停菜单"><div className="pause-content"><Icon name="tower" size={36} /><span className="label">WATCH ON HOLD</span><h2>哨站已暂停</h2><p>准备好后，继续守望前方。{state.mode === 'survival' && '坚守计时已暂停。'}</p><button className="start-button" onClick={() => game.current?.start()}>继续游戏 <Icon name="arrow" /></button><button className="text-button" onClick={() => { setFeedback(null); game.current?.reset(); }}>{state.mode === 'practice' ? '重新开始训练' : '重新开始坚守'}</button><button className="text-button" onClick={() => { setFeedback(null); game.current?.menu(); }}>返回主菜单</button><small>按 ESC 继续</small></div></section>}
 
+    {state.phase === 'countdown' && <section className="wave-countdown" role="status"><span>准备迎战 · 第 {state.rogue?.wave} 波</span><strong>{state.rogue?.countdown}</strong><p>本波 {state.rogue?.total} 只僵尸 · 弹匣已补满</p>{state.rogue?.wave === 4 && <p>快速敌人：橄榄球僵尸出现</p>}{state.rogue?.wave === 6 && <p>巫师出现：命中后会瞬移</p>}{state.rogue?.wave === 8 && <p>巨人出现：集中火力，留意其他敌人</p>}<button className="text-button" onClick={() => game.current?.pause()}>暂停</button></section>}
+    {state.phase === 'upgrade' && state.rogue && <UpgradePanel state={state.rogue} onConfirm={id => game.current?.chooseUpgrade(id)} />}
     {state.phase === 'breaching' && state.breach && <BreachOverlay breach={state.breach} />}
     {state.phase === 'failed' && state.result && <ResultPanel result={state.result} entries={entries} saved={saved} record={record} breach={state.breach} onRetry={() => game.current?.reset()} onMenu={() => game.current?.menu()} />}
 
     <dialog ref={scoreDialog} className="settings-dialog leaderboard-dialog" aria-labelledby="leaderboard-title" onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>
       <div className="dialog-heading"><div><span className="label">LOCAL RECORDS</span><h2 id="leaderboard-title">坚守排行榜</h2></div><button className="icon-button" onClick={() => scoreDialog.current?.close()} aria-label="关闭排行榜"><Icon name="close" /></button></div>
-      <p className="settings-intro">困难难度 · 本机前 10 名</p><LeaderboardTable entries={entries} difficulty={FIXED_DIFFICULTY} /><p className="board-footnote">正式模式结束后自动记录。<br />成绩保存在当前浏览器，清除网站数据会移除纪录。</p>
+      <p className="settings-intro">手枪肉鸽 · 按通过波数排名 · 本机前 10 名</p><LeaderboardTable entries={entries} difficulty={FIXED_DIFFICULTY} /><p className="board-footnote">正式模式结束后自动记录。<br />成绩保存在当前浏览器，清除网站数据会移除纪录。</p>
     </dialog>
 
     <dialog ref={dialog} className="settings-dialog" aria-labelledby="settings-title" onCancel={event => { event.preventDefault(); event.stopPropagation(); closeSettings(); }} onKeyDown={event => { if (event.key === 'Escape') event.stopPropagation(); }}>

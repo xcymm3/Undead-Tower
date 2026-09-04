@@ -39,6 +39,11 @@ export class Encounter {
   kills = 0;
   zombies: Zombie[] = [];
   totalSpawned = 0;
+  waveQueue: ZombieKind[] | null = null;
+  waveTotal = 0;
+  waveSpawned = 0;
+  waveKills = 0;
+  waveSpawnRate = 0;
   private spawnCredit = 0;
   private nextId = 0;
   private normalsSinceCone = 0;
@@ -46,12 +51,18 @@ export class Encounter {
   private movement = new CrowdMovement();
 
   constructor() { this.reset('practice', FIXED_DIFFICULTY); }
-  setNavigation(navigation: Navigation) { this.movement = new CrowdMovement(navigation); }
+  setNavigation(navigation: Navigation, giant?: Navigation) { this.movement = new CrowdMovement(navigation, giant); }
+
+  startWave(kinds: ZombieKind[], rate: number) {
+    this.zombies = []; this.waveQueue = [...kinds]; this.waveTotal = kinds.length;
+    this.waveSpawned = 0; this.waveKills = 0; this.waveSpawnRate = rate; this.spawnCredit = 1;
+  }
+  get waveCleared() { return this.waveQueue !== null && this.waveQueue.length === 0 && this.alive === 0; }
 
   reset(mode: GameMode, difficulty: Difficulty) {
     this.mode = mode; this.difficulty = difficulty;
     this.elapsed = 0; this.failed = false; this.kills = 0; this.spawnCredit = 0; this.nextId = 0; this.totalSpawned = 0;
-    this.breachedId = null;
+    this.breachedId = null; this.waveQueue = null; this.waveTotal = 0; this.waveSpawned = 0; this.waveKills = 0;
     this.normalsSinceCone = 0; this.conesSinceBucket = 0;
     this.zombies = mode === 'practice' ? PRACTICE_POSITIONS.map(p => this.makeZombie(p)) : [];
   }
@@ -71,15 +82,14 @@ export class Encounter {
     return 'normal';
   }
 
-  private makeZombie(position: SpawnPosition): Zombie {
-    const kind = this.nextKind();
+  private makeZombie(position: SpawnPosition, kind = this.nextKind()): Zombie {
     const health = ZOMBIE_TYPES[kind].health;
     return { ...position, id: this.nextId++, kind, health, armorHealth: ZOMBIE_TYPES[kind].armor, maxHealth: health, downTime: 0, bornAt: this.elapsed };
   }
-  get pressure() { return pressureAt(this.difficulty, this.elapsed); }
+  get pressure() { return this.waveQueue ? { speed: PRESSURE.speed, spawnRate: this.waveSpawnRate } : pressureAt(this.difficulty, this.elapsed); }
   get alive() { return this.zombies.filter(z => z.health > 0).length; }
   get zombieCounts(): Record<ZombieKind, number> {
-    const counts = { normal: 0, cone: 0, bucket: 0 };
+    const counts = { normal: 0, cone: 0, bucket: 0, football: 0, giant: 0, wizard: 0 };
     for (const zombie of this.zombies) if (zombie.health > 0) counts[zombie.kind]++;
     return counts;
   }
@@ -97,13 +107,13 @@ export class Encounter {
     zombie.armorHealth = Math.max(0, zombie.armorHealth - damage);
     zombie.health = Math.max(0, zombie.health - damage);
     const armorBroken = armorHit !== null && zombie.armorHealth === 0;
-    if (armorBroken) zombie.kind = 'normal';
+    if (armorBroken && (zombie.kind === 'cone' || zombie.kind === 'bucket')) zombie.kind = 'normal';
     const killed = zombie.health === 0;
-    if (killed) { this.kills++; zombie.downTime = this.mode === 'practice' ? CONFIG.target.respawn : 0.85; }
+    if (killed) { this.kills++; this.waveKills++; zombie.downTime = this.mode === 'practice' ? CONFIG.target.respawn : 0.85; }
     return { killed, armorHit, armorBroken };
   }
 
-  update(delta: number, spawnPosition: () => SpawnPosition | null) {
+  update(delta: number, spawnPosition: (kind?: ZombieKind) => SpawnPosition | null) {
     if (this.failed || !Number.isFinite(delta) || delta <= 0) return;
     // 小步推进可防止快移速跨过失败半径，也确保新生僵尸只移动其出生后的时间。
     let remaining = delta;
@@ -124,6 +134,16 @@ export class Encounter {
         this.failed = true;
         this.breachedId = movement.breachedId;
         return;
+      }
+      if (this.waveQueue !== null) {
+        this.spawnCredit += movement.duration * this.waveSpawnRate;
+        if (this.spawnCredit >= 1 - 1e-9 && this.waveQueue.length && this.zombies.length < SURVIVAL.maxZombies) {
+          const position = spawnPosition(this.waveQueue[0]);
+          if (position) { this.zombies.push(this.makeZombie(position, this.waveQueue.shift()!)); this.totalSpawned++; this.waveSpawned++; this.spawnCredit -= 1; }
+        }
+        // 保留成功投放后的分数余量，满槽或无合法入口时最多保留一次待投放。
+        this.spawnCredit = Math.min(1, Math.max(0, this.spawnCredit));
+        continue;
       }
       this.spawnCredit += spawnIntegral(this.difficulty, previous, this.elapsed);
       while (this.spawnCredit >= 1 - 1e-9) {

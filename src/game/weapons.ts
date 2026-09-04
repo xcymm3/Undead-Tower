@@ -1,4 +1,5 @@
 export interface WeaponDefinition {
+  headMultiplier?: number;
   id: string; label: string; short: string; model: string; capacity: number; interval: number;
   reloadDuration: number; automatic: boolean; damage: number; pellets: number; spread: number;
   length: number; rotationY: number; fireDuration: number; shellReload?: boolean; recoil: number;
