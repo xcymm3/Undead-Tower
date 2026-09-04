@@ -166,16 +166,19 @@ export class Game {
     this.updateCrosshair();
     this.audio.unlock();
     this.renderer.domElement.focus({ preventScroll: true });
+    this.audio.setPlaying(true);
     this.publish();
   }
 
   pause() {
+    this.audio.setPlaying(false);
     this.trigger = false;
     this.dirty = true;
     if (this.phase === 'playing') { this.phase = 'paused'; this.publish(); }
   }
 
   private prepare(mode: GameMode) {
+    this.audio.resetMusic();
     this.weapon.root.visible = true;
     this.firearm.reset(); this.hitCount = 0; this.kills = 0;
     this.encounter.reset(mode, FIXED_DIFFICULTY);
@@ -210,6 +213,7 @@ export class Game {
     if (this.phase !== 'playing' || this.encounter.mode !== 'survival') return;
     this.phase = 'failed'; this.trigger = false; this.flashTime = 0; this.dirty = true;
     this.weapon.root.visible = false;
+    this.audio.setPlaying(false);
     this.result = { id: crypto.randomUUID(), difficulty: this.encounter.difficulty, duration: this.encounter.elapsed, kills: this.kills, shots: this.firearm.shots, hits: this.hitCount, endedAt: new Date().toISOString() };
     this.audio.tone(160, 50, 0.4, 0.06);
     this.callbacks.onEnd(this.result);
@@ -287,7 +291,7 @@ export class Game {
       this.zombieField.sync(this.encounter);
       this.scene.updateMatrixWorld(true);
       killed = damage.killed;
-      if (killed) this.blood.burst(end, direction, head);
+      if (killed) { this.blood.burst(end, direction, head); this.audio.death(); }
       this.hitCount++;
       this.kills = this.encounter.kills;
       this.callbacks.onHit(head, damage.killed, damage.armorBroken);

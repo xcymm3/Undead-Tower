@@ -69,6 +69,7 @@ test('瞄准人形靶头部可命中，倒下后自动复位', async ({ page }) 
   expect((await snapshot(page)).targets[1].health).toBe(0);
   const killed = await snapshot(page);
   expect(killed.blood.active).toBeGreaterThan(0);
+  expect(killed.audio.deathCues).toBe(1);
   expect(killed.blood.origin).toEqual(killed.lastShot!.impact);
   await page.waitForTimeout(150);
   await page.screenshot({ path: 'test-results/blood-kill.png' });

@@ -1,11 +1,25 @@
 import type { ZombieKind } from './config';
+import { synthesizeDeath, synthesizeMusic } from './soundSynthesis';
 
 export const AUDIO_SETTINGS_KEY = 'undead-tower.audio.v1';
+const MUSIC_LEVEL = 0.028;
+const DUCKED_MUSIC_LEVEL = 0.007;
 
 export class GameAudio {
   private context?: AudioContext;
   private noise?: AudioBuffer;
   private master?: GainNode;
+  private musicGain?: GainNode;
+  private musicBuffer?: AudioBuffer;
+  private musicSource?: AudioBufferSourceNode;
+  private musicOffset = 0;
+  private musicStartedAt = 0;
+  private duckUntil = 0;
+  private playing = false;
+  private disposed = false;
+  private deaths = new Map<number, AudioBuffer>();
+  private deathSources = new Set<AudioBufferSourceNode>();
+  private deathCues = 0;
   private muted = false;
   private level = 1;
   private armorCues = 0;
@@ -28,9 +42,11 @@ export class GameAudio {
     if (this.master && this.context) this.master.gain.setValueAtTime(this.muted ? 0 : this.level, this.context.currentTime);
     try { localStorage.setItem(AUDIO_SETTINGS_KEY, JSON.stringify({ enabled: this.enabled, volume: this.level })); }
     catch { /* 当前会话的音量调节仍然有效。 */ }
+    this.syncMusic();
   }
 
   unlock() {
+    if (this.disposed) return;
     try {
       this.context ??= new AudioContext();
       if (!this.master) {
@@ -38,13 +54,59 @@ export class GameAudio {
         this.master.gain.value = this.muted ? 0 : this.level;
         this.master.connect(this.context.destination);
       }
-      if (this.context.state === 'suspended') void this.context.resume().catch(() => {});
+      if (this.context.state === 'suspended') void this.context.resume().then(() => this.syncMusic()).catch(() => {});
+      else this.syncMusic();
     } catch { /* 无音频设备时继续运行视觉原型。 */ }
+  }
+
+  setPlaying(playing: boolean) { this.playing = playing; this.syncMusic(); }
+  resetMusic() { this.setPlaying(false); this.musicOffset = 0; this.duckUntil = 0; }
+
+  private buffer(samples: Float32Array) {
+    const buffer = this.context!.createBuffer(1, samples.length, this.context!.sampleRate);
+    buffer.getChannelData(0).set(samples);
+    return buffer;
+  }
+
+  private syncMusic() {
+    const ctx = this.context;
+    if (!ctx || !this.master) return;
+    if (this.disposed || !this.playing || !this.enabled || this.level === 0 || ctx.state !== 'running') {
+      if (this.musicSource) {
+        this.musicOffset = (this.musicOffset + ctx.currentTime - this.musicStartedAt) % this.musicBuffer!.duration;
+        this.musicSource.stop(); this.musicSource.disconnect(); this.musicSource = undefined;
+      }
+      return;
+    }
+    if (this.musicSource) return;
+    this.musicBuffer ??= this.buffer(synthesizeMusic(ctx.sampleRate));
+    if (!this.musicGain) { this.musicGain = ctx.createGain(); this.musicGain.connect(this.master); }
+    this.musicGain.gain.cancelScheduledValues(ctx.currentTime);
+    this.musicGain.gain.setValueAtTime(0, ctx.currentTime);
+    this.musicGain.gain.linearRampToValueAtTime(MUSIC_LEVEL, ctx.currentTime + 0.3);
+    const source = ctx.createBufferSource();
+    source.buffer = this.musicBuffer; source.loop = true;
+    source.connect(this.musicGain);
+    this.musicStartedAt = ctx.currentTime;
+    source.start(0, this.musicOffset);
+    this.musicSource = source;
+  }
+
+  private duckMusic(duration = 0.3) {
+    const ctx = this.context;
+    if (!ctx || !this.musicGain || !this.musicSource) return;
+    this.duckUntil = Math.max(this.duckUntil, ctx.currentTime + duration);
+    const gain = this.musicGain.gain;
+    gain.cancelScheduledValues(ctx.currentTime);
+    gain.setValueAtTime(DUCKED_MUSIC_LEVEL, ctx.currentTime);
+    gain.setValueAtTime(DUCKED_MUSIC_LEVEL, this.duckUntil);
+    gain.linearRampToValueAtTime(MUSIC_LEVEL, this.duckUntil + 0.35);
   }
 
   shot() {
     const ctx = this.context;
     if (!ctx || !this.master || !this.enabled || this.level === 0 || ctx.state !== 'running') return;
+    this.duckMusic();
     if (!this.noise) {
       this.noise = ctx.createBuffer(1, ctx.sampleRate * 0.3, ctx.sampleRate);
       const data = this.noise.getChannelData(0);
@@ -66,35 +128,57 @@ export class GameAudio {
     this.tone(140, 44, 0.17, 0.12);
   }
 
-  tone(from: number, to: number, duration: number, volume = 0.035) {
+  tone(from: number, to: number, duration: number, volume = 0.035, type: OscillatorType = 'triangle', delay = 0) {
     const ctx = this.context;
     if (!ctx || !this.master || !this.enabled || this.level === 0 || ctx.state !== 'running') return;
+    this.duckMusic(duration + delay);
+    const start = ctx.currentTime + delay;
     const oscillator = ctx.createOscillator();
-    oscillator.type = 'triangle';
-    oscillator.frequency.setValueAtTime(from, ctx.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(to, ctx.currentTime + duration);
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(from, start);
+    oscillator.frequency.exponentialRampToValueAtTime(to, start + duration);
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    gain.gain.setValueAtTime(volume, start);
+    gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
     oscillator.connect(gain).connect(this.master);
     oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + duration);
+    oscillator.start(start);
+    oscillator.stop(start + duration);
   }
 
   armor(kind: ZombieKind, broken: boolean) {
     if (!this.context || !this.enabled || this.level === 0 || this.context.state !== 'running') return;
     this.armorCues++; this.lastArmorCue = { kind, broken };
     if (kind === 'bucket') {
-      // 不同频率叠加产生金属敲击余音，脱落时更低、更长。
-      this.tone(broken ? 620 : 1650, broken ? 230 : 1300, broken ? 0.32 : 0.15, 0.075);
-      this.tone(broken ? 1010 : 2460, broken ? 430 : 1990, 0.20, 0.035);
+      // 非整数泛音形成中空金属桶余响，略错开枪声起音以便听清。
+      this.tone(broken ? 620 : 1480, broken ? 350 : 1390, broken ? 0.42 : 0.27, 0.09, 'sine', 0.035);
+      this.tone(broken ? 1010 : 2370, broken ? 610 : 2200, 0.23, 0.045, 'sine', 0.035);
+      this.tone(3540, 3100, 0.08, 0.025, 'sine', 0.035);
     } else {
-      this.tone(broken ? 290 : 510, 95, broken ? 0.20 : 0.09, 0.08);
-      this.tone(880, 330, 0.045, 0.025);
+      // 塑料路锥以低沉的空腔撞击搭配短促的敲击起音。
+      this.tone(broken ? 260 : 430, 95, broken ? 0.22 : 0.13, 0.11, 'triangle', 0.035);
+      this.tone(1050, 390, 0.055, 0.045, 'square', 0.035);
     }
   }
 
-  diagnostics() { return { enabled: this.enabled, volume: this.volume, gain: this.master?.gain.value ?? (this.muted ? 0 : this.level), armorCues: this.armorCues, lastArmorCue: this.lastArmorCue }; }
-  dispose() { void this.context?.close().catch(() => {}); }
+  death() {
+    const ctx = this.context;
+    if (!ctx || !this.master || !this.enabled || this.level === 0 || ctx.state !== 'running') return;
+    const variant = this.deathCues++ % 3;
+    if (!this.deaths.has(variant)) this.deaths.set(variant, this.buffer(synthesizeDeath(ctx.sampleRate, variant)));
+    // 连续击杀时保留最新三声，避免低吼叠加盖住射击声。
+    if (this.deathSources.size >= 3) {
+      const oldest = this.deathSources.values().next().value!;
+      oldest.stop(); this.deathSources.delete(oldest);
+    }
+    const source = ctx.createBufferSource(); source.buffer = this.deaths.get(variant)!;
+    const gain = ctx.createGain(); gain.gain.value = 0.12;
+    source.connect(gain).connect(this.master);
+    source.onended = () => { source.disconnect(); gain.disconnect(); this.deathSources.delete(source); };
+    this.deathSources.add(source); source.start();
+    this.duckMusic(source.buffer.duration);
+  }
+
+  diagnostics() { return { enabled: this.enabled, volume: this.volume, gain: this.master?.gain.value ?? (this.muted ? 0 : this.level), armorCues: this.armorCues, lastArmorCue: this.lastArmorCue, deathCues: this.deathCues, activeDeaths: this.deathSources.size, musicPlaying: Boolean(this.musicSource), musicLevel: MUSIC_LEVEL, musicDucked: Boolean(this.musicSource && this.context && this.context.currentTime < this.duckUntil), duckedMusicLevel: DUCKED_MUSIC_LEVEL }; }
+  dispose() { this.disposed = true; this.setPlaying(false); this.deathSources.clear(); void this.context?.close().catch(() => {}); }
 }

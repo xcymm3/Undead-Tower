@@ -61,6 +61,7 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   expect(ended.nearest).toBeCloseTo(8, 6);
   expect(ended.defenseVisible).toBe(true);
   expect(ended.weaponVisible).toBe(false);
+  expect(ended.audio.musicPlaying).toBe(false);
   const breached = ended.targets.filter(z => z.health > 0).sort((a, b) => Math.hypot(a.x, a.z - 9) - Math.hypot(b.x, b.z - 9))[0];
   expect(breached.head.x).toBeGreaterThan(10);
   expect(breached.head.x).toBeLessThan(1430);

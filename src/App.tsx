@@ -147,7 +147,7 @@ export function App() {
       <div className="dialog-heading"><div><span className="label">FIELD PREFERENCES</span><h2 id="settings-title">哨站设置</h2></div><button className="icon-button" onClick={closeSettings} aria-label="关闭设置"><Icon name="close" /></button></div>
       <p className="settings-intro">枪口跟随准星，镜头以固定速度平滑跟随视线。</p>
       <div className="view-limits"><Icon name="aim" /><p>水平 ±4°<span>垂直 ±2.5°</span><small>始终朝向北侧公路，无法转身。</small></p></div>
-      <label className="toggle-row"><span>游戏声音<small>枪声、命中与装填反馈</small></span><input type="checkbox" checked={state.sound} onChange={event => game.current?.setSound(event.target.checked)} /><i /></label>
+      <label className="toggle-row"><span>游戏声音<small>射击、护甲、死亡与低音量背景音乐</small></span><input type="checkbox" checked={state.sound} onChange={event => game.current?.setSound(event.target.checked)} /><i /></label>
       <div className="volume-control"><label htmlFor="volume">总音量 <b>{Math.round(state.volume * 100)}%{!state.sound && ' · 已静音'}</b></label><input id="volume" type="range" min="0" max="100" step="1" value={Math.round(state.volume * 100)} onChange={event => game.current?.setVolume(Number(event.target.value) / 100)} /><small>自动保存音量与静音设置</small></div>
       <label className="toggle-row"><span>粗颗粒像素<small>降低渲染分辨率，保留清晰的界面</small></span><input type="checkbox" checked={state.pixelated} onChange={event => game.current?.setPixelated(event.target.checked)} /><i /></label>
       <div className="settings-controls"><span><kbd>左键</kbd> 射击</span><span><kbd>R</kbd> 换弹</span><span><kbd>M</kbd> 静音</span><span><kbd>ESC</kbd> 暂停</span></div>
