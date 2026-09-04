@@ -9,7 +9,7 @@ export type Difficulty = 'easy' | 'normal' | 'hard';
 export const FIXED_DIFFICULTY = 'hard' satisfies Difficulty;
 export type ZombieKind = 'normal' | 'cone' | 'bucket';
 export type GamePhase = 'ready' | 'playing' | 'paused' | 'breaching' | 'failed';
-export const PRESSURE = { spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.25, speedGrowth: 0.011 } as const;
+export const PRESSURE = { spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.4 } as const;
 export const ZOMBIE_TYPES = {
   normal: { label: '普通僵尸', health: 100, armor: 0 },
   cone: { label: '路障僵尸', health: 200, armor: 100 },

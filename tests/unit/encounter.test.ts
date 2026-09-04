@@ -22,20 +22,20 @@ describe('练习与正式模式', () => {
     expect(encounter.zombies[1].health).toBe(100);
   });
 
-  it('三档难度共享原普通难度的初值和增长曲线', () => {
+  it('三档难度共享刷新曲线和固定移速', () => {
     for (const time of [0, 30, 60, 120, 1000]) {
       expect(pressureAt('easy', time)).toEqual(pressureAt('normal', time));
       expect(pressureAt('normal', time)).toEqual(pressureAt('hard', time));
     }
-    expect(pressureAt('easy', 0)).toEqual({ spawnRate: 0.65, speed: 1.25 });
-    expect(pressureAt('hard', 60)).toEqual({ spawnRate: 2.75, speed: 1.91 });
+    expect(pressureAt('easy', 0)).toEqual({ spawnRate: 0.65, speed: 1.4 });
+    expect(pressureAt('hard', 60)).toEqual({ spawnRate: 2.75, speed: 1.4 });
   });
 
   for (const difficulty of Object.keys(DIFFICULTIES) as Difficulty[]) {
-    it(`${difficulty} 逐渐加速并封顶每秒 10 只，移动速度继续增长`, () => {
+    it(`${difficulty} 刷新逐渐增多并封顶每秒 10 只，移速始终为 1.4 米每秒`, () => {
       expect(pressureAt(difficulty, 60).spawnRate).toBeGreaterThan(pressureAt(difficulty, 0).spawnRate);
       expect(pressureAt(difficulty, 1000).spawnRate).toBe(10);
-      expect(pressureAt(difficulty, 2000).speed).toBeGreaterThan(pressureAt(difficulty, 1000).speed);
+      for (const time of [0, 60, 180, 1000, 2000]) expect(pressureAt(difficulty, time).speed).toBe(1.4);
       for (const start of [0, 50, 100, 150, 260, 480, 1000]) expect(spawnIntegral(difficulty, start, start + 1)).toBeLessThanOrEqual(10 + 1e-9);
       const encounter = new Encounter();
       encounter.reset('survival', difficulty);

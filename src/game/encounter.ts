@@ -11,7 +11,7 @@ export const PRACTICE_POSITIONS: Position[] = [{ x: -5.8, z: -9.5 }, { x: 0.15, 
 export function pressureAt(_difficulty: Difficulty, elapsed: number) {
   const profile = PRESSURE;
   const time = Math.max(0, elapsed);
-  return { spawnRate: Math.min(SURVIVAL.maxSpawnRate, profile.spawnRate + profile.spawnGrowth * time), speed: profile.speed + profile.speedGrowth * time };
+  return { spawnRate: Math.min(SURVIVAL.maxSpawnRate, profile.spawnRate + profile.spawnGrowth * time), speed: profile.speed };
 }
 
 /** 积分而非每帧概率，保证不同帧率下的刷新量一致，封顶后稳定每秒 10 只。 */
