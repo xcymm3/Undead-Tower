@@ -1,5 +1,5 @@
 import { PerspectiveCamera, Vector3 } from 'three';
-import { ARMOR_SPAWNS, CONFIG, PRESSURE, ZOMBIE_TYPES } from '../src/game/config';
+import { ARMOR_SPAWNS, CONFIG, CROWD, PRESSURE, ZOMBIE_TYPES } from '../src/game/config';
 import type { Difficulty, ZombieKind } from '../src/game/config';
 import { distanceToBreach, Encounter } from '../src/game/encounter';
 import { Firearm } from '../src/game/firearm';
@@ -20,7 +20,7 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
   const firearm = new Firearm();
   const camera = new PerspectiveCamera(CONFIG.camera.fov, 1440 / 900, 0.025, 220);
   camera.position.set(0, CONFIG.camera.height, 9); camera.rotation.set(-0.105, 0, 0, 'YXZ'); camera.updateMatrixWorld();
-  const spawns = new SpawnDirector(seededRandom(seed));
+  const spawns = new SpawnDirector(seededRandom(seed), seededRandom(seed ^ 0x51a7));
   const randomShot = seededRandom(seed + 98171);
   const project = new Vector3();
   const dt = 1 / fps;
@@ -86,7 +86,7 @@ export function evaluateBalance() {
     groups.push({ difficulty, profile: profile.id, fps, samples: runs.length, min: quantile(0), p10: quantile(0.1), median: quantile(0.5), p90: quantile(0.9), max: quantile(1), withinTarget: runs.filter(r => r.seconds >= 60 && r.seconds <= 180).length, runs });
   }
   return {
-    generatedAt: new Date().toISOString(), profiles: PLAYER_PROFILES, pressure: PRESSURE, armorSpawns: { ...ARMOR_SPAWNS, enabledFromStart: true }, zombieTypes: ZOMBIE_TYPES, weapon: CONFIG.weapon,
+    generatedAt: new Date().toISOString(), profiles: PLAYER_PROFILES, pressure: PRESSURE, armorSpawns: { ...ARMOR_SPAWNS, enabledFromStart: true }, crowd: CROWD, zombieTypes: ZOMBIE_TYPES, weapon: CONFIG.weapon,
     assumptions: ['使用实际 Encounter、Firearm、SpawnDirector，1440×900 固定镜头，分别模拟 60/30 FPS。', '命中率和命中后的爆头比例是操作假设，不是实测玩家数据；获取目标延迟和换弹反应时间按配置计算。', '选择距离失守路线最短的可见活僵尸，击杀后切换；模型不精确模拟建筑遮挡、鼠标轨迹或枪口视差，结果偏乐观。', '每组 24 个可复现种子，最多模拟 360 秒；理想机器人是参考值，不是数学证明的绝对极限。'],
     groups,
   };

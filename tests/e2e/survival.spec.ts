@@ -33,6 +33,16 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   const arrivals = (await snapshot(page)).targets;
   expect(new Set(arrivals.map(z => z.spawnZone)).size).toBe(8);
   expect(arrivals.some(z => z.spawnZone === 'north-road')).toBe(true);
+  expect(new Set(arrivals.map(z => z.breachTarget!.x.toFixed(5))).size).toBeGreaterThanOrEqual(7);
+  for (const zombie of arrivals) {
+    expect(Math.hypot(zombie.breachTarget!.x, zombie.breachTarget!.z - 9)).toBeCloseTo(8, 8);
+    expect(zombie.breachTarget!.z).toBeLessThan(9);
+  }
+  await expect.poll(async () => (await snapshot(page)).targets.some(z => z.health > 0 && !z.waypoint), { timeout: 15000 }).toBe(true);
+  for (const original of arrivals) {
+    const current = (await snapshot(page)).targets.find(z => z.id === original.id);
+    if (current) expect(current.breachTarget).toEqual(original.breachTarget);
+  }
   await page.screenshot({ path: 'test-results/survival-playing.png' });
   // 真实移动模型必须能被枪口射线击杀，成绩不能只验证零击杀的空局。
   for (let shot = 0; shot < 5 && (await snapshot(page)).kills === 0; shot++) {
@@ -46,6 +56,11 @@ test('正式模式移动、暂停、失败结算与刷新后排行榜持久化',
   const ended = await snapshot(page);
   expect(ended.phase).toBe('failed');
   expect(ended.nearest).toBeCloseTo(8, 6);
+  const breached = ended.targets.filter(z => z.health > 0).sort((a, b) => Math.hypot(a.x, a.z - 9) - Math.hypot(b.x, b.z - 9))[0];
+  expect(breached.head.x).toBeGreaterThan(10);
+  expect(breached.head.x).toBeLessThan(1430);
+  expect(breached.head.y).toBeGreaterThan(0);
+  expect(breached.head.y).toBeLessThan(900);
   expect(ended.result!.duration).toBeGreaterThan(1);
   await page.mouse.click(20, 500);
   await page.keyboard.press('r');

@@ -1,9 +1,10 @@
 import { ARMOR_SPAWNS, CONFIG, PRESSURE, SURVIVAL, ZOMBIE_TYPES } from './config';
 import type { Difficulty, GameMode, ZombieKind } from './config';
+import { CrowdMovement } from './movement';
 
 export interface Position { x: number; z: number; }
-export interface SpawnPosition extends Position { waypoint?: Position; spawnZone?: string; }
-export interface Zombie extends SpawnPosition { id: number; kind: ZombieKind; health: number; maxHealth: number; downTime: number; bornAt: number; }
+export interface SpawnPosition extends Position { waypoint?: Position; breachTarget?: Position; spawnZone?: string; }
+export interface Zombie extends SpawnPosition { id: number; kind: ZombieKind; health: number; maxHealth: number; downTime: number; bornAt: number; avoidance?: number; heading?: number; }
 export const PRACTICE_POSITIONS: Position[] = [{ x: -5.8, z: -9.5 }, { x: 0.15, z: -17 }, { x: 5.4, z: -21 }, { x: -1, z: -31 }];
 
 export function pressureAt(_difficulty: Difficulty, elapsed: number) {
@@ -23,7 +24,12 @@ export function spawnIntegral(_difficulty: Difficulty, from: number, to: number)
   return Math.max(0, primitive(to) - primitive(from));
 }
 
+/** 当前路径的预计剩余路程，不预测避让；失败必须按实际移动线段判定。 */
 export function distanceToBreach(zombie: SpawnPosition) {
+  if (zombie.breachTarget) {
+    const goal = zombie.waypoint ?? zombie;
+    return (zombie.waypoint ? Math.hypot(zombie.x - goal.x, zombie.z - goal.z) : 0) + Math.hypot(goal.x - zombie.breachTarget.x, goal.z - zombie.breachTarget.z);
+  }
   const goal = zombie.waypoint;
   const distance = goal
     ? Math.hypot(zombie.x - goal.x, zombie.z - goal.z) + Math.hypot(goal.x - SURVIVAL.playerX, goal.z - SURVIVAL.playerZ)
@@ -43,6 +49,7 @@ export class Encounter {
   private nextId = 0;
   private normalsSinceCone = 0;
   private conesSinceBucket = 0;
+  private movement = new CrowdMovement();
 
   constructor() { this.reset('practice', 'normal'); }
 
@@ -109,29 +116,10 @@ export class Encounter {
       if (this.mode === 'practice') continue;
       this.zombies = this.zombies.filter(z => z.health > 0 || z.downTime > 0);
       const speed = pressureAt(this.difficulty, this.elapsed + step / 2).speed;
-      let allowedStep = step;
-      for (const zombie of this.zombies) if (zombie.health > 0) {
-        allowedStep = Math.min(allowedStep, distanceToBreach(zombie) / speed);
-      }
-      for (const zombie of this.zombies) if (zombie.health > 0) {
-        let budget = speed * allowedStep;
-        // 先收拢到哨塔前方，避免透视投影让侧边出生的僵尸一直贴着屏幕边缘。
-        if (zombie.waypoint) {
-          const dx = zombie.waypoint.x - zombie.x, dz = zombie.waypoint.z - zombie.z;
-          const distance = Math.hypot(dx, dz);
-          const movement = Math.min(distance, budget);
-          if (distance > 0) { zombie.x += dx / distance * movement; zombie.z += dz / distance * movement; }
-          budget -= movement;
-          if (distance <= movement + 1e-8) zombie.waypoint = undefined;
-        }
-        const dx = SURVIVAL.playerX - zombie.x, dz = SURVIVAL.playerZ - zombie.z;
-        const distance = Math.hypot(dx, dz);
-        const movement = Math.min(distance, budget);
-        if (distance > 0) { zombie.x += dx / distance * movement; zombie.z += dz / distance * movement; }
-      }
+      const movement = this.movement.advance(this.zombies, step, speed);
       const previous = this.elapsed;
-      this.elapsed += allowedStep;
-      if (allowedStep < step - 1e-8 || (this.nearest !== null && this.nearest <= SURVIVAL.breachRadius + 1e-8)) {
+      this.elapsed += movement.duration;
+      if (movement.failed) {
         this.failed = true;
         return;
       }

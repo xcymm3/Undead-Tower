@@ -1,6 +1,6 @@
 # Windows 便携版
 
-成品：`release/Undead-Tower-0.3.0-portable-x64.exe`。面向 Windows 10/11 x64，当前游戏内容与网页版本一致。
+成品：`release/Undead-Tower-0.3.0-portable-x64.exe`。面向 Windows 10/11 x64，保留 2026-09-03 的游戏构建快照。2026-09-04 新增的圆弧突破和轻微避让尚未打入 EXE；默认只修改源码和网页版，用户明确要求后才重新打包。
 
 ## 使用
 

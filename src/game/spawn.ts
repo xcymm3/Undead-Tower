@@ -1,5 +1,5 @@
 import { PerspectiveCamera, Plane, Raycaster, Vector2, Vector3 } from 'three';
-import { SURVIVAL } from './config';
+import { CONFIG, CROWD, SURVIVAL } from './config';
 import type { Position, SpawnPosition } from './encounter';
 
 interface SpawnZone { id: string; label: string; center?: Position; spread?: Position; waypoint?: Position; side?: -1 | 1; }
@@ -25,14 +25,26 @@ export function spawnAtScreenEdge(camera: PerspectiveCamera, random: () => numbe
   return { x: point.x, z: point.z, waypoint: { x: Math.sign(point.x) * Math.min(4.5, Math.abs(point.x) * 0.25), z: -6 } };
 }
 
+/** 在固定朝向的前方圆弧选定终点；为镜头的小幅转动和僵尸身体留出边缘余量。 */
+export function sampleBreachTarget(camera: PerspectiveCamera, random: () => number = Math.random): Position {
+  const viewAngle = Math.atan(Math.tan(camera.fov * Math.PI / 360) * camera.aspect * CROWD.viewMargin);
+  const halfAngle = Math.max(0, Math.min(CROWD.arcHalfAngle, viewAngle - CONFIG.camera.yawLimit));
+  const angle = (random() * 2 - 1) * halfAngle;
+  return { x: SURVIVAL.playerX + Math.sin(angle) * SURVIVAL.breachRadius, z: SURVIVAL.playerZ - Math.cos(angle) * SURVIVAL.breachRadius };
+}
+
 /** 每轮洗牌后轮流使用各区域，防止纯随机连续遗漏正面刷新点。 */
 export class SpawnDirector {
   private remaining: SpawnZone[] = [];
   private projection = new Vector3();
 
-  constructor(private random: () => number = Math.random) {}
+  constructor(private random: () => number = Math.random, private targetRandom: () => number = random) {}
 
   reset() { this.remaining = []; }
+
+  private withBreach(position: SpawnPosition, camera: PerspectiveCamera): SpawnPosition {
+    return { ...position, breachTarget: sampleBreachTarget(camera, this.targetRandom) };
+  }
 
   private inView(position: Position, camera: PerspectiveCamera) {
     this.projection.set(position.x, 1, position.z).project(camera);
@@ -49,17 +61,17 @@ export class SpawnDirector {
         }
       }
       const zone = this.remaining.pop()!;
-      if (zone.side) return { ...spawnAtScreenEdge(camera, this.random, zone.side), spawnZone: zone.id };
+      if (zone.side) return this.withBreach({ ...spawnAtScreenEdge(camera, this.random, zone.side), spawnZone: zone.id }, camera);
       const position = {
         x: zone.center!.x + (this.random() * 2 - 1) * zone.spread!.x,
         z: zone.center!.z + (this.random() * 2 - 1) * zone.spread!.z,
       };
       // 窄窗口跳过视野外的固定区域，保留可看见的正面入口和适配屏幕的林地入口。
       if (this.inView(position, camera) && this.inView(zone.waypoint!, camera)) {
-        return { ...position, waypoint: { ...zone.waypoint! }, spawnZone: zone.id };
+        return this.withBreach({ ...position, waypoint: { ...zone.waypoint! }, spawnZone: zone.id }, camera);
       }
     }
     const road = SPAWN_ZONES[0];
-    return { ...road.center!, waypoint: { ...road.waypoint! }, spawnZone: road.id };
+    return this.withBreach({ ...road.center!, waypoint: { ...road.waypoint! }, spawnZone: road.id }, camera);
   }
 }
