@@ -9,7 +9,7 @@ import { chromium, expect } from '@playwright/test';
 
 const project = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const { version } = JSON.parse(await readFile(path.join(project, 'package.json'), 'utf8'));
-const source = path.resolve(process.argv[2] || path.join(project, 'release', `Undead Tower ${version}.exe`));
+const source = path.resolve(process.argv[2] || path.join(project, 'release', `Undead Tower Rogue ${version}.exe`));
 const evidence = path.join(project, 'test-results', `portable-${Date.now()}`);
 let portableDir = path.join(evidence, '初次运行');
 await mkdir(portableDir, { recursive: true });
@@ -124,7 +124,7 @@ try {
   await page.getByRole('button', { name: '退出全屏' }).click();
   await page.getByRole('button', { name: '正式模式' }).click();
   await expect(page.getByRole('group', { name: '选择难度' })).toHaveCount(0);
-  await expect(page.locator('.practice-note')).toContainText('困难难度');
+  await page.getByRole('button', { name: '选择半自动手枪' }).click();
   // 在开局前安装观察器，避免截图或 CDP 往返错过特写开头。
   await page.evaluate(() => { window.__portableCinematic = new Promise(resolve => {
     const deadline = performance.now() + 60000;
@@ -143,9 +143,17 @@ try {
     observe();
   }); });
   await page.getByRole('button', { name: '开始坚守' }).click();
+  await expect(page.locator('.wave-countdown')).toBeVisible();
+  await expect(page.getByTestId('wave-number')).toHaveText('第 1 波');
+  await expect(page.getByTestId('weapon-name')).toContainText('半自动手枪');
+  await expect(page.getByTestId('ammo')).toHaveText('12');
+  await expect(page.getByRole('group', { name: '切换武器' })).toHaveCount(0);
+  await expect(page.locator('.wave-countdown')).toBeHidden({ timeout: 6000 });
+  await page.keyboard.press('1');
+  await page.mouse.wheel(0, 150);
+  await expect(page.getByTestId('weapon-name')).toContainText('半自动手枪');
   await expect(page.locator('.horde-status')).toContainText('移速 1.4 m/s');
-  await expect(page.locator('.horde-status')).toContainText('铁桶 1', { timeout: 16000 });
-  await expect(page.locator('.horde-status')).toContainText('移速 1.4 m/s');
+  await expect(page.getByTestId('wave-remaining')).toHaveText('本波剩余 6 / 6');
   await page.screenshot({ path: path.join(evidence, 'portable-game.png') });
   console.log('六枪开火、装填、数字键与滚轮切换通过；等待自然失败与两秒特写');
   const cinematic = await page.evaluate(() => window.__portableCinematic);
@@ -161,6 +169,11 @@ try {
   });
   assert.equal(record.entries.length, 1);
   assert.equal(record.entries[0].difficulty, 'hard');
+  assert.equal(record.key, 'undead-tower.leaderboard.rogue-v1');
+  assert.equal(record.entries[0].rogue.completed, 0);
+  assert.equal(record.entries[0].rogue.failedWave, 1);
+  assert.equal(record.entries[0].rogue.weapon, 'pistol');
+  await expect(page.getByTestId('survival-result')).toHaveText('0 波');
   assert.ok(record.entries[0].duration > 10);
   await page.screenshot({ path: path.join(evidence, 'portable-result.png') });
   await stop(session); session = null;
@@ -185,7 +198,7 @@ try {
   await stop(session); session = null;
   assert.deepEqual(errors, []);
   assert.deepEqual([...requests].filter(url => !url.startsWith('undead://game/')), []);
-  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, reloadMs, cinematic, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'six weapons fire and reload', 'digit and wheel switching', 'pause', 'fullscreen', 'fixed hard difficulty and 1.4 m/s speed', 'early armored zombies', 'natural defeat and two-second culprit cinematic', 'personal record feedback', 'leaderboard saved', 'volume setting persists after relocation', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
+  await writeFile(path.join(evidence, 'result.json'), JSON.stringify({ version, source, bytes: (await stat(source)).size, offline: true, errors, requests: [...requests], record, reloadMs, cinematic, movedDataPersists: true, checks: ['production WebGL startup', 'no renderer Node API or dev diagnostics', 'six practice weapons fire and reload', 'practice digit and wheel switching', 'pause', 'fullscreen', 'rogue pistol selection and switching restriction', 'wave countdown and fixed first-wave quota', '1.4 m/s base speed', 'natural defeat and two-second culprit cinematic', 'personal record feedback', 'rogue wave leaderboard saved', 'volume setting persists after relocation', 'portable relocation and relaunch', 'clean exit'] }, null, 2));
   console.log(`Portable 验证通过，证据：${evidence}`);
 } catch (error) {
   if (session?.page && !session.page.isClosed()) await session.page.screenshot({ path: path.join(evidence, 'failed.png') }).catch(() => {});

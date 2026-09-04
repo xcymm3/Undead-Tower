@@ -17,5 +17,5 @@ module.exports = {
     requestedExecutionLevel: 'asInvoker',
     signExecutable: false,
   },
-  portable: { artifactName: 'Undead Tower ${version}.${ext}', requestExecutionLevel: 'user', unpackDirName: false },
+  portable: { artifactName: 'Undead Tower Rogue ${version}.${ext}', requestExecutionLevel: 'user', unpackDirName: false },
 };

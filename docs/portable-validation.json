@@ -1,7 +1,7 @@
 {
-  "version": "0.4.0",
-  "source": "D:\\mydoc\\React\\undead-tower\\release\\Undead-Tower-0.4.0-portable-x64.exe",
-  "bytes": 103208533,
+  "version": "0.1.0",
+  "source": "D:\\mydoc\\React\\undead-tower\\release\\Undead Tower Rogue 0.1.0.exe",
+  "bytes": 103457104,
   "offline": true,
   "errors": [],
   "requests": [
@@ -10,37 +10,66 @@
     "undead://game/assets/barlow-condensed-latin-700-normal-v1xN8_Wq.woff2",
     "undead://game/assets/ibm-plex-mono-latin-500-normal-DSY6xOcd.woff2",
     "undead://game/",
-    "undead://game/assets/index-BbHPz7sp.js",
-    "undead://game/assets/three-BxRLIvVH.js",
-    "undead://game/assets/index-DebxRlTE.css"
+    "undead://game/assets/index-yKfMdVxt.js",
+    "undead://game/assets/three-Dprh7yuE.js",
+    "undead://game/assets/index-kSLIPsD1.css",
+    "undead://game/models/weapons/Rifle.fbx",
+    "undead://game/models/weapons/P90.fbx",
+    "undead://game/models/weapons/Pistol.fbx",
+    "undead://game/models/weapons/Revolver.fbx",
+    "undead://game/models/weapons/Shotgun.fbx",
+    "undead://game/models/weapons/SniperRifle.fbx"
   ],
   "record": {
-    "key": "undead-tower.leaderboard.armor-v3",
+    "key": "undead-tower.leaderboard.rogue-v1",
     "entries": [
       {
-        "id": "5ec8be53-37cb-42a1-9051-c594674875eb",
+        "id": "cc0c0731-cf9a-4764-832e-c9876d1851fb",
         "difficulty": "hard",
-        "duration": 20.30006320890636,
+        "duration": 15.455146909803963,
         "kills": 0,
         "shots": 0,
         "hits": 0,
-        "endedAt": "2026-09-04T03:10:32.587Z"
+        "endedAt": "2026-09-04T09:30:26.136Z",
+        "rogue": {
+          "version": 1,
+          "weapon": "pistol",
+          "seed": 2966700252,
+          "completed": 0,
+          "failedWave": 1,
+          "waveKills": 0,
+          "waveTotal": 6,
+          "clearTime": 0,
+          "levels": {
+            "damage": 0,
+            "rate": 0,
+            "magazine": 0,
+            "reload": 0,
+            "head": 0
+          }
+        }
       }
     ]
   },
-  "reloadMs": 1038,
+  "reloadMs": 954,
+  "cinematic": {
+    "durationMs": 2044.8999999985099,
+    "culprit": "突破者普通僵尸从右侧突破哨站"
+  },
   "movedDataPersists": true,
   "checks": [
     "production WebGL startup",
     "no renderer Node API or dev diagnostics",
-    "fire and fast reload",
+    "six practice weapons fire and reload",
+    "practice digit and wheel switching",
     "pause",
     "fullscreen",
-    "fixed hard difficulty",
-    "early armored zombies",
-    "natural defeat and breach marker",
+    "rogue pistol selection and switching restriction",
+    "wave countdown and fixed first-wave quota",
+    "1.4 m/s base speed",
+    "natural defeat and two-second culprit cinematic",
     "personal record feedback",
-    "leaderboard saved",
+    "rogue wave leaderboard saved",
     "volume setting persists after relocation",
     "portable relocation and relaunch",
     "clean exit"
