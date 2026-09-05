@@ -1,0 +1,126 @@
+name: Build Windows Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 0.2.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build portable EXE and publish release
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Resolve release version
+        id: release
+        shell: pwsh
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        run: |
+          $rawVersion = if ($env:GITHUB_EVENT_NAME -eq 'push') { $env:GITHUB_REF_NAME } else { $env:REQUESTED_VERSION }
+          $version = $rawVersion.Trim() -replace '^v', ''
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$') {
+            throw "Version '$rawVersion' is not a supported semantic version."
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+          "prerelease=$($version.Contains('-').ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          npm config set registry https://registry.npmjs.org
+          npm config set replace-registry-host always
+          npm ci
+
+      - name: Apply release version
+        shell: pwsh
+        run: npm version "${{ steps.release.outputs.version }}" --no-git-tag-version
+
+      - name: Run unit tests
+        shell: pwsh
+        run: npm test
+
+      - name: Build portable EXE
+        shell: pwsh
+        run: npm run dist:portable
+
+      - name: Verify packaged artifact
+        id: artifact
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD "release/Undead Tower Rogue ${{ steps.release.outputs.version }}.exe"
+          $manifest = "$exe.smoke.json"
+          if (!(Test-Path -LiteralPath $exe) -or !(Test-Path -LiteralPath $manifest)) {
+            throw 'Portable EXE or its smoke manifest was not generated.'
+          }
+          $proof = Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
+          $actualHash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          if (!$proof.hiddenSmoke -or $proof.version -ne '${{ steps.release.outputs.version }}' -or $proof.sha256 -ne $actualHash) {
+            throw 'Portable EXE smoke manifest validation failed.'
+          }
+          "exe=$exe" >> $env:GITHUB_OUTPUT
+          "manifest=$manifest" >> $env:GITHUB_OUTPUT
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Undead-Tower-Rogue-${{ steps.release.outputs.version }}-portable
+          path: |
+            ${{ steps.artifact.outputs.exe }}
+            ${{ steps.artifact.outputs.manifest }}
+          if-no-files-found: error
+
+      - name: Create or update GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          EXE_PATH: ${{ steps.artifact.outputs.exe }}
+          MANIFEST_PATH: ${{ steps.artifact.outputs.manifest }}
+        run: |
+          gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:RELEASE_TAG $env:EXE_PATH $env:MANIFEST_PATH --clobber --repo $env:GITHUB_REPOSITORY
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to update existing release assets.' }
+            exit 0
+          }
+
+          $arguments = @(
+            'release', 'create', $env:RELEASE_TAG,
+            $env:EXE_PATH, $env:MANIFEST_PATH,
+            '--repo', $env:GITHUB_REPOSITORY,
+            '--title', "Undead Tower Rogue $env:RELEASE_VERSION",
+            '--generate-notes'
+          )
+          git ls-remote --exit-code --tags origin "refs/tags/$env:RELEASE_TAG" *> $null
+          if ($LASTEXITCODE -eq 0) { $arguments += '--verify-tag' } else { $arguments += @('--target', $env:GITHUB_SHA) }
+          if ($env:RELEASE_PRERELEASE -eq 'true') { $arguments += '--prerelease' }
+          gh @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to create GitHub release.' }
