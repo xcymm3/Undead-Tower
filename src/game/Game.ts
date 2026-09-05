@@ -307,6 +307,8 @@ export class Game {
     this.wave++; this.countdown = 3;
     this.encounter.startWave(waveEnemies(this.wave, this.waveRandom), waveRate(this.wave));
     this.zombieField.sync(this.encounter); this.releaseTrigger(); this.flashTime = 0; this.recoil = 0;
+    // 尸群已经清空，立即重绘阴影，避免上一波僵尸的轮廓残留到下一次 100ms 定时刷新。
+    this.renderer.shadowMap.needsUpdate = true;
     this.phase = 'countdown'; this.previousTime = 0; this.dirty = true; this.publish();
   }
   private finishWave() {
