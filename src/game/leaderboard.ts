@@ -1,4 +1,5 @@
-import { UPGRADES } from './rogue';
+import { UPGRADES, eligibleUpgrades, maxUpgradeCount, waveCounts } from './rogue';
+import { WEAPON_IDS } from './weapons';
 import type { Difficulty, RunResult } from './config';
 
 // 开局护甲新比例单独记榜；旧 v1 与 armor-v2 数据保留在原键。
@@ -9,7 +10,7 @@ export interface PersonalRecord { status: 'first' | 'new' | 'tied' | 'chasing'; 
 /** 在写入本次成绩前比较同难度最佳，按界面显示的十分之一秒比较。 */
 export function personalRecord(result: RunResult, entries: RunResult[]): PersonalRecord {
   if (result.rogue) {
-    const scores = entries.filter(r => r.id !== result.id && r.rogue?.weapon === result.rogue!.weapon).map(r => r.rogue!.completed);
+    const scores = entries.filter(r => r.id !== result.id && r.difficulty === result.difficulty && r.rogue?.version === result.rogue!.version && r.rogue?.weapon === result.rogue!.weapon).map(r => r.rogue!.completed);
     const previous = scores.length ? Math.max(...scores) : null, difference = result.rogue.completed - (previous ?? 0);
     return { status: previous === null ? 'first' : difference > 0 ? 'new' : difference === 0 ? 'tied' : 'chasing', previous, difference: Math.abs(difference) };
   }
@@ -25,24 +26,26 @@ function isResult(value: unknown): value is RunResult {
   const r = value as RunResult;
   if (r.rogue !== undefined) {
     const g = r.rogue;
-    if (!g || g.version !== 1 || g.weapon !== 'pistol' || !Number.isSafeInteger(g.seed) || g.seed < 0 || g.seed > 0xffffffff
+    if (!g || g.version !== 2 || !WEAPON_IDS.includes(g.weapon) || !Number.isSafeInteger(g.seed) || g.seed < 0 || g.seed > 0xffffffff
       || ![g.completed, g.failedWave, g.waveKills, g.waveTotal].every(n => Number.isSafeInteger(n) && n >= 0)
-      || g.failedWave !== g.completed + 1 || g.waveTotal !== 6 + 2 * g.completed || g.waveKills >= g.waveTotal
+      || g.failedWave !== g.completed + 1 || g.waveTotal !== Object.values(waveCounts(g.failedWave)).reduce((sum, n) => sum + n, 0) || g.waveKills >= g.waveTotal
       || !Number.isFinite(g.clearTime) || g.clearTime < 0 || g.clearTime > r.duration || g.waveKills > r.kills
       || !g.levels || !Object.entries(UPGRADES).every(([id, upgrade]) => { const n = g.levels[id as keyof typeof UPGRADES]; return Number.isInteger(n) && n >= 0 && n <= upgrade.max; })
-      || Object.values(g.levels).reduce((sum, n) => sum + n, 0) !== Math.min(g.completed, 23)) return false;
+      || Object.keys(g.levels).length !== Object.keys(UPGRADES).length
+      || Object.entries(g.levels).some(([id, n]) => n > 0 && !eligibleUpgrades(g.weapon).includes(id as keyof typeof UPGRADES))
+      || Object.values(g.levels).reduce((sum, n) => sum + n, 0) !== Math.min(g.completed, maxUpgradeCount(g.weapon))) return false;
   }
   return typeof r.id === 'string' && r.id.length > 0 && difficulties.includes(r.difficulty)
     && Number.isFinite(r.duration) && r.duration >= 0
     && [r.kills, r.shots, r.hits].every(n => Number.isSafeInteger(n) && n >= 0)
-    && r.hits <= r.shots && r.kills <= r.hits
+    && r.hits <= r.shots && (r.rogue ? r.kills <= r.hits * 10 : r.kills <= r.hits)
     && typeof r.endedAt === 'string' && Number.isFinite(Date.parse(r.endedAt));
 }
 
 export function rankResults(entries: RunResult[]): RunResult[] {
   const unique = [...new Map(entries.filter(isResult).map(entry => [entry.id, entry])).values()];
-  return difficulties.flatMap(difficulty => unique.filter(r => r.difficulty === difficulty)
-    .sort((a, b) => (a.rogue && b.rogue ? b.rogue.completed - a.rogue.completed || b.rogue.waveKills - a.rogue.waveKills || a.rogue.clearTime - b.rogue.clearTime : b.duration - a.duration || b.kills - a.kills) || a.endedAt.localeCompare(b.endedAt) || a.id.localeCompare(b.id)).slice(0, 10));
+  return difficulties.flatMap(difficulty => [undefined, ...WEAPON_IDS].flatMap(weapon => unique.filter(r => r.difficulty === difficulty && r.rogue?.weapon === weapon)
+    .sort((a, b) => (a.rogue && b.rogue ? b.rogue.completed - a.rogue.completed || b.rogue.waveKills - a.rogue.waveKills || a.rogue.clearTime - b.rogue.clearTime : b.duration - a.duration || b.kills - a.kills) || a.endedAt.localeCompare(b.endedAt) || a.id.localeCompare(b.id)).slice(0, 10)));
 }
 
 /** 存储不可用时保留当前会话成绩，且明确向 UI 返回保存失败。 */

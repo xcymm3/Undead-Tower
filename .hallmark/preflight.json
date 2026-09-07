@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "scannedAt": "2026-09-05",
+  "framework": "React 19 + Vite 8",
+  "designSystem": "design.md",
+  "fontStack": {
+    "display": "Barlow Condensed",
+    "body": "IBM Plex Mono",
+    "sources": [
+      "@fontsource/barlow-condensed",
+      "@fontsource/ibm-plex-mono"
+    ]
+  },
+  "palette": "Named OKLCH tokens in tokens.css with rogue UI role aliases in src/ui/rogue-tokens.css",
+  "motion": "motion-cut; named transform/opacity durations and reduced-motion fallback",
+  "spacing": "Named 4-point scale",
+  "genre": "atmospheric",
+  "tone": "utilitarian / austere field equipment",
+  "preserve": [
+    "live low-poly game canvas",
+    "dark forest, sand and amber brand palette",
+    "existing information architecture and component ownership",
+    "keyboard operation and fixed-view gameplay"
+  ],
+  "packageJsonLastWriteUtc": "2026-09-04T11:37:12.6416500Z"
+}

@@ -1,5 +1,6 @@
 import type { ZombieKind } from './config';
 import { synthesizeDeath, synthesizeMusic } from './soundSynthesis';
+import { METAL_VARIANTS, METAL_VOICES, metalRecipe, synthesizeMetal } from './metalSynthesis';
 
 export const AUDIO_SETTINGS_KEY = 'undead-tower.audio.v1';
 const MUSIC_LEVEL = 0.028;
@@ -24,6 +25,11 @@ export class GameAudio {
   private muted = false;
   private level = 1;
   private armorCues = 0;
+  private metalCues = 0;
+  private metalBuffers = new Map<string, AudioBuffer>();
+  private metalGain?: GainNode;
+  private metalSources = new Set<AudioBufferSourceNode>();
+  private lastMetal: ReturnType<typeof metalRecipe> | null = null;
   private lastArmorCue: { kind: ZombieKind; broken: boolean } | null = null;
 
   constructor() {
@@ -40,7 +46,12 @@ export class GameAudio {
   set volume(value: number) { if (Number.isFinite(value)) { this.level = Math.max(0, Math.min(1, value)); this.applyVolume(); } }
 
   private applyVolume() {
-    if (this.master && this.context) this.master.gain.setValueAtTime(this.muted ? 0 : this.level, this.context.currentTime);
+    if (this.master) {
+      // Settings are immediate, including when the audio render clock is suspended.
+      this.master.gain.cancelScheduledValues(0);
+      this.master.gain.value = this.muted ? 0 : this.level;
+    }
+    if (this.muted || this.level === 0) this.clearMetal();
     try { localStorage.setItem(AUDIO_SETTINGS_KEY, JSON.stringify({ enabled: this.enabled, volume: this.level })); }
     catch { /* 当前会话的音量调节仍然有效。 */ }
     this.syncMusic();
@@ -60,8 +71,20 @@ export class GameAudio {
     } catch { /* 无音频设备时继续运行视觉原型。 */ }
   }
 
-  setPlaying(playing: boolean) { this.playing = playing; this.syncMusic(); }
-  resetMusic() { this.setPlaying(false); this.musicOffset = 0; this.duckUntil = 0; }
+  setPlaying(playing: boolean) { this.playing = playing; if (!playing) this.clearMetal(); this.syncMusic(); }
+  resetMusic() { this.setPlaying(false); this.musicOffset = 0; this.duckUntil = 0; this.clearMetal(); }
+
+  private clearMetal() {
+    for (const source of this.metalSources) { source.onended = null; source.stop(); source.disconnect(); }
+    this.metalSources.clear();
+    this.updateMetalGain();
+  }
+  private updateMetalGain() {
+    if (this.metalGain) {
+      this.metalGain.gain.cancelScheduledValues(0);
+      this.metalGain.gain.value = 1 / Math.max(1, this.metalSources.size);
+    }
+  }
 
   private buffer(samples: Float32Array) {
     const buffer = this.context!.createBuffer(1, samples.length, this.context!.sampleRate);
@@ -106,7 +129,10 @@ export class GameAudio {
 
   shot() {
     const ctx = this.context;
-    if (!ctx || !this.master || !this.enabled || this.level === 0 || ctx.state !== 'running') return;
+    if (!ctx || !this.master || !this.enabled || this.level === 0) return;
+    // 首次可信输入会异步唤醒 WebAudio；保留这次枪声，而不是在 resume 完成前静默丢弃。
+    if (ctx.state === 'suspended') { void ctx.resume().then(() => this.shot()).catch(() => {}); return; }
+    if (ctx.state !== 'running') return;
     this.duckMusic();
     if (!this.noise) {
       this.noise = ctx.createBuffer(1, ctx.sampleRate * 0.3, ctx.sampleRate);
@@ -131,6 +157,7 @@ export class GameAudio {
 
   failure() {
     this.failureCues++;
+    this.clearMetal();
     this.setPlaying(false);
     this.tone(140, 35, 1.2, 0.12, 'sine');
     this.tone(480, 75, 0.45, 0.055, 'triangle');
@@ -159,15 +186,31 @@ export class GameAudio {
     if (!this.context || !this.enabled || this.level === 0 || this.context.state !== 'running') return;
     this.armorCues++; this.lastArmorCue = { kind, broken };
     if (kind === 'bucket') {
-      // 非整数泛音形成中空金属桶余响，略错开枪声起音以便听清。
-      this.tone(broken ? 620 : 1480, broken ? 350 : 1390, broken ? 0.42 : 0.27, 0.09, 'sine', 0.035);
-      this.tone(broken ? 1010 : 2370, broken ? 610 : 2200, 0.23, 0.045, 'sine', 0.035);
-      this.tone(3540, 3100, 0.08, 0.025, 'sine', 0.035);
+      this.metal(broken);
     } else {
       // 塑料路锥以低沉的空腔撞击搭配短促的敲击起音。
       this.tone(broken ? 260 : 430, 95, broken ? 0.22 : 0.13, 0.11, 'triangle', 0.035);
       this.tone(1050, 390, 0.055, 0.045, 'square', 0.035);
     }
+  }
+
+  private metal(broken: boolean) {
+    const ctx = this.context;
+    if (!ctx || !this.master || this.disposed) return;
+    const variant = this.metalCues++ % METAL_VARIANTS.length, key = `${broken}:${variant}`;
+    this.lastMetal = metalRecipe(broken, variant);
+    if (!this.metalBuffers.has(key)) this.metalBuffers.set(key, this.buffer(synthesizeMetal(ctx.sampleRate, broken, variant)));
+    if (this.metalSources.size >= METAL_VOICES) {
+      const oldest = this.metalSources.values().next().value!;
+      oldest.onended = null; oldest.stop(); oldest.disconnect(); this.metalSources.delete(oldest);
+    }
+    this.metalGain ??= ctx.createGain();
+    if (!this.metalSources.size) { this.metalGain.disconnect(); this.metalGain.connect(this.master); }
+    const source = ctx.createBufferSource(); source.buffer = this.metalBuffers.get(key)!;
+    source.connect(this.metalGain);
+    source.onended = () => { source.disconnect(); this.metalSources.delete(source); this.updateMetalGain(); };
+    this.metalSources.add(source); this.updateMetalGain(); source.start(ctx.currentTime + .018);
+    this.duckMusic(source.buffer.duration);
   }
 
   death() {
@@ -188,6 +231,6 @@ export class GameAudio {
     this.duckMusic(source.buffer.duration);
   }
 
-  diagnostics() { return { enabled: this.enabled, volume: this.volume, gain: this.master?.gain.value ?? (this.muted ? 0 : this.level), armorCues: this.armorCues, lastArmorCue: this.lastArmorCue, deathCues: this.deathCues, failureCues: this.failureCues, activeDeaths: this.deathSources.size, musicPlaying: Boolean(this.musicSource), musicLevel: MUSIC_LEVEL, musicDucked: Boolean(this.musicSource && this.context && this.context.currentTime < this.duckUntil), duckedMusicLevel: DUCKED_MUSIC_LEVEL }; }
-  dispose() { this.disposed = true; this.setPlaying(false); this.deathSources.clear(); void this.context?.close().catch(() => {}); }
+  diagnostics() { return { enabled: this.enabled, volume: this.volume, gain: this.master?.gain.value ?? (this.muted ? 0 : this.level), armorCues: this.armorCues, lastArmorCue: this.lastArmorCue, metalCues: this.metalCues, activeMetal: this.metalSources.size, cachedMetal: this.metalBuffers.size, lastMetal: this.lastMetal, deathCues: this.deathCues, failureCues: this.failureCues, activeDeaths: this.deathSources.size, musicPlaying: Boolean(this.musicSource), musicLevel: MUSIC_LEVEL, musicDucked: Boolean(this.musicSource && this.context && this.context.currentTime < this.duckUntil), duckedMusicLevel: DUCKED_MUSIC_LEVEL }; }
+  dispose() { this.disposed = true; this.setPlaying(false); this.clearMetal(); this.metalGain?.disconnect(); this.metalBuffers.clear(); this.deathSources.clear(); void this.context?.close().catch(() => {}); }
 }

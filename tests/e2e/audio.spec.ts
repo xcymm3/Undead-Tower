@@ -4,8 +4,8 @@ test('音量即时生效，静音独立保存，刷新与重开不丢失偏好',
   await page.goto('/');
   await page.getByRole('button', { name: '进入哨站' }).click();
   await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.musicPlaying).toBe(true);
-  await page.mouse.click(700, 400);
-  expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.musicDucked).toBe(true);
+  await page.getByTestId('game-canvas').click({ position: { x: 700, y: 400 } });
+  await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.musicDucked).toBe(true);
   await page.getByRole('button', { name: '游戏设置' }).click();
   expect((await page.evaluate(() => window.__undeadTower!.snapshot())).audio.musicPlaying).toBe(false);
   const volume = page.getByRole('slider', { name: '总音量' });
@@ -24,7 +24,7 @@ test('音量即时生效，静音独立保存，刷新与重开不丢失偏好',
   await volume.fill('0');
   await expect.poll(async () => (await page.evaluate(() => window.__undeadTower!.snapshot())).audio.gain).toBe(0);
   await volume.fill('37');
-  await page.screenshot({ path: 'test-results/audio-settings.png' });
+  await page.screenshot({ path: test.info().outputPath('audio-settings.png') });
   await page.getByRole('button', { name: '返回哨站' }).click();
   await page.getByRole('button', { name: '进入哨站' }).click();
   await page.keyboard.press('Escape');

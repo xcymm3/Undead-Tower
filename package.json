@@ -16,9 +16,11 @@
     "test:desktop:hidden": "node scripts/smoke-portable.mjs --desktop",
     "preview": "vite preview --host 127.0.0.1 --port 4175",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "node scripts/run-e2e.mjs",
     "balance": "node scripts/evaluate-balance.mjs",
-    "verify": "npm run test && npm run build && npm run test:e2e"
+    "verify": "npm run test && npm run build && npm run test:e2e",
+    "balance:rogue": "node scripts/evaluate-rogue.mjs",
+    "test:rogue:replay": "node scripts/replay-rogue.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.2.8",

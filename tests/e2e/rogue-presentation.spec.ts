@@ -1,0 +1,60 @@
+import { test, expect } from '@playwright/test';
+import { clearWave } from './rogue-helpers';
+
+test('实际清波图案、三视口、淡出单次确认和持续构筑详情', async ({ page }, info) => {
+  test.setTimeout(120000);
+  await page.addInitScript(() => localStorage.setItem('undead-tower.audio.v1', JSON.stringify({ enabled: false, volume: 0 })));
+  await page.goto('/');
+  await page.getByRole('button', { name: '正式模式' }).click();
+  await page.getByRole('button', { name: '选择半自动手枪', exact: true }).click();
+  await page.getByRole('button', { name: '开始坚守' }).click();
+  await expect.poll(() => page.evaluate(() => window.__undeadTower!.snapshot().phase)).toBe('playing');
+  await page.getByTestId('game-canvas').dispatchEvent('pointerdown', { button: 2 });
+  await page.evaluate(() => window.dispatchEvent(new PointerEvent('pointerup', { button: 2 })));
+  await clearWave(page);
+  const before = await page.evaluate(() => window.__undeadTower!.snapshot());
+  expect(before.rogue!.skill.cooldownRemaining).toBeGreaterThan(0);
+  const id = before.rogue!.choices[0];
+  await expect(page.locator('.upgrade-card .upgrade-icon')).toHaveCount(3);
+  await expect(page.getByRole('button', { name: /应用升级/ })).toBeDisabled();
+  for (const [width, height] of [[1440, 900], [1280, 720], [390, 844], [320, 844], [375, 844], [414, 844], [768, 900]]) {
+    await page.setViewportSize({ width, height });
+    await page.waitForTimeout(200);
+    expect(await page.locator('.upgrade-screen').evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+    await page.screenshot({ path: info.outputPath(`upgrade-${width}.png`) });
+  }
+  const afterThinking = await page.evaluate(() => window.__undeadTower!.snapshot());
+  expect(afterThinking.survived).toBe(before.survived);
+  expect(afterThinking.rogue!.skill.cooldownRemaining).toBe(before.rogue!.skill.cooldownRemaining);
+  expect(afterThinking.rogue!.skill.active).toBe(false);
+  expect(afterThinking.offhandVisible).toBe(false);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.locator('.upgrade-card').first().focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.upgrade-card').first()).toHaveAttribute('aria-pressed', 'true');
+  // Two synchronous confirm events must result in one application after the exit animation.
+  await page.getByRole('button', { name: /应用升级/ }).evaluate(el => { (el as HTMLButtonElement).click(); (el as HTMLButtonElement).click(); });
+  await expect(page.locator('.upgrade-screen')).toHaveClass(/is-leaving/);
+  await page.screenshot({ path: info.outputPath('upgrade-exit.png') });
+  await expect(page.locator('.upgrade-screen')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.__undeadTower!.snapshot().phase)).toBe('countdown');
+  const after = await page.evaluate(() => window.__undeadTower!.snapshot());
+  expect(after.rogue!.levels[id]).toBe(before.rogue!.levels[id] + 1);
+  expect(after.rogue!.wave).toBe(2);
+  expect(after.ammo).toBe(after.rogue!.stats.capacity); expect(after.reloading).toBe(false);
+  expect(after.rogue!.skill.cooldownRemaining).toBeLessThanOrEqual(before.rogue!.skill.cooldownRemaining);
+  await page.waitForTimeout(150);
+  const countdown = await page.evaluate(() => window.__undeadTower!.snapshot());
+  expect(countdown.phase).toBe('countdown'); expect(countdown.survived).toBe(before.survived);
+  expect(countdown.rogue!.skill.cooldownRemaining).toBeLessThan(after.rogue!.skill.cooldownRemaining);
+  await expect.poll(() => page.evaluate(() => window.__undeadTower!.snapshot().phase)).toBe('playing');
+  const inventory = page.locator('.build-inventory.compact');
+  await expect(inventory.locator(`[data-upgrade-icon="${id}"]`)).toBeVisible();
+  await inventory.getByRole('button').focus();
+  await expect(inventory.getByRole('tooltip')).toBeVisible();
+  await expect(inventory.getByRole('tooltip')).toContainText('当前：');
+  await page.screenshot({ path: info.outputPath('build-detail.png') });
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '重新开始坚守' }).click();
+  expect((await page.evaluate(() => window.__undeadTower!.snapshot())).rogue!.levels[id]).toBe(0);
+});

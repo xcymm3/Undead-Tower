@@ -84,7 +84,7 @@ try {
     log({ type: 'wave-cleared', wave: state.rogue.wave, kills: state.kills });
     await page.mouse.move(640, 110, { steps: 6 });
     await page.waitForTimeout(2200);
-    const labels = { damage: '强装药', head: '精准射击', rate: '轻快扳机', reload: '快速装填', magazine: '扩容弹匣' };
+    const labels = { damage: '强装药', critical_chance: '致命概率', critical_damage: '致命冲击', rate: '轻快扳机', reload: '快速装填', magazine: '扩容弹匣' };
     const selected = ['damage', 'head', 'rate', 'reload', 'magazine'].find(key => state.rogue.choices.includes(key));
     await page.getByRole('button', { name: new RegExp(labels[selected]) }).click();
     await page.waitForTimeout(1200);

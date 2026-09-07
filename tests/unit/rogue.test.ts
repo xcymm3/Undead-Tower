@@ -5,7 +5,9 @@ import { seededRandom } from '../../src/game/geometry';
 import { Encounter, type Zombie } from '../../src/game/encounter';
 import { Navigation, NAV_RADIUS } from '../../src/game/navigation';
 import { CrowdMovement } from '../../src/game/movement';
-import { teleportPoint } from '../../src/game/teleport';
+import { teleportPoint, finishShotTeleports } from '../../src/game/teleport';
+import { createShot, hitWithShot } from '../../src/game/combat';
+import { WEAPONS } from '../../src/game/weapons';
 import { ZOMBIE_TYPES, type ZombieKind, type RunResult } from '../../src/game/config';
 import { createWorld } from '../../src/game/world';
 import { SpawnDirector } from '../../src/game/spawn';
@@ -15,14 +17,24 @@ const actor = (kind: ZombieKind, x = 0, z = -30): Zombie => ({ id: 1, kind, x, z
 
 describe('肉鸽波次与升级', () => {
   it('名单总量固定且增长，新怪按设计引入，种子可重放', () => {
+    let previousTotal = 0;
     for (let wave = 1; wave <= 100; wave++) {
       const counts = waveCounts(wave);
-      expect(Object.values(counts).reduce((a,b) => a+b)).toBe(6 + 2*(wave-1));
+      const currentTotal = Object.values(counts).reduce((a,b) => a+b);
+      expect(currentTotal).toBeGreaterThanOrEqual(previousTotal); previousTotal = currentTotal;
       expect(waveEnemies(wave, seededRandom(31))).toEqual(waveEnemies(wave, seededRandom(31)));
       expect(waveRate(wave)).toBeLessThanOrEqual(10);
     }
     expect(waveCounts(3).football).toBe(0); expect(waveEnemies(4, seededRandom(1))[0]).toBe('football');
     expect(waveEnemies(6, seededRandom(1))[0]).toBe('wizard'); expect(waveEnemies(8, seededRandom(1))[0]).toBe('giant');
+    expect(waveEnemies(10, seededRandom(1))[0]).toBe('skitter'); expect(waveEnemies(13, seededRandom(1))[0]).toBe('charger');
+    expect(waveEnemies(15, seededRandom(1))[0]).toBe('howler'); expect(waveEnemies(18, seededRandom(1))[0]).toBe('berserker');
+    expect(Object.values(waveCounts(24)).reduce((a, b) => a + b)).toBe(23);
+    expect(Object.values(waveCounts(50)).reduce((a, b) => a + b)).toBe(218);
+    expect(Object.values(waveCounts(60)).reduce((a, b) => a + b)).toBe(383);
+    const late = waveCounts(30);
+    expect(late.berserker + late.giant + late.charger + late.howler).toBeGreaterThan(late.football + late.wizard + late.skitter);
+    expect(late.berserker).toBeGreaterThan(Object.values(late).reduce((sum, count) => sum + count, 0) / 2);
   });
   it('暂时全歼不提前过波，失败出生重试不丢名额，最终只生成固定总数', () => {
     const encounter = new Encounter(); encounter.reset('survival', 'hard'); encounter.startWave(['normal','cone'], 1);
@@ -49,15 +61,32 @@ describe('肉鸽波次与升级', () => {
   });
   it('升级公式、满级池与动画时长保持一致，不修改全局配置', () => {
     const levels = freshLevels(), base = pistolStats(levels);
-    levels.damage=2; expect(pistolStats(levels).damage * 2).toBe(210);
+    levels.damage=2; expect(pistolStats(levels).damage * 2).toBeCloseTo(238);
+    for (const id of ['damage','rate','magazine','reload','critical_chance'] as const) levels[id]=UPGRADES[id].max;
+    const max = pistolStats(levels); expect(max.damage).toBe(170); expect(max.headMultiplier).toBe(2); expect(max.capacity).toBe(24);
+    expect(max.fireDuration).toBeLessThanOrEqual(max.interval); expect(max.reloadDuration).toBeCloseTo(1.0625);
     for (const id of Object.keys(UPGRADES) as (keyof typeof UPGRADES)[]) levels[id]=UPGRADES[id].max;
-    const max = pistolStats(levels); expect(max.damage).toBe(150); expect(max.headMultiplier).toBe(3.5); expect(max.capacity).toBe(24);
-    expect(max.fireDuration).toBeLessThanOrEqual(max.interval); expect(max.reloadDuration).toBeCloseTo(.53125);
     expect(upgradeChoices(levels, seededRandom(1))).toEqual([]);
-    expect(new Set(upgradeChoices(freshLevels(), seededRandom(1))).size).toBe(3); expect(base.damage).toBe(75);
+    expect(new Set(upgradeChoices(freshLevels(), seededRandom(1))).size).toBe(3); expect(base.damage).toBe(85);
   });
 });
 describe('高级僵尸', () => {
+  it('一发散弹先结算全部真实命中，存活巫师只反应一次，死亡者不瞬移', () => {
+    const nav = new Navigation([]), e = new Encounter(); e.reset('survival', 'hard');
+    const z = actor('wizard'); e.zombies = [z];
+    const shot = createShot(WEAPONS.find(w => w.id === 'shotgun')!, freshLevels(), false, () => .99);
+    for (let i = 0; i < 3; i++) hitWithShot(e, shot, z.id, false);
+    expect(z.x).toBe(0); expect(z.z).toBe(-30);
+    expect(z.health).toBe(ZOMBIE_TYPES.wizard.health - shot.weapon.damage * 3);
+    const events = finishShotTeleports(shot, e.zombies, nav, () => true, seededRandom(77));
+    expect(events).toHaveLength(1);
+    expect(Math.hypot(z.x, z.z - 9)).toBeCloseTo(39, 10);
+    e.hit(z.id, true, 10000);
+    const random = vi.fn(() => .5);
+    expect(finishShotTeleports(shot, e.zombies, nav, () => true, random)).toEqual([]);
+    expect(random).not.toHaveBeenCalled();
+    expect(finishShotTeleports(createShot(shot.weapon, freshLevels(), false, () => .99), [actor('wizard')], nav, () => true, random)).toEqual([]);
+  });
   it('速度倍率、掉护甲后物种与总生命保持正确', () => {
     for (const [kind,speed] of [['normal',1.4],['football',2.8],['giant',.7],['wizard',1.4]] as const) {
       const z=actor(kind); new CrowdMovement().advance([z],1,1.4); expect(z.z+30).toBeCloseTo(speed);
@@ -96,7 +125,7 @@ describe('高级僵尸', () => {
   },20000);
 });
 describe('波数榜', () => {
-  const result=(id:string,completed:number,waveKills:number,clearTime:number,duration=100):RunResult=>({id,difficulty:'hard',duration,kills:100,shots:100,hits:100,endedAt:'2026-09-04T00:00:00Z',rogue:{version:1,weapon:'pistol',seed:1,completed,failedWave:completed+1,waveKills,waveTotal:6+2*completed,clearTime,levels:{...freshLevels(),damage:completed}}});
+  const result=(id:string,completed:number,waveKills:number,clearTime:number,duration=100):RunResult=>({id,difficulty:'hard',duration,kills:100,shots:100,hits:100,endedAt:'2026-09-04T00:00:00Z',rogue:{version:2,weapon:'pistol',seed:1,completed,failedWave:completed+1,waveKills,waveTotal:6+2*completed,clearTime,levels:{...freshLevels(),damage:completed}}});
   it('按通过波数、末波击杀、清波速度排序，拖延不加分，个人纪录按波数',()=>{
     const a=result('a',2,3,50,100), b=result('b',2,4,60), c=result('c',3,0,70), d=result('d',2,4,40);
     expect(rankResults([a,b,c,d]).map(r=>r.id)).toEqual(['c','d','b','a']);

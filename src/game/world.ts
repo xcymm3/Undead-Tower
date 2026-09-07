@@ -3,6 +3,11 @@ import { batchStaticBoxes, box, cube, material, seededRandom } from './geometry'
 import type { Obstacle } from './navigation';
 
 function sign(parent: THREE.Object3D, text: string, subtitle: string, x: number, y: number, z: number, width = 5) {
+  // Headless rule simulations retain the same sign geometry without a DOM texture.
+  if (typeof document === 'undefined') {
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, width * 160 / 512), material(0x303e38));
+    mesh.position.set(x, y, z); parent.add(mesh); return;
+  }
   const canvas = document.createElement('canvas');
   canvas.width = 512; canvas.height = 160;
   const ctx = canvas.getContext('2d')!;

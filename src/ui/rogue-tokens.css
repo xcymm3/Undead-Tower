@@ -1,0 +1,33 @@
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V3
+ * genre: atmospheric · macrostructure: Workbench · design-system: design.md · designed-as-app
+ * tone: utilitarian / austere field equipment · anchor hue: amber
+ */
+:root {
+  --color-rogue-paper: #ece8d3;
+  --color-rogue-muted: #b4bcae;
+  --color-rogue-panel: #25332c;
+  --color-rogue-deep: #101b17;
+  --color-rogue-line: #627062;
+  --color-rogue-focus: #eee5ca;
+  --color-rogue-selected: #3b402c;
+  --color-rogue-common: #bdc7b8;
+  --color-rogue-rare: #82cdd2;
+  --color-rogue-epic: #dfb86c;
+  --color-rogue-error: #df9674;
+  --color-rogue-success: #bed08c;
+  --color-rogue-disabled: #7f8b80;
+  --dur-rogue: 180ms;
+  --dur-rogue-card: 220ms;
+  --dur-rogue-reduced: 120ms;
+  --ease-rogue: ease-out;
+  --ease-rogue-enter: cubic-bezier(.2,.8,.2,1);
+}
+:root {
+  --color-rogue-overlay: #101b17ed;
+  --color-skill-rifle: #e8b260;
+  --color-skill-p90: #82cdd2;
+  --color-skill-pistol: #e2c58d;
+  --color-skill-revolver: #df9674;
+  --color-skill-shotgun: #bed08c;
+  --color-skill-sniper: #adbbe5;
+}

@@ -18,11 +18,19 @@ export class Firearm {
     return this.definition.shellReload ? ((this.reloadTotal - this.reloadRemaining) / this.definition.reloadDuration) % 1 : this.reloadProgress;
   }
   get fireProgress() { return this.fireRemaining > 0 ? 1 - this.fireRemaining / this.definition.fireDuration : 1; }
-  fire(): boolean {
-    if (this.reloading || this.cooldown > 1e-8 || this.ammo === 0) return false;
-    this.ammo--; this.shots++;
+  fire(infiniteAmmo = false): boolean {
+    if (this.cooldown > 1e-8 || (!infiniteAmmo && this.ammo === 0)) return false;
+    if (this.reloading && !this.interruptShellReload()) return false;
+    if (!infiniteAmmo) this.ammo--;
+    this.shots++;
     this.cooldown = this.definition.interval;
     this.fireRemaining = this.definition.fireDuration;
+    return true;
+  }
+  /** 已入膛的弹药保留，尚未完成的这一发不结算；普通弹匣不可中断。 */
+  interruptShellReload() {
+    if (!this.reloading || !this.definition.shellReload) return false;
+    this.reloadRemaining = 0; this.reloadTotal = 0; this.reloadEmpty = false;
     return true;
   }
   reload(): boolean {

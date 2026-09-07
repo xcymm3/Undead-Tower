@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-09-05",
+    "scope": "app",
+    "macrostructure": "Workbench",
+    "theme": "custom",
+    "theme_axes": "dark / display-condensed / amber",
+    "vibe": "utilitarian austere field equipment",
+    "nav": "N9 Edge-aligned minimal",
+    "footer": "Ft2 Inline single line",
+    "enrichment": "interactive Three.js game scene",
+    "brief": "精简部署、设置、升级和构筑界面并保留实景战场"
+  },
+  {
     "date": "2026-09-03",
     "macrostructure": "Photographic (live game canvas)",
     "theme": "custom",

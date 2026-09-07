@@ -1,5 +1,5 @@
 import { PerspectiveCamera, Vector3 } from 'three';
-import { ARMOR_SPAWNS, CONFIG, CROWD, PRESSURE, ZOMBIE_TYPES } from '../src/game/config';
+import { ARMOR_SPAWNS, CONFIG, CROWD, PRESSURE, ZOMBIE_TYPES, emptyZombieCounts } from '../src/game/config';
 import type { Difficulty, ZombieKind } from '../src/game/config';
 import { distanceToBreach, Encounter } from '../src/game/encounter';
 import { Firearm } from '../src/game/firearm';
@@ -33,8 +33,8 @@ export function simulateRun(difficulty: Difficulty, profile: typeof PLAYER_PROFI
   let maxAlive = 0;
   let observedSpawns = 0;
   const firstAppearance: Partial<Record<ZombieKind, number>> = {};
-  const spawned = { normal: 0, cone: 0, bucket: 0, football: 0, giant: 0, wizard: 0 };
-  const kills = { normal: 0, cone: 0, bucket: 0, football: 0, giant: 0, wizard: 0 };
+  const spawned = emptyZombieCounts();
+  const kills = emptyZombieCounts();
   const originalKinds = new Map<number, ZombieKind>();
   while (!encounter.failed && encounter.elapsed < 360) {
     firearm.update(dt);

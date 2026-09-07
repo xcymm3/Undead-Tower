@@ -1,57 +1,69 @@
-import { WEAPONS } from './weapons';
-import type { WeaponDefinition } from './weapons';
+import type { WeaponDefinition, WeaponId } from './weapons';
 import type { ZombieKind } from './config';
+import { ZOMBIE_KINDS } from './config';
+import type { UpgradeLevels, UpgradeId, SkillStats } from './upgrades';
+import type { SkillSnapshot } from './skills';
+export * from './upgrades';
 
-export const ROGUE_KEY = 'undead-tower.leaderboard.rogue-v1';
-export const UPGRADES = {
-  damage: { name: '强装药', detail: '基础伤害 +20%', max: 5 },
-  rate: { name: '轻快扳机', detail: '基础射速 +12%', max: 5 },
-  magazine: { name: '扩容弹匣', detail: '弹容 +3 发', max: 4 },
-  reload: { name: '快速装填', detail: '装填速度 +15%', max: 4 },
-  head: { name: '精准射击', detail: '爆头倍率 +0.3', max: 5 },
-} as const;
-export type UpgradeId = keyof typeof UPGRADES;
-export type UpgradeLevels = Record<UpgradeId, number>;
-export const freshLevels = (): UpgradeLevels => ({ damage: 0, rate: 0, magazine: 0, reload: 0, head: 0 });
-export function pistolStats(levels: UpgradeLevels): WeaponDefinition {
-  const base = WEAPONS[2];
-  return { ...base, damage: base.damage * (1 + .2 * levels.damage), headMultiplier: 2 + .3 * levels.head,
-    interval: base.interval / (1 + .12 * levels.rate), fireDuration: base.fireDuration / (1 + .12 * levels.rate),
-    capacity: base.capacity + 3 * levels.magazine, reloadDuration: base.reloadDuration / (1 + .15 * levels.reload) };
-}
+export const LEGACY_ROGUE_KEY = 'undead-tower.leaderboard.rogue-v1';
+export const LEGACY_SIX_ROGUE_KEY = 'undead-tower.leaderboard.rogue-six-v2';
+export const ROGUE_KEY = 'undead-tower.leaderboard.rogue-revision-v3';
 export function shuffle<T>(values: T[], random: () => number): T[] {
   for (let i = values.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [values[i], values[j]] = [values[j], values[i]]; }
   return values;
 }
-export function upgradeChoices(levels: UpgradeLevels, random: () => number) {
-  return shuffle((Object.keys(UPGRADES) as UpgradeId[]).filter(id => levels[id] < UPGRADES[id].max), random).slice(0, 3);
-}
-const KINDS: ZombieKind[] = ['normal', 'cone', 'bucket', 'football', 'giant', 'wizard'];
-const WAVES = [[6,0,0,0,0,0], [6,2,0,0,0,0], [7,2,1,0,0,0], [8,2,1,1,0,0], [8,3,2,1,0,0],
-  [9,3,2,1,0,1], [9,4,3,1,0,1], [9,4,3,2,1,1], [10,4,4,2,1,1], [10,5,4,2,1,2]];
+const KINDS = ZOMBIE_KINDS;
+export const ENEMY_INTEL: Partial<Record<ZombieKind, { wave: number; tip: string }>> = {
+  football: { wave: 4, tip: '橄榄球僵尸：移动很快，优先拦截' },
+  wizard: { wave: 6, tip: '巫师：非致命受击后瞬移，重新寻找目标' },
+  giant: { wave: 8, tip: '巨人：体型巨大但缓慢，集中火力并留意其他通路' },
+  skitter: { wave: 10, tip: '游走者：左右变向接近，持续跟枪或用散弹覆盖' },
+  charger: { wave: 13, tip: '突进者：蓄力时射击可打断，否则会沿通路高速突进' },
+  howler: { wave: 15, tip: '号令者：打断蓄势或优先击杀，避免附近尸群获得加速' },
+  berserker: { wave: 18, tip: '狂暴者：生命降至40%后永久狂暴，保留爆发火力完成击杀' },
+};
+export const waveIntel = (wave: number) => Object.values(ENEMY_INTEL).filter(intel => intel.wave === wave).map(intel => intel.tip);
 export function waveCounts(wave: number) {
   if (!Number.isSafeInteger(wave) || wave < 1) throw new Error('Invalid wave');
-  const counts = [...WAVES[Math.min(wave, 10) - 1]];
-  const additions = [[1,2], [2,3], [1,5], [2,3], [0,4]];
-  if (wave > 10) for (let i = 0; i < 5; i++) {
-    const repeats = Math.max(0, Math.floor((wave - 11 - i) / 5) + 1);
-    for (const index of additions[i]) counts[index] += repeats;
+  const counts = Object.fromEntries(KINDS.map(kind => [kind, 0])) as Record<ZombieKind, number>;
+  const earlyWeak = [6, 8, 10, 9, 9, 9, 10, 10, 11, 10];
+  const weakTotal = wave <= 10 ? earlyWeak[wave - 1] : Math.max(0, 10 - Math.floor((wave - 9) * 2 / 3));
+  counts.normal = Math.ceil(weakTotal * .4);
+  counts.cone = Math.ceil((weakTotal - counts.normal) / 2);
+  counts.bucket = weakTotal - counts.normal - counts.cone;
+  const unlocked = (Object.entries(ENEMY_INTEL) as [ZombieKind, { wave: number; tip: string }][]).filter(([, intel]) => intel.wave <= wave).map(([kind]) => kind);
+  if (unlocked.length) {
+    // Once builds approach their upgrade ceiling, linear quotas let the strongest
+    // weapons settle into an endless throughput equilibrium. Keep the target
+    // regular-player window unchanged, then make late waves progressively denser.
+    const latePressure = Math.floor(Math.max(0, wave - 24) ** 2 / 4);
+    const strongTotal = Math.max(unlocked.length, wave - 1 + latePressure);
+    for (const kind of unlocked) counts[kind] = 1;
+    const rotation: ZombieKind[] = wave <= 24
+      ? ['skitter', 'football', 'charger', 'wizard', 'skitter', 'howler', 'football', 'berserker', 'giant']
+      : ['berserker'];
+    for (let index = unlocked.length; index < strongTotal; index++) {
+      const available = rotation.filter(kind => unlocked.includes(kind));
+      counts[available[(index - unlocked.length) % available.length]]++;
+    }
   }
-  return Object.fromEntries(KINDS.map((kind, i) => [kind, counts[i]])) as Record<ZombieKind, number>;
+  return counts;
 }
-export const waveRate = (wave: number) => Math.min(10, .8 + .15 * (wave - 1));
+// 前段给逐发武器建立构筑的时间，后段持续增压；没有指定波数强制失败。
+export const waveRate = (wave: number) => Math.min(10, .5 + .06 * (wave - 1) + .015 * Math.max(0, wave - 15) ** 2);
 export function waveEnemies(wave: number, random: () => number) {
   const counts = waveCounts(wave);
   const enemies = shuffle(KINDS.flatMap(kind => Array<ZombieKind>(counts[kind]).fill(kind)), random);
-  const first: ZombieKind | undefined = counts.giant ? 'giant' : wave === 6 ? 'wizard' : wave === 4 ? 'football' : undefined;
+  const first = KINDS.find(kind => ENEMY_INTEL[kind]?.wave === wave);
   if (first) enemies.unshift(...enemies.splice(enemies.indexOf(first), 1));
   return enemies;
 }
 export interface RogueResult {
-  version: 1; weapon: 'pistol'; seed: number; completed: number; failedWave: number; waveKills: number;
+  version: 2; weapon: WeaponId; seed: number; completed: number; failedWave: number; waveKills: number;
   waveTotal: number; clearTime: number; levels: UpgradeLevels;
 }
 export interface RogueSnapshot {
   wave: number; total: number; remaining: number; completed: number; countdown: number;
-  levels: UpgradeLevels; choices: UpgradeId[]; stats: WeaponDefinition;
+  weapon: WeaponId; levels: UpgradeLevels; choices: UpgradeId[]; stats: WeaponDefinition;
+  skill: SkillSnapshot; skillStats: SkillStats;
 }

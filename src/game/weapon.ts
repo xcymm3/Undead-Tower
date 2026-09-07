@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { clone } from 'three/addons/utils/SkeletonUtils.js';
 import { WEAPONS } from './weapons';
 import type { WeaponDefinition } from './weapons';
 
@@ -104,11 +105,15 @@ export function prepareWeapon(model: THREE.Group, definition: WeaponDefinition) 
 
 export class WeaponView {
   readonly root = new THREE.Group();
+  readonly offhand = new THREE.Group();
+  readonly offhandMuzzle = new THREE.Object3D();
+  readonly offhandFlash = new THREE.Group();
   readonly muzzle = new THREE.Object3D();
   readonly flash = new THREE.Group();
   readonly light = new THREE.PointLight(0xffc36b, 0, 8, 2);
   readonly ready: Promise<void>;
   private rigs: ReturnType<typeof prepareWeapon>[] = [];
+  private offhandRig?: ReturnType<typeof prepareWeapon>;
   private active = 0;
   private disposed = false;
   loaded = false;
@@ -116,9 +121,17 @@ export class WeaponView {
     this.root.add(this.muzzle); this.muzzle.add(this.flash, this.light);
     const flame = new THREE.Mesh(new THREE.OctahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xffdd86, depthWrite: false }));
     flame.scale.set(0.75, 0.75, 2.6); flame.position.z = -0.065; this.flash.add(flame); this.flash.visible = false;
+    this.offhand.add(this.offhandMuzzle); this.offhandMuzzle.add(this.offhandFlash);
+    this.offhandFlash.add(flame.clone()); this.offhand.visible = false;
     const loader = new FBXLoader();
     this.ready = Promise.all(WEAPONS.map(async definition => {
       const model = await loader.loadAsync(`${import.meta.env.BASE_URL}models/weapons/${definition.model}.fbx`);
+      if (definition.id === 'pistol') {
+        const copy = clone(model) as THREE.Group; copy.animations = model.animations;
+        const offhand = prepareWeapon(copy, definition);
+        if (this.disposed) disposeModel(offhand.holder);
+        else { this.offhandRig = offhand; this.offhand.add(offhand.holder); this.offhandMuzzle.position.z = offhand.muzzleZ; }
+      }
       const rig = prepareWeapon(model, definition);
       if (this.disposed) { disposeModel(rig.holder); return null; }
       rig.holder.visible = false; this.root.add(rig.holder); return rig;
@@ -133,9 +146,9 @@ export class WeaponView {
     this.muzzle.position.set(0, 0, this.rigs[index]?.muzzleZ ?? -0.65);
     this.flash.visible = false; this.light.intensity = 0;
   }
-  animate(kind: WeaponAnimation, progress: number) { this.rigs[this.active]?.sample(kind, progress); }
+  animate(kind: WeaponAnimation, progress: number) { this.rigs[this.active]?.sample(kind, progress); if (this.offhand.visible) this.offhandRig?.sample(kind, progress); }
   diagnostics() { return { loaded: this.loaded, model: WEAPONS[this.active].model, visibleModels: this.rigs.filter(rig => rig.holder.visible).length, ...this.rigs[this.active]?.diagnostics() }; }
-  dispose() { this.disposed = true; this.rigs.forEach(rig => {
+  dispose() { this.disposed = true; [...this.rigs, ...(this.offhandRig ? [this.offhandRig] : [])].forEach(rig => {
     rig.mixer.stopAllAction(); rig.mixer.uncacheRoot(rig.model);
     rig.model.traverse(node => { if (node instanceof THREE.SkinnedMesh) node.skeleton.dispose(); });
   }); }

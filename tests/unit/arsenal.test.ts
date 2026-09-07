@@ -18,7 +18,7 @@ describe('独立弹匣与协调切枪', () => {
     expect(a.reloadQueued).toBe(true); a.update(WEAPONS[0].fireDuration); expect(a.gun.reloading).toBe(true);
     a.request(3); a.request(5); a.update(0.4);
     expect(a.active).toBe(0); expect(a.switching).toBe(false); expect(a.fire()).toBe(false);
-    a.update(0.4); expect(a.gun.ammo).toBe(30); expect(a.switching).toBe(true);
+    a.update(1.15); expect(a.gun.ammo).toBe(30); expect(a.switching).toBe(true);
     a.update(0.4); expect(a.active).toBe(5);
   });
   it('拔枪时的新请求排队，暂停零时间不推进，重开清空所有状态', () => {

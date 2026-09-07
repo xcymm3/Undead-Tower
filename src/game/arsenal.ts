@@ -18,13 +18,14 @@ export class Arsenal {
   request(index: number) {
     if (!Number.isInteger(index) || index < 0 || index >= this.guns.length) return;
     this.requested = index; this.reloadQueued = false;
+    if (index !== this.active) this.gun.interruptShellReload();
     this.update(0);
   }
   reload() {
     if (this.switching || this.pending || this.gun.reloading || this.gun.ammo === this.gun.definition.capacity) return false;
     this.reloadQueued = true; this.update(0); return true;
   }
-  fire() { return !this.blocked && this.gun.fire(); }
+  fire(infiniteAmmo = false) { return !this.blocked && this.gun.fire(infiniteAmmo); }
   update(delta: number) {
     this.guns.forEach(gun => gun.update(delta));
     if (this.switchElapsed !== null) {
@@ -38,7 +39,7 @@ export class Arsenal {
     }
   }
   reset() {
-    this.guns.forEach(gun => gun.reset()); this.active = 0; this.requested = 0;
+    this.guns.forEach((gun, index) => { gun.definition = { ...WEAPONS[index] }; gun.reset(); }); this.active = 0; this.requested = 0;
     this.switchElapsed = null; this.swapped = false; this.reloadQueued = false;
   }
 }

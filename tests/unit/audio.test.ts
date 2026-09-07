@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AUDIO_SETTINGS_KEY, GameAudio } from '../../src/game/audio';
 import { synthesizeDeath, synthesizeMusic } from '../../src/game/soundSynthesis';
+import { METAL_VARIANTS, metalRecipe, synthesizeMetal } from '../../src/game/metalSynthesis';
 
 afterEach(() => vi.unstubAllGlobals());
 function setup() {
   const data = new Map<string, string>();
   vi.stubGlobal('localStorage', { getItem: (key: string) => data.get(key) ?? null, setItem: (key: string, value: string) => data.set(key, value) });
-  const makeNode = () => ({ gain: { value: 0, setValueAtTime(v: number) { this.value = v; }, exponentialRampToValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), cancelScheduledValues: vi.fn() }, frequency: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }, connect: vi.fn((target: unknown) => target), disconnect: vi.fn(), start: vi.fn(), stop: vi.fn() });
+  const makeNode = () => ({ onended: null as (() => void) | null, gain: { value: 0, setValueAtTime(v: number) { this.value = v; }, exponentialRampToValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), cancelScheduledValues: vi.fn() }, frequency: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }, connect: vi.fn((target: unknown) => target), disconnect: vi.fn(), start: vi.fn(), stop: vi.fn() });
   const nodes: ReturnType<typeof makeNode>[] = [];
   function node() { const value = makeNode(); nodes.push(value); return value; }
   vi.stubGlobal('AudioContext', class {
@@ -26,7 +27,7 @@ describe('统一音量与护甲声音', () => {
     audio.shot(); audio.armor('bucket', false);
     const master = nodes[0];
     expect(master.gain.value).toBe(0.35);
-    expect(nodes.slice(1).filter(n => n.connect.mock.calls.some(([target]) => target === master)).length).toBe(5);
+    expect(nodes.slice(1).filter(n => n.connect.mock.calls.some(([target]) => target === master)).length).toBe(3);
     audio.enabled = false; expect(master.gain.value).toBe(0);
     const count = nodes.length; audio.shot(); audio.armor('cone', true); expect(nodes).toHaveLength(count);
     audio.enabled = true; expect(master.gain.value).toBe(0.35);
@@ -36,7 +37,7 @@ describe('统一音量与护甲声音', () => {
   it('护甲命中和脱落有不同音色，持久化且损坏设置不阻止启动', () => {
     const { data, nodes } = setup(); const audio = new GameAudio(); audio.unlock();
     audio.armor('cone', false); const cone = nodes[1].frequency.setValueAtTime.mock.calls[0][0];
-    audio.armor('bucket', true); const bucket = nodes[5].frequency.setValueAtTime.mock.calls[0][0];
+    audio.armor('bucket', true); const bucket = audio.diagnostics().lastMetal!.resonances[0].frequency;
     expect(cone).not.toBe(bucket);
     expect(audio.diagnostics().lastArmorCue).toEqual({ kind: 'bucket', broken: true });
     audio.volume = 0.42; audio.enabled = false;
@@ -89,5 +90,48 @@ describe('统一音量与护甲声音', () => {
     for (const samples of [music, death]) expect(samples.every(value => Number.isFinite(value) && Math.abs(value) < 1)).toBe(true);
     expect(rms(music) * 0.028).toBeLessThan(rms(death) * 0.12 / 3);
     expect(synthesizeDeath(24000, 1)).not.toEqual(death);
+  });
+});
+
+describe('分层金属桶音', () => {
+  it('四组可复现变化、20–45ms瞬态、非整数共振和桶腔体，完整/破裂包络不同', () => {
+    const outputs: Float32Array[] = [];
+    for (const broken of [false, true]) for (let variant = 0; variant < 4; variant++) {
+      const r = metalRecipe(broken, variant), samples = synthesizeMetal(24000, broken, variant);
+      expect(r.transientSeconds).toBeGreaterThanOrEqual(.02); expect(r.transientSeconds).toBeLessThanOrEqual(.045);
+      expect(r.resonances.length).toBeGreaterThanOrEqual(3);
+      for (let i = 1; i < r.resonances.length; i++) {
+        const ratio = r.resonances[i].frequency / r.resonances[0].frequency;
+        expect(Math.abs(ratio - Math.round(ratio))).toBeGreaterThan(.005);
+      }
+      expect(r.cavity.frequency).toBeLessThan(r.resonances[0].frequency);
+      expect(samples).toEqual(synthesizeMetal(24000, broken, variant));
+      expect(samples.every(s => Number.isFinite(s))).toBe(true);
+      const peak = samples.reduce((p, s) => Math.max(p, Math.abs(s)), 0);
+      expect(peak).toBeCloseTo(r.peak); expect(peak).toBeGreaterThan(.025); expect(peak).toBeLessThan(.21);
+      expect(Math.abs(samples[0])).toBe(0); expect(Math.abs(samples[samples.length - 1])).toBeLessThan(.001);
+      expect(outputs.every(previous => JSON.stringify(previous) !== JSON.stringify(samples))).toBe(true); outputs.push(samples);
+    }
+    for (const v of METAL_VARIANTS) { expect(Math.abs(v.pitch - 1)).toBeLessThanOrEqual(.030001); expect(Math.abs(v.decay - 1)).toBeLessThanOrEqual(.080001); expect(Math.abs(v.gain - 1)).toBeLessThanOrEqual(.100001); }
+    expect(metalRecipe(true, 0).duration).toBeGreaterThan(metalRecipe(false, 0).duration);
+    expect(metalRecipe(true, 0).resonances[0].frequency).toBeLessThan(metalRecipe(false, 0).resonances[0].frequency);
+  });
+  it('最多六组、淘汰最旧、结束/暂停/静音/dispose回收，混音通过统一master', () => {
+    const { nodes } = setup(); const audio = new GameAudio(); audio.unlock(); audio.volume = .37;
+    audio.armor('bucket', false);
+    const master = nodes[0], bus = nodes[1], first = nodes[2];
+    expect(bus.connect).toHaveBeenCalledWith(master); expect(first.connect).toHaveBeenCalledWith(bus);
+    for (let i = 0; i < 12; i++) audio.armor('bucket', i % 2 === 0);
+    expect(audio.diagnostics().activeMetal).toBe(6); expect(audio.diagnostics().cachedMetal).toBeLessThanOrEqual(8);
+    expect(first.stop).toHaveBeenCalledOnce(); expect(first.disconnect).toHaveBeenCalled(); expect(first.onended).toBeNull();
+    expect(bus.gain.value).toBeCloseTo(1 / 6); expect(master.gain.value).toBe(.37);
+    nodes[nodes.length - 1].onended?.(); expect(audio.diagnostics().activeMetal).toBe(5); expect(bus.gain.value).toBe(.2);
+    audio.enabled = false; expect(audio.diagnostics().activeMetal).toBe(0); const before = nodes.length;
+    audio.armor('bucket', false); expect(nodes).toHaveLength(before);
+    audio.enabled = true; audio.armor('bucket', true); expect(audio.diagnostics().activeMetal).toBe(1);
+    audio.setPlaying(false); expect(audio.diagnostics().activeMetal).toBe(0);
+    audio.armor('bucket', false); audio.resetMusic(); expect(audio.diagnostics().activeMetal).toBe(0);
+    audio.armor('bucket', false); audio.failure(); expect(audio.diagnostics().activeMetal).toBe(0);
+    audio.armor('bucket', false); audio.dispose(); expect(audio.diagnostics().activeMetal).toBe(0); expect(audio.diagnostics().cachedMetal).toBe(0);
   });
 });

@@ -26,7 +26,7 @@ test('六种悬浮枪械数字键切换、独立弹量、换弹动画与暂停�
     const idle = await snapshot(page);
     expect(idle.weaponAnimation.loaded).toBe(true); expect(idle.weaponAnimation.visibleModels).toBe(1);
     await expect(page.getByTestId('weapon-name')).toContainText(WEAPONS[i].label);
-    await page.screenshot({ path: `test-results/weapon-${WEAPONS[i].id}.png` });
+    await page.screenshot({ path: test.info().outputPath(`weapon-${WEAPONS[i].id}.png`) });
     // 每把枪在待机时枪口和中心瞄准射线保持一致。
     const ray = idle.aimPoint.map((v, index) => v - idle.muzzle[index]), length = Math.hypot(...ray);
     expect(ray.reduce((sum, v, index) => sum + v / length * idle.barrelDirection[index], 0)).toBeCloseTo(1, 7);
@@ -36,7 +36,7 @@ test('六种悬浮枪械数字键切换、独立弹量、换弹动画与暂停�
     const during = await snapshot(page);
     expect(during.weaponAnimation.kind).toBe('reload');
     expect(during.weaponAnimation.bones).not.toEqual(idle.weaponAnimation.bones);
-    await page.screenshot({ path: `test-results/weapon-${WEAPONS[i].id}-reload.png` });
+    await page.screenshot({ path: test.info().outputPath(`weapon-${WEAPONS[i].id}-reload.png`) });
     await page.waitForTimeout(150); expect((await snapshot(page)).weaponAnimation).toEqual(during.weaponAnimation);
     await page.keyboard.press('Escape');
     await expect.poll(async () => (await snapshot(page)).reloading).toBe(false);

@@ -15,7 +15,7 @@ describe('护甲脱落', () => {
       field.sync(encounter);
       const ray = new Raycaster(new Vector3(0, 2.5, 10), new Vector3(0, 0, -1));
       expect(field.decode(ray.intersectObject(field)[0])?.id).toBe(target.id);
-      expect(encounter.hit(target.id, true)).toEqual({ killed: false, armorHit: 'cone', armorBroken: true });
+      expect(encounter.hit(target.id, true)).toEqual({ killed: false, armorHit: 'cone', armorBroken: true, enraged: false });
       expect(target.health).toBe(100); expect(target.kind).toBe('normal'); expect(encounter.kills).toBe(0);
       debris.release(field.captureArmor(target.id, 'cone'), new Vector3(0, 0, -1));
       field.sync(encounter);

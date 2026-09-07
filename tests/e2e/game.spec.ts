@@ -63,16 +63,25 @@ test('瞄准人形靶头部可命中，倒下后自动复位', async ({ page }) 
     await page.waitForTimeout(120);
   }
   const head = (await snapshot(page)).targets[1].head;
+  // 在页面渲染循环内采样短效，避免 CPU 忙时跨进程轮询错过 0.65 秒血滴窗口。
+  const bloodBecameVisible = page.evaluate(async () => {
+    for (let frame = 0; frame < 120; frame++) {
+      if (window.__undeadTower!.snapshot().blood.active > 0) return true;
+      await new Promise(requestAnimationFrame);
+    }
+    return false;
+  });
   await page.mouse.click(head.x, head.y);
+  expect(await bloodBecameVisible).toBe(true);
   await expect.poll(async () => (await snapshot(page)).hits).toBe(1);
   await expect.poll(async () => (await snapshot(page)).kills).toBe(1);
   expect((await snapshot(page)).targets[1].health).toBe(0);
   const killed = await snapshot(page);
-  expect(killed.blood.active).toBeGreaterThan(0);
+  expect(killed.blood.bursts).toBe(1);
   expect(killed.audio.deathCues).toBe(1);
   expect(killed.blood.origin).toEqual(killed.lastShot!.impact);
   await page.waitForTimeout(150);
-  await page.screenshot({ path: 'test-results/blood-kill.png' });
+  await page.screenshot({ path: test.info().outputPath('blood-kill.png') });
   await expect.poll(async () => (await snapshot(page)).blood.active, { timeout: 3000 }).toBe(0);
   await expect.poll(async () => (await snapshot(page)).targets[1].health, { timeout: 5000 }).toBe(100);
 });
@@ -103,9 +112,9 @@ test('暂停、设置和失焦不会误射，重新开始清空训练状态', as
   await page.mouse.up();
 });
 
-for (const width of [320, 375, 414, 768]) {
-  test(`小屏布局与设置可用 ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 844 });
+for (const [width, height] of [[320, 568], [375, 812], [390, 844], [414, 896], [768, 1024], [1280, 720], [1440, 900]]) {
+  test(`多视口首页与设置可用 ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
     await page.goto('/');
     await expect(page.getByRole('button', { name: '进入哨站' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -113,9 +122,9 @@ for (const width of [320, 375, 414, 768]) {
     await expect(page.getByRole('button', { name: '返回哨站' })).toBeVisible();
     await page.getByRole('checkbox', { name: '粗颗粒像素' }).check();
     await expect(page.getByRole('checkbox', { name: '粗颗粒像素' })).toBeChecked();
-    await page.screenshot({ path: `test-results/settings-${width}.png` });
+    await page.screenshot({ path: test.info().outputPath(`settings-${width}.png`) });
     await page.getByRole('button', { name: '返回哨站' }).click();
-    await page.screenshot({ path: `test-results/intro-${width}.png` });
+    await page.screenshot({ path: test.info().outputPath(`intro-${width}.png`) });
   });
 }
 

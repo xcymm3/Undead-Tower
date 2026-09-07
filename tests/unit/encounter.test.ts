@@ -150,7 +150,7 @@ describe('僵尸批量模型', () => {
       camera.position.set(0, 4.8, 9); camera.rotation.set(-0.105, yaw, 0, 'YXZ'); camera.updateMatrixWorld();
       const position = spawnAtScreenEdge(camera, () => side);
       const screen = new Vector3(position.x, 1, position.z).project(camera);
-      expect(Math.abs(screen.x)).toBeCloseTo(0.75, 8);
+      expect(Math.abs(screen.x)).toBeCloseTo(0.55, 8);
       expect(position.z).toBeLessThan(0);
       expect(Math.hypot(position.x, position.z - 9)).toBeGreaterThan(SURVIVAL.breachRadius);
     }

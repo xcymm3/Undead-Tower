@@ -1,14 +1,14 @@
 import type { RogueResult, RogueSnapshot } from './rogue';
 export const CONFIG = {
   camera: { fov: 61, height: 4.8, yawLimit: 4 * Math.PI / 180, pitchLimit: 2.5 * Math.PI / 180, damping: 5 },
-  weapon: { capacity: 30, interval: 0.15, reloadDuration: 0.775, range: 180 },
+  weapon: { capacity: 30, interval: 0.15, reloadDuration: 1.55, range: 180 },
   target: { respawn: 3, bodyDamage: 50, headDamage: 100 },
 } as const;
 
 export type GameMode = 'practice' | 'survival';
 export type Difficulty = 'easy' | 'normal' | 'hard';
 export const FIXED_DIFFICULTY = 'hard' satisfies Difficulty;
-export type ZombieKind = 'normal' | 'cone' | 'bucket' | 'football' | 'giant' | 'wizard';
+export type ZombieKind = 'normal' | 'cone' | 'bucket' | 'football' | 'giant' | 'wizard' | 'skitter' | 'charger' | 'howler' | 'berserker';
 export type GamePhase = 'ready' | 'playing' | 'paused' | 'breaching' | 'failed' | 'countdown' | 'upgrade';
 export const PRESSURE = { spawnRate: 0.65, spawnGrowth: 0.035, speed: 1.4 } as const;
 export const ZOMBIE_TYPES = {
@@ -16,8 +16,20 @@ export const ZOMBIE_TYPES = {
   cone: { label: '路障僵尸', health: 200, armor: 100 },
   bucket: { label: '铁桶僵尸', health: 400, armor: 300 },
   football: { label: '橄榄球僵尸', health: 400, armor: 300 },
-  giant: { label: '巨人僵尸', health: 4000, armor: 1000 },
-  wizard: { label: '巫师僵尸', health: 2000, armor: 0 },
+  giant: { label: '巨人僵尸', health: 2000, armor: 600 },
+  wizard: { label: '巫师僵尸', health: 800, armor: 0 },
+  skitter: { label: '游走者', health: 900, armor: 0 },
+  charger: { label: '突进者', health: 1800, armor: 0 },
+  howler: { label: '号令者', health: 1600, armor: 0 },
+  berserker: { label: '狂暴者', health: (2000 + 600) * 2, armor: 0 },
+} as const;
+export const ZOMBIE_KINDS = Object.keys(ZOMBIE_TYPES) as ZombieKind[];
+export const emptyZombieCounts = () => Object.fromEntries(ZOMBIE_KINDS.map(kind => [kind, 0])) as Record<ZombieKind, number>;
+export const ENEMY_RULES = {
+  skitter: { lateralSpeed: .85, frequency: 2.4 },
+  charger: { minimumRange: 10, maximumRange: 24, windup: .8, speedMultiplier: 2.2, chargeDuration: 1.25, staggerDuration: .7, cooldown: 5 },
+  howler: { radius: 7, requiredAllies: 2, windup: .9, speedMultiplier: 1.35, duration: 3, cooldown: 7, interruptedCooldown: 3 },
+  berserker: { threshold: .4, speedMultiplier: 1.8 },
 } as const;
 export const ARMOR_SPAWNS = { normalPerCone: 3, conesPerBucket: 2 } as const;
 export const DIFFICULTIES = {
