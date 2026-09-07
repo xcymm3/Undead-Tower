@@ -1,0 +1,1080 @@
+{
+  "status": "PASS",
+  "gaps": [],
+  "stress": [
+    {
+      "time": 608.9999999997748,
+      "phase": "playing",
+      "slots": 8,
+      "alive": 7,
+      "skillTime": 122.91666666666124,
+      "skillActivations": 22,
+      "enemyEventCounts": {
+        "skitter-turn": 237,
+        "charger-windup": 20,
+        "charger-charge": 10,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 6,
+        "howler-command": 6,
+        "howler-interrupted": 0,
+        "command-ended": 8,
+        "berserker-rage": 10
+      },
+      "teleportCount": 220,
+      "effects": 9,
+      "sceneChildren": 95,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 611.9999999997721,
+      "phase": "playing",
+      "slots": 16,
+      "alive": 16,
+      "skillTime": 125.91666666666107,
+      "skillActivations": 22,
+      "enemyEventCounts": {
+        "skitter-turn": 242,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 6,
+        "howler-command": 6,
+        "howler-interrupted": 0,
+        "command-ended": 8,
+        "berserker-rage": 11
+      },
+      "teleportCount": 220,
+      "effects": 109,
+      "sceneChildren": 195,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 614.9999999997693,
+      "phase": "playing",
+      "slots": 14,
+      "alive": 14,
+      "skillTime": 127.14999999999435,
+      "skillActivations": 22,
+      "enemyEventCounts": {
+        "skitter-turn": 251,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 8,
+        "berserker-rage": 11
+      },
+      "teleportCount": 220,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 617.9999999997666,
+      "phase": "playing",
+      "slots": 11,
+      "alive": 10,
+      "skillTime": 127.14999999999435,
+      "skillActivations": 22,
+      "enemyEventCounts": {
+        "skitter-turn": 259,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 11
+      },
+      "teleportCount": 220,
+      "effects": 41,
+      "sceneChildren": 127,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 620.9999999997639,
+      "phase": "playing",
+      "slots": 9,
+      "alive": 9,
+      "skillTime": 127.14999999999435,
+      "skillActivations": 22,
+      "enemyEventCounts": {
+        "skitter-turn": 266,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 11
+      },
+      "teleportCount": 220,
+      "effects": 20,
+      "sceneChildren": 106,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 623.9999999997611,
+      "phase": "playing",
+      "slots": 6,
+      "alive": 5,
+      "skillTime": 127.14999999999435,
+      "skillActivations": 22,
+      "enemyEventCounts": {
+        "skitter-turn": 269,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 11
+      },
+      "teleportCount": 220,
+      "effects": 70,
+      "sceneChildren": 156,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 626.9999999997584,
+      "phase": "playing",
+      "slots": 5,
+      "alive": 5,
+      "skillTime": 129.8999999999958,
+      "skillActivations": 23,
+      "enemyEventCounts": {
+        "skitter-turn": 271,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 11
+      },
+      "teleportCount": 220,
+      "effects": 100,
+      "sceneChildren": 186,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 629.9999999997557,
+      "phase": "playing",
+      "slots": 2,
+      "alive": 2,
+      "skillTime": 132.8999999999982,
+      "skillActivations": 23,
+      "enemyEventCounts": {
+        "skitter-turn": 272,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 12
+      },
+      "teleportCount": 224,
+      "effects": 3,
+      "sceneChildren": 89,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 632.999999999753,
+      "phase": "playing",
+      "slots": 1,
+      "alive": 1,
+      "skillTime": 133.1499999999984,
+      "skillActivations": 23,
+      "enemyEventCounts": {
+        "skitter-turn": 272,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 12
+      },
+      "teleportCount": 224,
+      "effects": 71,
+      "sceneChildren": 157,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 633.0333333330863,
+      "phase": "countdown",
+      "slots": 0,
+      "alive": 0,
+      "skillTime": 133.1499999999984,
+      "skillActivations": 23,
+      "enemyEventCounts": {
+        "skitter-turn": 272,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 12
+      },
+      "teleportCount": 224,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 635.9999999997502,
+      "phase": "playing",
+      "slots": 9,
+      "alive": 8,
+      "skillTime": 133.1499999999984,
+      "skillActivations": 23,
+      "enemyEventCounts": {
+        "skitter-turn": 274,
+        "charger-windup": 21,
+        "charger-charge": 11,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 8,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 13
+      },
+      "teleportCount": 227,
+      "effects": 75,
+      "sceneChildren": 161,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 638.9999999997475,
+      "phase": "playing",
+      "slots": 17,
+      "alive": 15,
+      "skillTime": 133.88333333333233,
+      "skillActivations": 24,
+      "enemyEventCounts": {
+        "skitter-turn": 282,
+        "charger-windup": 22,
+        "charger-charge": 12,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 9,
+        "howler-command": 8,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 13
+      },
+      "teleportCount": 227,
+      "effects": 62,
+      "sceneChildren": 148,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 641.9999999997448,
+      "phase": "playing",
+      "slots": 17,
+      "alive": 17,
+      "skillTime": 136.88333333333472,
+      "skillActivations": 24,
+      "enemyEventCounts": {
+        "skitter-turn": 290,
+        "charger-windup": 23,
+        "charger-charge": 12,
+        "charger-impact": 0,
+        "charger-interrupted": 9,
+        "howler-windup": 10,
+        "howler-command": 9,
+        "howler-interrupted": 0,
+        "command-ended": 12,
+        "berserker-rage": 13
+      },
+      "teleportCount": 227,
+      "effects": 17,
+      "sceneChildren": 103,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 644.999999999742,
+      "phase": "playing",
+      "slots": 15,
+      "alive": 14,
+      "skillTime": 139.15000000000322,
+      "skillActivations": 24,
+      "enemyEventCounts": {
+        "skitter-turn": 298,
+        "charger-windup": 24,
+        "charger-charge": 13,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 10,
+        "howler-command": 10,
+        "howler-interrupted": 0,
+        "command-ended": 14,
+        "berserker-rage": 13
+      },
+      "teleportCount": 228,
+      "effects": 101,
+      "sceneChildren": 187,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 647.9999999997393,
+      "phase": "playing",
+      "slots": 14,
+      "alive": 14,
+      "skillTime": 139.15000000000322,
+      "skillActivations": 24,
+      "enemyEventCounts": {
+        "skitter-turn": 305,
+        "charger-windup": 24,
+        "charger-charge": 13,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 10,
+        "howler-command": 10,
+        "howler-interrupted": 0,
+        "command-ended": 16,
+        "berserker-rage": 14
+      },
+      "teleportCount": 228,
+      "effects": 2,
+      "sceneChildren": 88,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 650.9999999997366,
+      "phase": "playing",
+      "slots": 11,
+      "alive": 9,
+      "skillTime": 139.15000000000322,
+      "skillActivations": 24,
+      "enemyEventCounts": {
+        "skitter-turn": 311,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 16,
+        "berserker-rage": 14
+      },
+      "teleportCount": 230,
+      "effects": 83,
+      "sceneChildren": 169,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 653.9999999997339,
+      "phase": "playing",
+      "slots": 8,
+      "alive": 8,
+      "skillTime": 139.15000000000322,
+      "skillActivations": 24,
+      "enemyEventCounts": {
+        "skitter-turn": 316,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 14
+      },
+      "teleportCount": 230,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 656.9999999997311,
+      "phase": "playing",
+      "slots": 6,
+      "alive": 4,
+      "skillTime": 142.13333333333892,
+      "skillActivations": 25,
+      "enemyEventCounts": {
+        "skitter-turn": 319,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 14
+      },
+      "teleportCount": 230,
+      "effects": 63,
+      "sceneChildren": 149,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 659.9999999997284,
+      "phase": "playing",
+      "slots": 3,
+      "alive": 2,
+      "skillTime": 145.1333333333413,
+      "skillActivations": 25,
+      "enemyEventCounts": {
+        "skitter-turn": 319,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 14
+      },
+      "teleportCount": 233,
+      "effects": 80,
+      "sceneChildren": 166,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 662.9999999997257,
+      "phase": "playing",
+      "slots": 1,
+      "alive": 1,
+      "skillTime": 145.15000000000802,
+      "skillActivations": 25,
+      "enemyEventCounts": {
+        "skitter-turn": 319,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 14
+      },
+      "teleportCount": 233,
+      "effects": 39,
+      "sceneChildren": 125,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 663.366666666392,
+      "phase": "countdown",
+      "slots": 0,
+      "alive": 0,
+      "skillTime": 145.15000000000802,
+      "skillActivations": 25,
+      "enemyEventCounts": {
+        "skitter-turn": 319,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 14
+      },
+      "teleportCount": 233,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 665.999999999723,
+      "phase": "playing",
+      "slots": 10,
+      "alive": 9,
+      "skillTime": 145.15000000000802,
+      "skillActivations": 25,
+      "enemyEventCounts": {
+        "skitter-turn": 320,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 15
+      },
+      "teleportCount": 233,
+      "effects": 83,
+      "sceneChildren": 169,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 668.9999999997202,
+      "phase": "playing",
+      "slots": 18,
+      "alive": 18,
+      "skillTime": 147.9166666666769,
+      "skillActivations": 26,
+      "enemyEventCounts": {
+        "skitter-turn": 321,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 15
+      },
+      "teleportCount": 238,
+      "effects": 98,
+      "sceneChildren": 184,
+      "geometries": 53,
+      "textures": 7
+    },
+    {
+      "time": 671.9999999997175,
+      "phase": "playing",
+      "slots": 21,
+      "alive": 20,
+      "skillTime": 150.91666666667928,
+      "skillActivations": 26,
+      "enemyEventCounts": {
+        "skitter-turn": 321,
+        "charger-windup": 26,
+        "charger-charge": 15,
+        "charger-impact": 0,
+        "charger-interrupted": 10,
+        "howler-windup": 11,
+        "howler-command": 11,
+        "howler-interrupted": 0,
+        "command-ended": 19,
+        "berserker-rage": 16
+      },
+      "teleportCount": 240,
+      "effects": 17,
+      "sceneChildren": 103,
+      "geometries": 53,
+      "textures": 7
+    }
+  ],
+  "restarts": [
+    {
+      "run": 0,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 1,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 2,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 3,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 4,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 5,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 6,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 7,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 8,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 9,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 10,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    },
+    {
+      "run": 11,
+      "time": 10.016666666666744,
+      "skillActive": false,
+      "skillActivations": 1,
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 54,
+      "textures": 9
+    }
+  ],
+  "sampleCount": 253,
+  "maxAlive": 20,
+  "maxEffects": 127,
+  "maxSceneChildren": 213,
+  "final": {
+    "weapon": "p90",
+    "profile": "regular",
+    "seed": 45394,
+    "seedIndex": 19,
+    "fps": 60,
+    "strategy": "priority",
+    "completed": 24,
+    "failedWave": 25,
+    "seconds": 679.3481399990048,
+    "clearTime": 663.366666666392,
+    "failed": true,
+    "censored": false,
+    "shots": 4438,
+    "hits": 3089,
+    "headHits": 1405,
+    "criticalHits": 609,
+    "criticalHeadHits": 273,
+    "requestedShots": 4438,
+    "requestedHits": 3106,
+    "requestedHeads": 1411,
+    "kills": 435,
+    "skillActivations": 26,
+    "skillTime": 151.15000000001282,
+    "maxAlive": 21,
+    "spawned": {
+      "normal": 72,
+      "cone": 48,
+      "bucket": 37,
+      "football": 75,
+      "giant": 34,
+      "wizard": 43,
+      "skitter": 60,
+      "charger": 30,
+      "howler": 23,
+      "berserker": 32
+    },
+    "killedKinds": {
+      "normal": 72,
+      "cone": 48,
+      "bucket": 37,
+      "football": 75,
+      "giant": 33,
+      "wizard": 43,
+      "skitter": 60,
+      "charger": 29,
+      "howler": 22,
+      "berserker": 16
+    },
+    "enemyEventCounts": {
+      "skitter-turn": 321,
+      "charger-windup": 27,
+      "charger-charge": 16,
+      "charger-impact": 0,
+      "charger-interrupted": 10,
+      "howler-windup": 12,
+      "howler-command": 12,
+      "howler-interrupted": 0,
+      "command-ended": 20,
+      "berserker-rage": 17
+    },
+    "teleportCount": 240,
+    "levels": {
+      "damage": 5,
+      "rate": 5,
+      "magazine": 0,
+      "reload": 0,
+      "critical_chance": 5,
+      "critical_damage": 4,
+      "duration": 0,
+      "cooldown": 3,
+      "rifle_velocity": 0,
+      "rifle_overload": 0,
+      "p90_dense": 1,
+      "p90_frost": 1,
+      "pistol_match": 0,
+      "pistol_partner": 0,
+      "revolver_cylinder": 0,
+      "revolver_deadeye": 0,
+      "shotgun_choke": 0,
+      "shotgun_impact": 0,
+      "sniper_caliber": 0,
+      "sniper_pierce": 0
+    },
+    "upgradeHistory": [
+      {
+        "wave": 1,
+        "choices": [
+          "cooldown",
+          "magazine",
+          "duration"
+        ],
+        "selected": "cooldown"
+      },
+      {
+        "wave": 2,
+        "choices": [
+          "damage",
+          "reload",
+          "rate"
+        ],
+        "selected": "damage"
+      },
+      {
+        "wave": 3,
+        "choices": [
+          "magazine",
+          "reload",
+          "critical_chance"
+        ],
+        "selected": "critical_chance"
+      },
+      {
+        "wave": 4,
+        "choices": [
+          "duration",
+          "p90_dense",
+          "rate"
+        ],
+        "selected": "rate"
+      },
+      {
+        "wave": 5,
+        "choices": [
+          "damage",
+          "cooldown",
+          "critical_damage"
+        ],
+        "selected": "damage"
+      },
+      {
+        "wave": 6,
+        "choices": [
+          "p90_dense",
+          "critical_damage",
+          "p90_frost"
+        ],
+        "selected": "critical_damage"
+      },
+      {
+        "wave": 7,
+        "choices": [
+          "damage",
+          "reload",
+          "rate"
+        ],
+        "selected": "damage"
+      },
+      {
+        "wave": 8,
+        "choices": [
+          "critical_chance",
+          "damage",
+          "rate"
+        ],
+        "selected": "damage"
+      },
+      {
+        "wave": 9,
+        "choices": [
+          "rate",
+          "critical_chance",
+          "magazine"
+        ],
+        "selected": "rate"
+      },
+      {
+        "wave": 10,
+        "choices": [
+          "p90_frost",
+          "cooldown",
+          "magazine"
+        ],
+        "selected": "cooldown"
+      },
+      {
+        "wave": 11,
+        "choices": [
+          "duration",
+          "critical_damage",
+          "p90_dense"
+        ],
+        "selected": "critical_damage"
+      },
+      {
+        "wave": 12,
+        "choices": [
+          "damage",
+          "p90_frost",
+          "magazine"
+        ],
+        "selected": "damage"
+      },
+      {
+        "wave": 13,
+        "choices": [
+          "cooldown",
+          "critical_damage",
+          "reload"
+        ],
+        "selected": "critical_damage"
+      },
+      {
+        "wave": 14,
+        "choices": [
+          "reload",
+          "magazine",
+          "critical_chance"
+        ],
+        "selected": "critical_chance"
+      },
+      {
+        "wave": 15,
+        "choices": [
+          "p90_frost",
+          "rate",
+          "magazine"
+        ],
+        "selected": "rate"
+      },
+      {
+        "wave": 16,
+        "choices": [
+          "critical_chance",
+          "p90_dense",
+          "duration"
+        ],
+        "selected": "critical_chance"
+      },
+      {
+        "wave": 17,
+        "choices": [
+          "p90_dense",
+          "critical_chance",
+          "reload"
+        ],
+        "selected": "critical_chance"
+      },
+      {
+        "wave": 18,
+        "choices": [
+          "p90_frost",
+          "rate",
+          "critical_chance"
+        ],
+        "selected": "rate"
+      },
+      {
+        "wave": 19,
+        "choices": [
+          "reload",
+          "magazine",
+          "rate"
+        ],
+        "selected": "rate"
+      },
+      {
+        "wave": 20,
+        "choices": [
+          "reload",
+          "critical_chance",
+          "magazine"
+        ],
+        "selected": "critical_chance"
+      },
+      {
+        "wave": 21,
+        "choices": [
+          "reload",
+          "magazine",
+          "p90_dense"
+        ],
+        "selected": "p90_dense"
+      },
+      {
+        "wave": 22,
+        "choices": [
+          "reload",
+          "magazine",
+          "critical_damage"
+        ],
+        "selected": "critical_damage"
+      },
+      {
+        "wave": 23,
+        "choices": [
+          "reload",
+          "magazine",
+          "cooldown"
+        ],
+        "selected": "cooldown"
+      },
+      {
+        "wave": 24,
+        "choices": [
+          "magazine",
+          "reload",
+          "p90_frost"
+        ],
+        "selected": "p90_frost"
+      }
+    ],
+    "resources": {
+      "effects": 0,
+      "sceneChildren": 86,
+      "geometries": 53,
+      "textures": 7
+    }
+  },
+  "limitations": [
+    "Fixed-step real input playthrough, sampled drawing every 180 updates; not a real-time FPS benchmark.",
+    "Hidden/title/pause draw behavior is checked separately in rogue-idle.spec.ts."
+  ],
+  "sourceHashes": {
+    "src/game/Game.ts": "ceda848f0b5007cf67cb103065227e45ccbb72ff89b9521a74d843148810f78f",
+    "src/App.tsx": "8358c4b764313416fa8984d70361925f0fb87698104fd47761260b890132d43f",
+    "scripts/rogue-model.ts": "aff46baf159976e7c0a57774e8a217a3996cf7410fc6ac768864bc112cb66a47",
+    "scripts/rogue-replay-browser.ts": "d8eefe0847aed6dcca9cc0461313ec4a7d248fcb9d537128e5bcb4cc689f9fd8",
+    "scripts/rogue-agent.ts": "3991c24cb06ceaedb4d386136ed11825d08ec5b8bf88c299d291e27ae26df547",
+    "scripts/replay-rogue.mjs": "434ace1c22fa84687ed8501556431fc863c6c95ac42ae6ddf50c2c64faff255a",
+    "scripts/rogue-replay-checks.ts": "6ed03277efa825cd41bc296a7b19a6b49a5b5b8eb7417d8a186598d096334d35",
+    "scripts/rogue-resource-checks.ts": "c3c590785fd3b101bdcd60531b5c9e6cdb2cdcc0b3e6dc371bf44b3654032c27",
+    "src/game/staticCollision.ts": "de81b781ea4bc71c0493a43786bbc7909bbc9bbe817feb52577c6871607c94cb",
+    "src/game/rogue.ts": "d7ddc1cb4a97c09ac33b21d82594001ff322bfd491340b57e1aca51c7f9e3e08",
+    "src/game/config.ts": "cb8918a4126236c15696e9603187ddda14c4449e26361de7d70b671d88403071",
+    "src/game/upgrades.ts": "a49c518db10e281f1cba740c9ef8743402e2cbcc4894a358af420eb682b1e7bc",
+    "src/game/skills.ts": "81c49a379ee9573a39c2b2c2376d90670700f6af1710cc801244f3cbbff29f55",
+    "src/game/combat.ts": "3d24ff93b47e6eac78c6dd25c766a8742a6a7492a402ca48d066e6c5525c32ef",
+    "src/game/encounter.ts": "3d6700a05375dbbf33e757d500759c7ef869266ba8083a6d2bc7e8d6764127ff",
+    "src/game/enemyRules.ts": "f7d132b8f835a1025e7494b9b02b801ae564d75e9ce0d53edb360b6126d41de1",
+    "src/game/movement.ts": "41b535fc54f4f3dfb2139856d36ec62231399f6faf80f1672257e7e19d66c4be",
+    "src/game/navigation.ts": "ba00e226dd3dabf674e8491024dbeef7b8e9ac95b0ea92a2a68841446026e98d",
+    "src/game/spawn.ts": "7b0e9e625ebff1fc085b5e65d7f5927f8ff97b47a3413ec5a3fcc85c82ea1f43",
+    "src/game/sceneRules.ts": "029aa9451c659a3b1f965b661d6c52972821b80e345217fc3238614866e3cce8",
+    "src/game/world.ts": "d4a37cbe073f0c720c5bc6a9d2e76cfcb95ee83b0545cbeba6b7a44d91352fd4",
+    "src/game/geometry.ts": "c99acf2fab331d7b1e14e06ea9d1c1aad72cdd4332aeefe57d4cf00736fae834",
+    "src/game/zombies.ts": "e379cc39bd2b7dcd738852dcbeca411bb17f30ca4b207f1e32b756f896325552",
+    "src/game/firearm.ts": "1370a6bb33ad62ddd33513c0868b096bc56a68916090ec3870f34ec4f2653080",
+    "src/game/arsenal.ts": "1d0f2877864b2941c20787275dbdc1a6dc94b41252f59d642d18e9b3dd455fd3",
+    "src/game/weapons.ts": "e89958304888e549edf70872223bcc7305d86011305de98c2a5c2ef06e50be78",
+    "src/game/teleport.ts": "0fddd3c14ca680094ab241273a4f4837ab01569dbb63c28cb2ba14ae1b89c17a",
+    "src/game/aim.ts": "a1541d6de6d9424054fc67efdae690da9ff0c70bd6c9501534716f9cfda55736",
+    "src/game/timing.ts": "0dea6d03bb2c5ed89bae3ebabc05ebeeaf73999b97ab281ec435f32a6dc22d4b",
+    "src/game/hitFeedback.ts": "328acc9de1a4dabe7ebbbdb3510166c111008d606195a4843ab6b42925e09e54",
+    "src/game/audio.ts": "963d4173a43c4ab0de8a37e9d1ce7c62559ed4876435a1ffbbb37b5d7642b322",
+    "src/game/metalSynthesis.ts": "06f65d6052748c86c0ae67b747783e70e77dad32c2c9bb13b928d8e84df68473"
+  },
+  "configurationSha256": "27980eb37198d94e8e2226863db127aa90b0e8857e62367ca5325e50ce73775c"
+}

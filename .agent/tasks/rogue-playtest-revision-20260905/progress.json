@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "task_id": "rogue-playtest-revision-20260905",
+  "plan_sha256": "d967d4d1f1cd0890d85c787acc2ae33f1be82c528894904c3173d6e4e4e28bcd",
+  "items": [
+    {
+      "id": "WI-001",
+      "state": "implemented",
+      "note": "巨人拒绝两侧林地及非法原点；同一 giantNavigation/半径逐 0.5m 完整审查身体、头部包络与障碍直到突破。新增两条实际长路径、全非林地入口种子与占位/配额回归。",
+      "proof": [
+        "src/game/sceneRules.ts",
+        "tests/unit/revision-core.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/revision-core-unit.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/unit-all.txt"
+      ]
+    },
+    {
+      "id": "WI-002",
+      "state": "implemented",
+      "note": "替换head为两项独立暴击成长；固定基础爆头倍率，左轮死眼每层+15百分点暴击。每弹独立随机、贯穿共享判定，游戏/模型/回放共用公式；命中文字聚合保留真实暴击头部组合，三种独立图案、预览与构筑同步。新v3榜保留旧六枪键。12项新单元及3项真实/夹具浏览器测试通过；整体Hallmark与矩阵仍归后续项。 最终合并5项隐藏静音E2E全部通过。",
+      "proof": [
+        "src/game/combat.ts",
+        "src/game/upgrades.ts",
+        "src/game/hitFeedback.ts",
+        "src/ui/UpgradeIcon.tsx",
+        "src/game/Game.ts",
+        "scripts/rogue-model.ts",
+        "src/game/rogue.ts",
+        "tests/unit/revision-critical.test.ts",
+        "tests/e2e/revision-critical.spec.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/unit-final-related.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-critical.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-verified.txt"
+      ]
+    },
+    {
+      "id": "WI-003",
+      "state": "implemented",
+      "note": "六枪精确双倍基础装填，预览/机械/动画读取共享配置；霰弹合法开火或切枪中断只保留已装整发，普通弹匣不变；换弹中技能不耗 CD，六枪准备操作 E2E 通过。",
+      "proof": [
+        "src/game/weapons.ts",
+        "src/game/firearm.ts",
+        "src/game/arsenal.ts",
+        "tests/unit/revision-core.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/unit-all.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-countdown-rerun.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-core-regression.txt"
+      ]
+    },
+    {
+      "id": "WI-004",
+      "state": "implemented",
+      "note": "准备阶段所有玩家输入开放，轻量顶部提示共享既有令牌；frameClocks 让玩家机械推进、敌人/成绩/债务冻结，零点下一帧启动。六枪操作与暂停6/6、设置/后台事件/清波升级衔接及旧装填/idle5/5通过；截图叠印已修正并重拍。后台检查使用document.hidden事件注入，非OS切后台。页面整体Hallmark/多视口最终审查仍归WI-010/011/016。",
+      "proof": [
+        "src/game/timing.ts",
+        "src/game/Game.ts",
+        "src/App.tsx",
+        "src/ui/rogue.css",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-countdown-rerun.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-core-regression.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/build-final.txt",
+        "tests/e2e/revision-preparation-lifecycle.spec.ts",
+        "tests/e2e/rogue-presentation.spec.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-core-regression/revision-preparation-lifecycle-准备阶段设置与后台事件暂停，恢复必须重新按下/preparation-desktop.png"
+      ]
+    },
+    {
+      "id": "WI-005",
+      "state": "implemented",
+      "note": "正式波池固定十类敌人并移除 shield/medic；冻结四类后期敌人的数值与第 10/13/15/18 波首发提示。弱敌占比满足 5/10/15/20/25 波上限，第 10 波后不增加且至少每两波下降，第 25 波归零；有限配额、首次敌人置顶和 10/s 上限由共享纯函数测试。",
+      "proof": [
+        "src/game/config.ts",
+        "src/game/rogue.ts",
+        "tests/unit/enemy-roles.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/enemy-roles-unit-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/unit-all.txt"
+      ]
+    },
+    {
+      "id": "WI-006",
+      "state": "implemented",
+      "note": "实现游走有界横移、突进蓄力/逐段冲刺/命中打断/碰障结束、号令视线盟友判定/不作用自身/不叠乘/打断与结束、狂暴 40% 一次性触发及永久 1.8 倍速度；减速、逐段击退、死亡禁触发、导航碰撞、配额与自然突破均有生产回归。",
+      "proof": [
+        "src/game/encounter.ts",
+        "src/game/enemyRules.ts",
+        "src/game/movement.ts",
+        "tests/unit/enemy-roles.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/enemy-roles-unit-final.txt"
+      ]
+    },
+    {
+      "id": "WI-007",
+      "state": "implemented",
+      "note": "四类后期敌人以单一 InstancedMesh 的原创部件区分，状态姿态/游走倾斜/突进标志/号令环与受影响标志/狂暴变色均不参与碰撞；事件短效和合成音接入共享 160 硬上限，补齐号令增益结束音画反馈，清局与 dispose 复用现有回收路径。",
+      "proof": [
+        "src/game/zombies.ts",
+        "src/game/Game.ts",
+        "tests/unit/enemy-roles.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/enemy-roles-unit-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/build.txt"
+      ]
+    },
+    {
+      "id": "WI-008",
+      "state": "implemented",
+      "note": "巫师在同一真实扳机完成全部碰撞后按 impacted 集合最多瞬移一次，死亡者不瞬移；落点保持半径并校验导航、占位、视野与遮挡。离场残影、两端过渡残像、落地环覆盖 180–280ms，并以离场/延迟落地双音区分；效果走共享上限和生命周期。",
+      "proof": [
+        "src/game/teleport.ts",
+        "src/game/Game.ts",
+        "tests/unit/rogue.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/unit-all.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/build.txt"
+      ]
+    },
+    {
+      "id": "WI-009",
+      "state": "implemented",
+      "note": "原创离线PCM含28/42ms瞬态、4非整数共振、低频桶腔；完整/破裂不同包络和音高，4确定性变体，6组并发淘汰最旧、8缓存硬上限、按活跃组数混音并接master。暂停/静音/失败/重开/dispose回收。真实WebAudio暴露即时音量调度问题，改直接AudioParam赋值后2项E2E重验通过；不声称主观试听。 最终合并5项隐藏静音E2E全部通过。",
+      "proof": [
+        "src/game/metalSynthesis.ts",
+        "src/game/audio.ts",
+        "tests/unit/audio.test.ts",
+        "tests/e2e/revision-metal.spec.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/unit-final-related.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-audio-rerun.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-verified.txt"
+      ]
+    },
+    {
+      "id": "WI-010",
+      "state": "implemented",
+      "note": "按锁定 design.md 完成 atmospheric Workbench 界面：主页删减重复背景文案但保留模式、六枪、技能一句话、开始和排行榜；设置仅保留声音/当前状态、总音量/当前值、像素效果/当前状态和完成动作。新增命名 success/disabled/动效令牌，未删除路由或组件；本地构建、24项定向单测及单worker隐藏E2E 13/13通过。",
+      "proof": [
+        "design.md",
+        "src/App.tsx",
+        "src/ui/SessionPanels.tsx",
+        "src/ui/rogue.css",
+        "src/ui/rogue-tokens.css",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-006-build/auxiliary/hallmark/ui-review.md"
+      ]
+    },
+    {
+      "id": "WI-011",
+      "state": "implemented",
+      "note": "在既有暴击图案、共享准确预览、构筑收益和命中提示基础上，精简升级说明和确认文案；组件以真实选择/确认状态驱动 default/loading/success，CSS补齐hover/focus-visible/active/disabled/error并保留非颜色信号。升级进入220ms、退出180ms，reduced-motion为120ms纯opacity，确认仍防双触发。七视口/键盘/预览/淡出E2E与构建均通过。",
+      "proof": [
+        "src/ui/UpgradeIcon.tsx",
+        "src/ui/UpgradePanel.tsx",
+        "src/game/hitFeedback.ts",
+        "src/ui/rogue.css",
+        "src/App.tsx",
+        "tests/e2e/revision-critical.spec.ts",
+        "tests/e2e/rogue-presentation.spec.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-verified.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-006-build/auxiliary/hallmark/ui-review.md"
+      ]
+    },
+    {
+      "id": "WI-012",
+      "state": "implemented",
+      "note": "模型继续复用生产 Encounter/波池/导航/碰撞/暴击/装填/准备时钟，并在每帧排空及统计生产特殊敌人事件；Game 专用只读回放、模型与配对报告同步输出十类组成、特殊事件、巫师瞬移和暴击计数。资源报告采集同一计数，视觉脚本提高至24波并按事件/瞬移捕获实际反馈；iteration-009 将巫师瞬移截图改为每枪首次事件一次，首枪截图由269降至约60，避免重复写盘。快速生产模型局记录十类组成、9类触发计数及119次瞬移；正式864矩阵归WI-015。",
+      "proof": [
+        "scripts/rogue-model.ts",
+        "src/game/timing.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/unit-all.txt",
+        "scripts/rogue-replay-browser.ts",
+        "scripts/evaluate-rogue.mjs",
+        "scripts/replay-rogue.mjs",
+        "scripts/rogue-resource-checks.ts",
+        "scripts/rogue-visual-checks.mjs",
+        "src/game/encounter.ts",
+        "src/game/Game.ts",
+        "tests/unit/rogue-balance.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/model-quick.json",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/resources-rerun/resources.json",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/unit-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/build-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-009-build/visual-rerun.txt"
+      ]
+    },
+    {
+      "id": "WI-013",
+      "state": "implemented",
+      "note": "巨人长路径/配额、暴击粒度、六枪装填、准备时钟、十敌波池/行为/实例碰撞、巫师聚合瞬移、金属音与资源边界均有单元或生产模型断言。本轮新增模型机器输出覆盖，当前全量20文件175项通过；真实视觉/E2E与全回归收束分别归WI-014/WI-016。",
+      "proof": [
+        "tests/unit/revision-core.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/unit-all.txt",
+        "tests/unit/revision-critical.test.ts",
+        "tests/unit/audio.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/unit-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/unit-final-related.txt",
+        "tests/unit/enemy-roles.test.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/enemy-roles-unit-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-005-build/unit-all.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/unit-all.txt"
+      ]
+    },
+    {
+      "id": "WI-014",
+      "state": "implemented",
+      "note": "iteration-020 先将升级展示、8 波清波后第 9 波自然失败及窄屏返回练习定向复验为 3/3。随后完整单 worker 隐藏 E2E 为 37/38；唯一失败发生在目标已死亡且 kills/hits 均正确后，跨进程断言错过 0.65 秒血滴窗口。测试改为点击前启动页面内逐帧采样，并以持久 bursts 计数补充结算断言，定向复验 1/1。当前产品源码对应的全部 38 个场景已有同轮全量 37 项与唯一改动场景的新鲜通过，WI-014 实现收束；fresh verifier 仍须独立重跑。",
+      "proof": [
+        "tests/e2e/revision-countdown.spec.ts",
+        "tests/e2e/revision-preparation-lifecycle.spec.ts",
+        "tests/e2e/rogue-presentation.spec.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-countdown-rerun.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-core-regression.txt",
+        "tests/e2e/revision-critical.spec.ts",
+        "tests/e2e/revision-metal.spec.ts",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-audio-rerun.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-verified.txt"
+        ,"scripts/rogue-replay-checks.ts"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/replay-lifecycle-rerun.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/resources-rerun/resources.json"
+        ,"tests/e2e/revision-countdown.spec.ts"
+        ,"tests/e2e/survival.spec.ts"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/e2e.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/e2e-p90-rerun.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-009-build/e2e-survival-rerun.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-009-build/visual-rerun.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-018-build/e2e-full.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-019-build/e2e-audio-final.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-019-build/e2e-countdown-final.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-020-build/targeted-results"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-020-build/e2e-full-results"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-020-build/headshot-rerun"
+      ]
+    },
+    {
+      "id": "WI-015",
+      "state": "implemented",
+      "note": "iteration-023 从新 scratch 完成不可过滤的正式 6枪×3水平×24 seeds×双FPS 共864局矩阵，601.1秒、机器断言0 gaps、无删失；普通60 FPS逐枪均值18.21–19.79且P10均为17，30 FPS合并均值18.08且逐枪漂移均<=20%，skilled/expert双FPS进入50波率均为0。随后以单个隐藏静音3D浏览器顺序完成固定12局真实配对，生命周期六枪通过，completed绝对差中位数0、最大3、进入50波判断一致，机器断言PASS且0 gaps。",
+      "proof": [
+        "scripts/evaluate-rogue.mjs",
+        "scripts/rogue-matrix-worker.mjs",
+        "scripts/typescript-loader.mjs",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-016-build/rogue-balance.json.manifest.json",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-016-build/rogue-balance.json.workers/direct-smoke.json",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-012-build/balance.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/balance-slice-1.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/balance-slice-2.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/balance-slice-3.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/rogue-balance.json.runs.jsonl",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/unit-related-direct.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/tsc.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-015-build/vite.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-017-build/rogue-balance.json.manifest.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-017-build/rogue-balance.json.workers"
+        ,"scripts/rogue-agent.ts"
+        ,"src/game/rogue.ts"
+        ,"tests/unit/rogue-balance.test.ts"
+        ,"tests/unit/rogue.test.ts"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-021-build/rogue-tuning-unit.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-021-build/diagnostic-priority-fixed-60.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-021-build/diagnostic-late-pressure-60.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-021-build/diagnostic-late-pressure-focused.json"
+        ,"src/game/weapons.ts"
+        ,"tests/unit/rogue-six.test.ts"
+        ,"tests/unit/revision-critical.test.ts"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/diagnostic-berserker-late-all-60.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/diagnostic-berserker-late-4seeds.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/diagnostic-regular-24seeds.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/diagnostic-regular-rebalanced-24seeds.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/diagnostic-sniper-final-24seeds.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/unit-all-final.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/build.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-022-build/diff-check.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-023-build/rogue-balance.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-023-build/rogue-balance.json.runs.jsonl"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-023-build/rogue-balance.json.manifest.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-023-build/balance.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-023-build/replay/report.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-023-build/replay.txt"
+      ]
+    },
+    {
+      "id": "WI-016",
+      "state": "implemented",
+      "note": "iteration-026 完成 WI-016 收束：175 项单元、TypeScript/生产构建、单 worker 隐藏静音 E2E 38/38 及资源压力均通过；首页/设置/升级的七视口截图完成实际检查。Hallmark 58 gate 首轮确认升级页触发 gate 3（三等分图案上置）、gate 13（hover 同时位移/换色）及 gate 27（reduced-motion 仍有空间/阴影动画），以最小修改改为图案左置标题、单一 hover 背景和静态 reduced-motion 降级；修正后 UI E2E 17/17 并目视复查 320/768/1440 升级页。README 与设计/平衡文档同步六枪正式模式、十敌数值、864 矩阵及 12 局配对现状；diff check 无错误，未打包或修改 portable EXE。",
+      "proof": [
+        "docs/ROGUE-SIX-DESIGN.md",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/unit-all.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/build-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/e2e-core-regression.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-002-build/diff-check.txt",
+        "README.md",
+        "design.md",
+        "tokens.css",
+        "src/ui/rogue-tokens.css",
+        ".hallmark/preflight.json",
+        ".hallmark/log.json",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/unit-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/build-final.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/diff-check.txt",
+        ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-003-build/e2e-verified.txt"
+        ,"docs/ROGUE-BALANCE-METHOD.md"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/resources-rerun/resources.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/unit-all.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-007-build/vite-final.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/unit.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/build.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/diff-check.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/e2e.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-008-build/e2e-p90-rerun.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-009-build/e2e-survival-rerun.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-019-build/unit-audio.txt"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-019-build/build.txt"
+        ,"src/ui/UpgradePanel.tsx"
+        ,"src/ui/rogue.css"
+        ,"src/style.css"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-026-build/vitest.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-026-build/e2e-results"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-026-build/e2e-ui-rerun"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-026-build/resources/resources.json"
+        ,".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-026-build/auxiliary/hallmark/slop-review.md"
+      ]
+    }
+  ]
+}

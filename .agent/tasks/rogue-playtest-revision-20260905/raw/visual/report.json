@@ -1,0 +1,2475 @@
+{
+  "status": "READY_FOR_REVIEW",
+  "gaps": [],
+  "captures": [
+    {
+      "name": "enemy-normal",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-normal.png",
+      "weapon": "rifle",
+      "enemy": "normal",
+      "target": {
+        "id": 0,
+        "kind": "normal",
+        "distance": 33.8946895416917,
+        "eta": 24.210492529779785,
+        "head": {
+          "x": 826.911743256542,
+          "y": 425.0116309660025
+        },
+        "chest": {
+          "x": 826.7568837662885,
+          "y": 435.6329064271301
+        },
+        "miss": {
+          "x": 836.583284826663,
+          "y": -238.3258692542897
+        }
+      },
+      "time": 0.09999999999999999
+    },
+    {
+      "name": "enemy-bucket",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-bucket.png",
+      "weapon": "rifle",
+      "enemy": "bucket",
+      "target": {
+        "id": 4,
+        "kind": "bucket",
+        "distance": 21.695117443781893,
+        "eta": 15.49651245984421,
+        "head": {
+          "x": 1131.6660972288482,
+          "y": 454.66991083876155
+        },
+        "chest": {
+          "x": 1130.6961635693701,
+          "y": 471.3885446069602
+        },
+        "miss": {
+          "x": 1195.9496506175146,
+          "y": -653.3782282494464
+        }
+      },
+      "time": 7.999999999999977
+    },
+    {
+      "name": "enemy-cone",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-cone.png",
+      "weapon": "rifle",
+      "enemy": "cone",
+      "target": {
+        "id": 3,
+        "kind": "cone",
+        "distance": 27.558461081182088,
+        "eta": 19.684615057987205,
+        "head": {
+          "x": 1005.9954972396683,
+          "y": 437.6627604850482
+        },
+        "chest": {
+          "x": 1005.4754510283748,
+          "y": 450.84879265579804
+        },
+        "miss": {
+          "x": 1039.2560773938499,
+          "y": -405.6759090534354
+        }
+      },
+      "time": 8.600000000000007
+    },
+    {
+      "name": "rifle-wave-1-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-1-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-1-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-1-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-1-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-1-cards-390.png",
+      "weapon": "rifle",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-1-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-1-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-enter-middle",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-enter-middle.png",
+      "animation": "enter-90ms",
+      "opacity": "0.908283"
+    },
+    {
+      "name": "rifle-exit-transition",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-exit-transition.png",
+      "animation": "exit",
+      "opacity": "1"
+    },
+    {
+      "name": "rifle-wave-1-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-1-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 1
+    },
+    {
+      "name": "rifle-wave-2-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-2-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 2,
+      "catalog": [
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-2-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-2-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 2,
+      "catalog": [
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-2-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-2-cards-390.png",
+      "weapon": "rifle",
+      "wave": 2,
+      "catalog": [
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-2-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-2-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 2,
+      "catalog": [
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-2-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-2-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 2
+    },
+    {
+      "name": "rifle-skill-hit",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-skill-hit.png",
+      "weapon": "rifle",
+      "skill": "active-hit",
+      "time": 39.38333333333238,
+      "hits": 66,
+      "slowed": [],
+      "lastShot": {
+        "muzzle": [
+          0.27632540921917437,
+          4.245040910344543,
+          7.249079880162733
+        ],
+        "direction": [
+          -0.14399632663962053,
+          -0.060958511097396105,
+          -0.987698900393781
+        ],
+        "aimPoint": [
+          -6.763135387342731,
+          1.2649992724710326,
+          -41.035955234172235
+        ],
+        "impact": [
+          -6.76313538734273,
+          1.264999272471033,
+          -41.03595523417222
+        ],
+        "hitTarget": 20
+      }
+    },
+    {
+      "name": "rifle-wave-3-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-3-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 3,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-3-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-3-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 3,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-3-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-3-cards-390.png",
+      "weapon": "rifle",
+      "wave": 3,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-3-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-3-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 3,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-3-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-3-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 3
+    },
+    {
+      "name": "rifle-skill-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-skill-ended.png",
+      "weapon": "rifle",
+      "skill": "ended",
+      "time": 41.199999999998944
+    },
+    {
+      "name": "enemy-football",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-football.png",
+      "weapon": "rifle",
+      "enemy": "football",
+      "target": {
+        "id": 24,
+        "kind": "football",
+        "distance": 23.63295134999436,
+        "eta": 8.440339767855129,
+        "head": {
+          "x": 347.89799246994454,
+          "y": 450.5803267821902
+        },
+        "chest": {
+          "x": 348.6762697166902,
+          "y": 465.9762145644834
+        },
+        "miss": {
+          "x": 297.22077707535203,
+          "y": -551.9168226548936
+        }
+      },
+      "time": 41.29999999999894
+    },
+    {
+      "name": "rifle-wave-4-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-4-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 4,
+      "catalog": [
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_damage",
+          "rarity": "rarity-rare"
+        },
+        {
+          "id": "cooldown",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-4-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-4-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 4,
+      "catalog": [
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_damage",
+          "rarity": "rarity-rare"
+        },
+        {
+          "id": "cooldown",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-4-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-4-cards-390.png",
+      "weapon": "rifle",
+      "wave": 4,
+      "catalog": [
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_damage",
+          "rarity": "rarity-rare"
+        },
+        {
+          "id": "cooldown",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-4-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-4-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 4,
+      "catalog": [
+        {
+          "id": "magazine",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_damage",
+          "rarity": "rarity-rare"
+        },
+        {
+          "id": "cooldown",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-4-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-4-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 4
+    },
+    {
+      "name": "rifle-wave-5-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-5-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 5,
+      "catalog": [
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "duration",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-5-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-5-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 5,
+      "catalog": [
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "duration",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-5-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-5-cards-390.png",
+      "weapon": "rifle",
+      "wave": 5,
+      "catalog": [
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "duration",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-5-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-5-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 5,
+      "catalog": [
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "duration",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-5-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-5-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 5
+    },
+    {
+      "name": "enemy-wizard",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-wizard.png",
+      "weapon": "rifle",
+      "enemy": "wizard",
+      "target": {
+        "id": 49,
+        "kind": "wizard",
+        "distance": 21.29808200548542,
+        "eta": 15.212915718203872,
+        "head": {
+          "x": 1094.8020730083376,
+          "y": 455.26627834531854
+        },
+        "chest": {
+          "x": 1093.93669908154,
+          "y": 471.8821470748824
+        },
+        "miss": {
+          "x": 1151.9736922256327,
+          "y": -642.4743520972096
+        }
+      },
+      "time": 80.91666666666336
+    },
+    {
+      "name": "feedback-wizard-teleport",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-wizard-teleport.png",
+      "weapon": "rifle",
+      "teleportCount": 1,
+      "time": 81.11666666666335,
+      "effects": 32
+    },
+    {
+      "name": "rifle-wave-6-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-6-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_velocity",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-6-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-6-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_velocity",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-6-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-6-cards-390.png",
+      "weapon": "rifle",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_velocity",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-6-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-6-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "rifle_overload",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "rifle_velocity",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-6-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-6-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 6
+    },
+    {
+      "name": "rifle-wave-7-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-7-cards-1440.png",
+      "weapon": "rifle",
+      "wave": 7,
+      "catalog": [
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "reload",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-7-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-7-cards-1280.png",
+      "weapon": "rifle",
+      "wave": 7,
+      "catalog": [
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "reload",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-7-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-7-cards-390.png",
+      "weapon": "rifle",
+      "wave": 7,
+      "catalog": [
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "reload",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-7-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-7-cards-390-bottom.png",
+      "weapon": "rifle",
+      "wave": 7,
+      "catalog": [
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "reload",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "rifle-wave-7-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-7-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 7
+    },
+    {
+      "name": "enemy-giant",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-giant.png",
+      "weapon": "rifle",
+      "enemy": "giant",
+      "target": {
+        "id": 84,
+        "kind": "giant",
+        "distance": 47.55476882218573,
+        "eta": 67.9353840316939,
+        "head": {
+          "x": 647.9065835113165,
+          "y": 375.13326089211427
+        },
+        "chest": {
+          "x": 648.0989678077179,
+          "y": 395.29839526024284
+        },
+        "miss": {
+          "x": 643.6182695685377,
+          "y": -74.35470920910224
+        }
+      },
+      "time": 126.4499999999941
+    },
+    {
+      "name": "rifle-wave-8-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-8-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 8
+    },
+    {
+      "name": "rifle-wave-9-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-9-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 9
+    },
+    {
+      "name": "enemy-skitter",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-skitter.png",
+      "weapon": "rifle",
+      "enemy": "skitter",
+      "target": {
+        "id": 115,
+        "kind": "skitter",
+        "distance": 36.74561563624446,
+        "eta": 26.246868311603187,
+        "head": {
+          "x": 582.2343684310841,
+          "y": 421.86780622929217
+        },
+        "chest": {
+          "x": 582.4224735901948,
+          "y": 431.88477848511616
+        },
+        "miss": {
+          "x": 570.548208849961,
+          "y": -200.44333534002993
+        }
+      },
+      "time": 171.31666666669514
+    },
+    {
+      "name": "feedback-skitter-turn",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-skitter-turn.png",
+      "weapon": "rifle",
+      "enemyEvent": "skitter-turn",
+      "count": 1,
+      "time": 171.61666666669538,
+      "effects": 27
+    },
+    {
+      "name": "rifle-wave-10-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-10-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 10
+    },
+    {
+      "name": "rifle-wave-11-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-11-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 11
+    },
+    {
+      "name": "rifle-wave-12-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-12-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 12
+    },
+    {
+      "name": "feedback-charger-windup",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-charger-windup.png",
+      "weapon": "rifle",
+      "enemyEvent": "charger-windup",
+      "count": 1,
+      "time": 274.8166666667454,
+      "effects": 6
+    },
+    {
+      "name": "enemy-charger",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-charger.png",
+      "weapon": "rifle",
+      "enemy": "charger",
+      "target": {
+        "id": 172,
+        "kind": "charger",
+        "distance": 23.260518229869447,
+        "eta": 16.614655878478178,
+        "head": {
+          "x": 345.54341021990047,
+          "y": 453.7251727884579
+        },
+        "chest": {
+          "x": 346.31579868315407,
+          "y": 469.3203444552612
+        },
+        "miss": {
+          "x": 295.34568189362636,
+          "y": -559.8091143941729
+        }
+      },
+      "time": 274.8166666667454
+    },
+    {
+      "name": "feedback-charger-interrupted",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-charger-interrupted.png",
+      "weapon": "rifle",
+      "enemyEvent": "charger-interrupted",
+      "count": 1,
+      "time": 275.0166666667452,
+      "effects": 25
+    },
+    {
+      "name": "rifle-wave-13-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-13-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 13
+    },
+    {
+      "name": "rifle-wave-14-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-14-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 14
+    },
+    {
+      "name": "enemy-howler",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-howler.png",
+      "weapon": "rifle",
+      "enemy": "howler",
+      "target": {
+        "id": 212,
+        "kind": "howler",
+        "distance": 18.25270201467448,
+        "eta": 13.037644296196058,
+        "head": {
+          "x": 1106.2600299574424,
+          "y": 468.07867970878976
+        },
+        "chest": {
+          "x": 1105.2887664002237,
+          "y": 486.68418487639514
+        },
+        "miss": {
+          "x": 1171.3268173934355,
+          "y": -778.339391763222
+        }
+      },
+      "time": 337.8833333333547
+    },
+    {
+      "name": "feedback-charger-charge",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-charger-charge.png",
+      "weapon": "rifle",
+      "enemyEvent": "charger-charge",
+      "count": 1,
+      "time": 354.2833333333398,
+      "effects": 33
+    },
+    {
+      "name": "rifle-wave-15-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-15-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 15
+    },
+    {
+      "name": "rifle-wave-16-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-16-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 16
+    },
+    {
+      "name": "rifle-wave-17-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-17-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 17
+    },
+    {
+      "name": "enemy-berserker",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\enemy-berserker.png",
+      "weapon": "rifle",
+      "enemy": "berserker",
+      "target": {
+        "id": 274,
+        "kind": "berserker",
+        "distance": 23.620987822719854,
+        "eta": 16.87213415908561,
+        "head": {
+          "x": 1077.275483184493,
+          "y": 450.03614400348977
+        },
+        "chest": {
+          "x": 1076.5337907027942,
+          "y": 465.32346006893704
+        },
+        "miss": {
+          "x": 1125.5206273013832,
+          "y": -544.3635363719791
+        }
+      },
+      "time": 423.6999999999433
+    },
+    {
+      "name": "feedback-berserker-rage",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-berserker-rage.png",
+      "weapon": "rifle",
+      "enemyEvent": "berserker-rage",
+      "count": 1,
+      "time": 427.9999999999394,
+      "effects": 55
+    },
+    {
+      "name": "feedback-howler-windup",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-howler-windup.png",
+      "weapon": "rifle",
+      "enemyEvent": "howler-windup",
+      "count": 1,
+      "time": 430.2999999999373,
+      "effects": 45
+    },
+    {
+      "name": "feedback-howler-command",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-howler-command.png",
+      "weapon": "rifle",
+      "enemyEvent": "howler-command",
+      "count": 1,
+      "time": 431.1999999999365,
+      "effects": 53
+    },
+    {
+      "name": "feedback-command-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-command-ended.png",
+      "weapon": "rifle",
+      "enemyEvent": "command-ended",
+      "count": 1,
+      "time": 434.19999999993377,
+      "effects": 36
+    },
+    {
+      "name": "rifle-wave-18-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-18-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 18
+    },
+    {
+      "name": "rifle-wave-19-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-19-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 19
+    },
+    {
+      "name": "rifle-wave-20-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-20-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 20
+    },
+    {
+      "name": "rifle-wave-21-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-21-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 21
+    },
+    {
+      "name": "rifle-wave-22-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-22-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 22
+    },
+    {
+      "name": "rifle-wave-23-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-23-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 23
+    },
+    {
+      "name": "rifle-wave-24-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\rifle-wave-24-next.png",
+      "phase": "countdown",
+      "weapon": "rifle",
+      "wave": 24
+    },
+    {
+      "name": "p90-wave-1-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-1-cards-1440.png",
+      "weapon": "p90",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-1-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-1-cards-1280.png",
+      "weapon": "p90",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-1-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-1-cards-390.png",
+      "weapon": "p90",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-1-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-1-cards-390-bottom.png",
+      "weapon": "p90",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "p90-enter-middle",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-enter-middle.png",
+      "animation": "enter-90ms",
+      "opacity": "0.908283"
+    },
+    {
+      "name": "p90-exit-transition",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-exit-transition.png",
+      "animation": "exit",
+      "opacity": "1"
+    },
+    {
+      "name": "p90-wave-1-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-1-next.png",
+      "phase": "countdown",
+      "weapon": "p90",
+      "wave": 1
+    },
+    {
+      "name": "p90-wave-2-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-2-next.png",
+      "phase": "countdown",
+      "weapon": "p90",
+      "wave": 2
+    },
+    {
+      "name": "p90-skill-hit",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-skill-hit.png",
+      "weapon": "p90",
+      "skill": "active-hit",
+      "time": 40.33333333333233,
+      "hits": 96,
+      "slowed": [
+        22
+      ],
+      "lastShot": {
+        "muzzle": [
+          0.6280497387954065,
+          4.455651914349525,
+          7.534952379951419
+        ],
+        "direction": [
+          0.4593957706299513,
+          0.3781072358634677,
+          -0.8037353072467336
+        ],
+        "aimPoint": [
+          82.70449573007672,
+          72.00894714975252,
+          -136.06179307128218
+        ],
+        "impact": [
+          83.31928845218664,
+          72.51495436977372,
+          -137.13740292446062
+        ],
+        "hitTarget": null
+      }
+    },
+    {
+      "name": "p90-wave-3-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-3-next.png",
+      "phase": "countdown",
+      "weapon": "p90",
+      "wave": 3
+    },
+    {
+      "name": "p90-skill-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-skill-ended.png",
+      "weapon": "p90",
+      "skill": "ended",
+      "time": 41.09999999999895
+    },
+    {
+      "name": "p90-wave-4-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-4-next.png",
+      "phase": "countdown",
+      "weapon": "p90",
+      "wave": 4
+    },
+    {
+      "name": "p90-wave-5-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-5-next.png",
+      "phase": "countdown",
+      "weapon": "p90",
+      "wave": 5
+    },
+    {
+      "name": "feedback-wizard-teleport",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-wizard-teleport.png",
+      "weapon": "p90",
+      "teleportCount": 1,
+      "time": 79.16666666666346,
+      "effects": 32
+    },
+    {
+      "name": "p90-wave-6-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-6-cards-1440.png",
+      "weapon": "p90",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "p90_dense",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-6-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-6-cards-1280.png",
+      "weapon": "p90",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "p90_dense",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-6-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-6-cards-390.png",
+      "weapon": "p90",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "p90_dense",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-6-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-6-cards-390-bottom.png",
+      "weapon": "p90",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "p90_frost",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "p90_dense",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "p90-wave-6-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\p90-wave-6-next.png",
+      "phase": "countdown",
+      "weapon": "p90",
+      "wave": 6
+    },
+    {
+      "name": "pistol-wave-1-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-1-cards-1440.png",
+      "weapon": "pistol",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-1-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-1-cards-1280.png",
+      "weapon": "pistol",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-1-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-1-cards-390.png",
+      "weapon": "pistol",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-1-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-1-cards-390-bottom.png",
+      "weapon": "pistol",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "pistol-enter-middle",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-enter-middle.png",
+      "animation": "enter-90ms",
+      "opacity": "0.908283"
+    },
+    {
+      "name": "pistol-exit-transition",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-exit-transition.png",
+      "animation": "exit",
+      "opacity": "1"
+    },
+    {
+      "name": "pistol-wave-1-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-1-next.png",
+      "phase": "countdown",
+      "weapon": "pistol",
+      "wave": 1
+    },
+    {
+      "name": "pistol-wave-2-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-2-next.png",
+      "phase": "countdown",
+      "weapon": "pistol",
+      "wave": 2
+    },
+    {
+      "name": "pistol-skill-hit",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-skill-hit.png",
+      "weapon": "pistol",
+      "skill": "active-hit",
+      "time": 37.83333333333247,
+      "hits": 41,
+      "slowed": [],
+      "lastShot": {
+        "muzzle": [
+          -0.5817579588697736,
+          4.323523557955873,
+          7.594267082649561
+        ],
+        "direction": [
+          -0.4756746326030118,
+          -0.10806853433184216,
+          -0.8729575223258903
+        ],
+        "aimPoint": [
+          -14.005880758308342,
+          1.2736966885109824,
+          -17.0416671782732
+        ],
+        "impact": [
+          -13.759057374384541,
+          1.3297725006548944,
+          -16.58869719645364
+        ],
+        "hitTarget": 19
+      }
+    },
+    {
+      "name": "pistol-skill-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-skill-ended.png",
+      "weapon": "pistol",
+      "skill": "ended",
+      "time": 42.5333333333322
+    },
+    {
+      "name": "pistol-wave-3-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-3-next.png",
+      "phase": "countdown",
+      "weapon": "pistol",
+      "wave": 3
+    },
+    {
+      "name": "pistol-wave-4-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-4-next.png",
+      "phase": "countdown",
+      "weapon": "pistol",
+      "wave": 4
+    },
+    {
+      "name": "pistol-wave-5-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-5-next.png",
+      "phase": "countdown",
+      "weapon": "pistol",
+      "wave": 5
+    },
+    {
+      "name": "feedback-wizard-teleport",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-wizard-teleport.png",
+      "weapon": "pistol",
+      "teleportCount": 1,
+      "time": 81.03333333333002,
+      "effects": 32
+    },
+    {
+      "name": "pistol-wave-6-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-6-cards-1440.png",
+      "weapon": "pistol",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "pistol_match",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-6-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-6-cards-1280.png",
+      "weapon": "pistol",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "pistol_match",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-6-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-6-cards-390.png",
+      "weapon": "pistol",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "pistol_match",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-6-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-6-cards-390-bottom.png",
+      "weapon": "pistol",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "pistol_partner",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "pistol_match",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "pistol-wave-6-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\pistol-wave-6-next.png",
+      "phase": "countdown",
+      "weapon": "pistol",
+      "wave": 6
+    },
+    {
+      "name": "revolver-skill-hit",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-skill-hit.png",
+      "weapon": "revolver",
+      "skill": "active-hit",
+      "time": 11.90000000000017,
+      "hits": 6,
+      "slowed": [],
+      "lastShot": {
+        "muzzle": [
+          0.1462553658755265,
+          4.323854839360674,
+          7.531472349362737
+        ],
+        "direction": [
+          -0.5101571954515199,
+          -0.0893047301229009,
+          -0.8554322305751144
+        ],
+        "aimPoint": [
+          -14.099999999999994,
+          1.83,
+          -16.356666666666662
+        ],
+        "impact": [
+          -13.947500266134737,
+          1.8566955904926472,
+          -16.100954920041175
+        ],
+        "hitTarget": 5
+      }
+    },
+    {
+      "name": "revolver-wave-1-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-1-cards-1440.png",
+      "weapon": "revolver",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-1-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-1-cards-1280.png",
+      "weapon": "revolver",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-1-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-1-cards-390.png",
+      "weapon": "revolver",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-1-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-1-cards-390-bottom.png",
+      "weapon": "revolver",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "revolver-enter-middle",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-enter-middle.png",
+      "animation": "enter-90ms",
+      "opacity": "0.908283"
+    },
+    {
+      "name": "revolver-exit-transition",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-exit-transition.png",
+      "animation": "exit",
+      "opacity": "1"
+    },
+    {
+      "name": "revolver-wave-1-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-1-next.png",
+      "phase": "countdown",
+      "weapon": "revolver",
+      "wave": 1
+    },
+    {
+      "name": "revolver-skill-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-skill-ended.png",
+      "weapon": "revolver",
+      "skill": "ended",
+      "time": 12.23333333333352
+    },
+    {
+      "name": "revolver-wave-2-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-2-next.png",
+      "phase": "countdown",
+      "weapon": "revolver",
+      "wave": 2
+    },
+    {
+      "name": "revolver-wave-3-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-3-next.png",
+      "phase": "countdown",
+      "weapon": "revolver",
+      "wave": 3
+    },
+    {
+      "name": "revolver-wave-4-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-4-next.png",
+      "phase": "countdown",
+      "weapon": "revolver",
+      "wave": 4
+    },
+    {
+      "name": "revolver-wave-5-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-5-next.png",
+      "phase": "countdown",
+      "weapon": "revolver",
+      "wave": 5
+    },
+    {
+      "name": "feedback-wizard-teleport",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-wizard-teleport.png",
+      "weapon": "revolver",
+      "teleportCount": 1,
+      "time": 85.04999999999646,
+      "effects": 31
+    },
+    {
+      "name": "revolver-wave-6-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-6-cards-1440.png",
+      "weapon": "revolver",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "revolver_cylinder",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-6-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-6-cards-1280.png",
+      "weapon": "revolver",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "revolver_cylinder",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-6-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-6-cards-390.png",
+      "weapon": "revolver",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "revolver_cylinder",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-6-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-6-cards-390-bottom.png",
+      "weapon": "revolver",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "revolver_deadeye",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "revolver_cylinder",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "revolver-wave-6-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\revolver-wave-6-next.png",
+      "phase": "countdown",
+      "weapon": "revolver",
+      "wave": 6
+    },
+    {
+      "name": "shotgun-wave-1-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-1-cards-1440.png",
+      "weapon": "shotgun",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-1-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-1-cards-1280.png",
+      "weapon": "shotgun",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-1-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-1-cards-390.png",
+      "weapon": "shotgun",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-1-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-1-cards-390-bottom.png",
+      "weapon": "shotgun",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-enter-middle",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-enter-middle.png",
+      "animation": "enter-90ms",
+      "opacity": "0.908283"
+    },
+    {
+      "name": "shotgun-exit-transition",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-exit-transition.png",
+      "animation": "exit",
+      "opacity": "1"
+    },
+    {
+      "name": "shotgun-wave-1-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-1-next.png",
+      "phase": "countdown",
+      "weapon": "shotgun",
+      "wave": 1
+    },
+    {
+      "name": "shotgun-wave-2-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-2-next.png",
+      "phase": "countdown",
+      "weapon": "shotgun",
+      "wave": 2
+    },
+    {
+      "name": "shotgun-skill-hit",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-skill-hit.png",
+      "weapon": "shotgun",
+      "skill": "active-hit",
+      "time": 39.26666666666572,
+      "hits": 21,
+      "slowed": [],
+      "lastShot": {
+        "muzzle": [
+          -0.013557563933408734,
+          4.204915337969892,
+          7.333588911237639
+        ],
+        "direction": [
+          -0.5382921489519306,
+          -0.11492051429881708,
+          -0.8348861226359007
+        ],
+        "aimPoint": [
+          -13.746482643035321,
+          1.2730598093497862,
+          -13.966050316390362
+        ],
+        "impact": [
+          -13.746482643035321,
+          1.2730598093497862,
+          -13.96605031639036
+        ],
+        "hitTarget": 19
+      }
+    },
+    {
+      "name": "shotgun-skill-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-skill-ended.png",
+      "weapon": "shotgun",
+      "skill": "ended",
+      "time": 43.26666666666549
+    },
+    {
+      "name": "shotgun-wave-3-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-3-next.png",
+      "phase": "countdown",
+      "weapon": "shotgun",
+      "wave": 3
+    },
+    {
+      "name": "shotgun-wave-4-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-4-next.png",
+      "phase": "countdown",
+      "weapon": "shotgun",
+      "wave": 4
+    },
+    {
+      "name": "shotgun-wave-5-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-5-next.png",
+      "phase": "countdown",
+      "weapon": "shotgun",
+      "wave": 5
+    },
+    {
+      "name": "feedback-wizard-teleport",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-wizard-teleport.png",
+      "weapon": "shotgun",
+      "teleportCount": 1,
+      "time": 89.98333333332951,
+      "effects": 86
+    },
+    {
+      "name": "shotgun-wave-6-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-6-cards-1440.png",
+      "weapon": "shotgun",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "shotgun_choke",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-6-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-6-cards-1280.png",
+      "weapon": "shotgun",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "shotgun_choke",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-6-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-6-cards-390.png",
+      "weapon": "shotgun",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "shotgun_choke",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-6-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-6-cards-390-bottom.png",
+      "weapon": "shotgun",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "shotgun_impact",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "shotgun_choke",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "shotgun-wave-6-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\shotgun-wave-6-next.png",
+      "phase": "countdown",
+      "weapon": "shotgun",
+      "wave": 6
+    },
+    {
+      "name": "sniper-skill-hit",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-skill-hit.png",
+      "weapon": "sniper",
+      "skill": "active-hit",
+      "time": 11.400000000000146,
+      "hits": 5,
+      "slowed": [],
+      "lastShot": {
+        "muzzle": [
+          0.7680574735175556,
+          4.1875391219184355,
+          7.263428253775158
+        ],
+        "direction": [
+          0.4741847113517005,
+          -0.12457076396262504,
+          -0.8715681179839433
+        ],
+        "aimPoint": [
+          11.856361058494405,
+          1.2745847065543505,
+          -13.117262341761533
+        ],
+        "impact": [
+          16.898457588678646,
+          -0.04999999999999999,
+          -22.384812472129717
+        ],
+        "hitTarget": null
+      }
+    },
+    {
+      "name": "sniper-wave-1-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-1-cards-1440.png",
+      "weapon": "sniper",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-1-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-1-cards-1280.png",
+      "weapon": "sniper",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-1-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-1-cards-390.png",
+      "weapon": "sniper",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-1-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-1-cards-390-bottom.png",
+      "weapon": "sniper",
+      "wave": 1,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "rate",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "critical_chance",
+          "rarity": "rarity-common"
+        }
+      ]
+    },
+    {
+      "name": "sniper-enter-middle",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-enter-middle.png",
+      "animation": "enter-90ms",
+      "opacity": "0.908283"
+    },
+    {
+      "name": "sniper-exit-transition",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-exit-transition.png",
+      "animation": "exit",
+      "opacity": "1"
+    },
+    {
+      "name": "sniper-wave-1-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-1-next.png",
+      "phase": "countdown",
+      "weapon": "sniper",
+      "wave": 1
+    },
+    {
+      "name": "sniper-skill-ended",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-skill-ended.png",
+      "weapon": "sniper",
+      "skill": "ended",
+      "time": 12.983333333333558
+    },
+    {
+      "name": "sniper-wave-2-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-2-next.png",
+      "phase": "countdown",
+      "weapon": "sniper",
+      "wave": 2
+    },
+    {
+      "name": "sniper-wave-3-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-3-next.png",
+      "phase": "countdown",
+      "weapon": "sniper",
+      "wave": 3
+    },
+    {
+      "name": "sniper-wave-4-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-4-next.png",
+      "phase": "countdown",
+      "weapon": "sniper",
+      "wave": 4
+    },
+    {
+      "name": "sniper-wave-5-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-5-next.png",
+      "phase": "countdown",
+      "weapon": "sniper",
+      "wave": 5
+    },
+    {
+      "name": "feedback-wizard-teleport",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\feedback-wizard-teleport.png",
+      "weapon": "sniper",
+      "teleportCount": 1,
+      "time": 86.26666666666306,
+      "effects": 31
+    },
+    {
+      "name": "sniper-wave-6-cards-1440",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-6-cards-1440.png",
+      "weapon": "sniper",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "sniper_caliber",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-6-cards-1280",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-6-cards-1280.png",
+      "weapon": "sniper",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "sniper_caliber",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-6-cards-390",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-6-cards-390.png",
+      "weapon": "sniper",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "sniper_caliber",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-6-cards-390-bottom",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-6-cards-390-bottom.png",
+      "weapon": "sniper",
+      "wave": 6,
+      "catalog": [
+        {
+          "id": "sniper_pierce",
+          "rarity": "rarity-epic"
+        },
+        {
+          "id": "damage",
+          "rarity": "rarity-common"
+        },
+        {
+          "id": "sniper_caliber",
+          "rarity": "rarity-rare"
+        }
+      ]
+    },
+    {
+      "name": "sniper-wave-6-next",
+      "path": "D:\\mydoc\\React\\undead-tower\\.agent\\deadline-carl-scratch\\rogue-playtest-revision-20260905\\iteration-028-evidence\\visual\\sniper-wave-6-next.png",
+      "phase": "countdown",
+      "weapon": "sniper",
+      "wave": 6
+    }
+  ],
+  "icons": [
+    "rifle_overload",
+    "rate",
+    "critical_chance",
+    "magazine",
+    "damage",
+    "critical_damage",
+    "cooldown",
+    "duration",
+    "rifle_velocity",
+    "reload",
+    "p90_frost",
+    "p90_dense",
+    "pistol_partner",
+    "pistol_match",
+    "revolver_deadeye",
+    "revolver_cylinder",
+    "shotgun_impact",
+    "shotgun_choke",
+    "sniper_pierce",
+    "sniper_caliber"
+  ],
+  "rarities": [
+    "rarity-epic",
+    "rarity-common",
+    "rarity-rare"
+  ],
+  "enemies": [
+    "normal",
+    "bucket",
+    "cone",
+    "football",
+    "wizard",
+    "giant",
+    "skitter",
+    "charger",
+    "howler",
+    "berserker"
+  ],
+  "enemyEvents": [
+    "skitter-turn",
+    "charger-windup",
+    "charger-interrupted",
+    "charger-charge",
+    "berserker-rage",
+    "howler-windup",
+    "howler-command",
+    "command-ended"
+  ],
+  "limitations": [
+    "Real input and production scene; fixed clock, first displayed upgrade chosen. These are visual fixtures, not the frozen probabilistic balance samples.",
+    "Screenshots require human/model visual inspection; capture coverage is not an AC6 verdict."
+  ]
+}

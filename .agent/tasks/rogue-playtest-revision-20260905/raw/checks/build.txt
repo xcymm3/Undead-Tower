@@ -1,0 +1,28 @@
+
+> undead-tower@0.1.0 build
+> tsc -b && vite build
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 65 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                 0.71 kB │ gzip:   0.46 kB
+dist/assets/ibm-plex-mono-latin-400-normal-CvHOgSBP.woff       13.14 kB
+dist/assets/ibm-plex-mono-latin-500-normal-CB9ihrfo.woff       13.15 kB
+dist/assets/ibm-plex-mono-latin-400-normal-DMJ8VG8y.woff2      14.70 kB
+dist/assets/ibm-plex-mono-latin-500-normal-DSY6xOcd.woff2      14.88 kB
+dist/assets/barlow-condensed-latin-700-normal-Dmwat-ge.woff    18.82 kB
+dist/assets/barlow-condensed-latin-600-normal-BFJEwTuo.woff    18.89 kB
+dist/assets/barlow-condensed-latin-600-normal-DepVgxBB.woff2   22.30 kB
+dist/assets/barlow-condensed-latin-700-normal-v1xN8_Wq.woff2   22.44 kB
+dist/assets/index-DVlbqYHc.css                                 46.29 kB │ gzip:   9.43 kB
+dist/assets/index-nqIw8bsQ.js                                 328.20 kB │ gzip: 105.78 kB
+dist/assets/three-CAPvTNmw.js                                 625.19 kB │ gzip: 162.04 kB
+
+✓ built in 293ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

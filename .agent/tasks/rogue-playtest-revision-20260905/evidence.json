@@ -1,0 +1,107 @@
+{
+  "task_id": "rogue-playtest-revision-20260905",
+  "overall_status": "PASS",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "text": "巨人不再从两侧树林生成；出生点、完整导航路径、运行时碰撞均使用同一巨人体积，原坏点和长路径回归通过。无合法点时保留配额重试，未发生传送、挪动、替换或跳过。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：175/175；revision-core 覆盖两侧树林、旧坏点、两条长路径、统一巨人半径及队首配额重试。", "src/game/spawn.ts、src/game/navigation.ts、src/game/movement.ts：生产出生与运行时移动共用路径/碰撞规则。", "raw/balance/report.json：864 局 formal=true、gaps=[] 并固定当前导航/出生源码哈希。"],
+      "gaps": []
+    },
+    {
+      "id": "AC2",
+      "text": "巫师瞬移具有清楚的离场、过渡和落地三段音画反馈；游走、突进、号令与狂暴的特殊行为均有可辨识触发/活动/结束或打断反馈，短效和音源受限并可回收。",
+      "status": "PASS",
+      "proof": ["raw/visual/report.json：170 张生产场景截图，10/10 敌人、全部必需敌人事件与 wizard teleport 覆盖，gaps=[]。", "raw/visual/feedback-wizard-teleport.png 及 feedback-*.png：当前生产特效帧。", "raw/resources/report.json：压力/重开/清理 PASS，maxEffects=127 < 160；raw/checks/e2e.txt：38/38。"],
+      "gaps": []
+    },
+    {
+      "id": "AC3",
+      "text": "波池按冻结检查点逐步淘汰 normal/cone/bucket 并显著提高强敌占比；第 25 波后三类弱敌为零，曲线确定、可测试且不靠无限弱敌堆量。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：第 5/10/15/20/25 波比例、绝对量单调淘汰和第 25 波归零断言通过。", "raw/balance/report.json 与 raw/balance/runs.jsonl：完整 864 局逐局十类组成，formal=true、gaps=[]。", "src/game/encounter.ts：生产波池是单元、模型和实际对局共同来源。"],
+      "gaps": []
+    },
+    {
+      "id": "AC4",
+      "text": "精准射击爆头成长被独立暴击率/暴击伤害成长完全替换；身体可暴击、爆头保留基础倍率并可与暴击叠加，预览、图案、构筑、反馈、模拟和真实碰撞逐项一致。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：两种暴击成长、身体/爆头叠加、双持/散弹/贯穿粒度、旧存档和死眼协同通过。", "raw/replay/report.json：12 个真实配对的 criticalHits/criticalHeadHits 与模型逐项一致。", "raw/visual/report.json：20/20 图案与三档稀有度；src/game/combat.ts、upgrades.ts、hitFeedback.ts 共用公式。"],
+      "gaps": []
+    },
+    {
+      "id": "AC5",
+      "text": "每波前 3 秒仅有轻量提示且所有正常玩家动作可用；玩家机械时钟前进，敌人/刷新债务/成绩时钟冻结，暂停、后台、波间和零点衔接符合冻结规则。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：玩家机械时钟与 Encounter/成绩时钟分离边界通过。", "raw/checks/e2e.txt：首波、波间、暂停、后台、连续波、归零及准备期操作在完整 38 项中通过。", "raw/visual/rifle-wave-1-next.png：轻量提示与战斗 HUD 同屏；src/game/timing.ts 为共享时钟规则。"],
+      "gaps": []
+    },
+    {
+      "id": "AC6",
+      "text": "六枪基础装填耗时精确变为旧值两倍；装填成长、逐发装填、枪械动画、技能冲突、模拟和真实对局使用同一新配置并有行为断言。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：六枪 1.55/1.80/1.70/2.40/0.40 每发/2.00 秒、成长、逐发中断和技能冲突通过。", "raw/replay/report.json：六枪 lifecycle 全部通过 countdown、换弹拒绝、暂停/blur/restart 和按键边缘检查。", "src/game/weapons.ts、firearm.ts 与 scripts/rogue-model.ts 共用生产配置。"],
+      "gaps": []
+    },
+    {
+      "id": "AC7",
+      "text": "铁桶命中/破裂使用分层、具细微变化的真实感合成金属敲击，混音层级和并发受限，统一服从静音/音量设置且与路障/身体音色不同。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：瞬态、非整数共振、腔体层、四变体、完整/破裂差异、master/mute/volume 和 6 组并发上限通过。", "raw/checks/e2e.txt：静音/音量持久化与铁桶诊断通过。", "src/game/metalSynthesis.ts、src/game/audio.ts：无外部采样的代码合成实现。"],
+      "gaps": []
+    },
+    {
+      "id": "AC8",
+      "text": "首页/部署、设置、升级/构筑按 Hallmark 1.1.0 精简并共享命名设计令牌；保留品牌、实景、信息架构、路由和组件，完整状态、键盘焦点、窄屏、reduced-motion 与不阻塞升级动效通过实际检查。",
+      "status": "PASS",
+      "proof": ["raw/hallmark/slop-review.md：六轴最低 4/5、58 gate 全部 No，并记录七视口、键盘、状态和 reduced-motion。", "raw/checks/e2e.txt：38/38，覆盖 320/375/390/414/768/1280/1440。", "raw/visual/rifle-wave-1-cards-1440.png、rifle-wave-1-cards-390.png、rifle-enter-middle.png、rifle-exit-transition.png；design.md/tokens.css 为命名系统。"],
+      "gaps": []
+    },
+    {
+      "id": "AC9",
+      "text": "shield 与 medic 从新正式规则中删除，替换为冻结的 charger 与 howler；最终仍恰好十类，每个替代者有独立外观、行为、反馈、反制和导航/碰撞/击杀/特写/配额/性能整合。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：十类映射、旧两类不生成、charger/howler 正反例、障碍/打断/死亡/配额边界通过。", "raw/visual/report.json 及 enemy-charger.png/enemy-howler.png：10/10 阵容与独立外观/反馈。", "raw/replay/report.json：真实场景 spawned/killedKinds/enemyEventCounts 与模型一致；resources PASS。"],
+      "gaps": []
+    },
+    {
+      "id": "AC10",
+      "text": "skitter、charger、howler、berserker 按冻结血量、速度、首次波数和职责变强后移；狂暴者总耐久始终是当前巨人的 2 倍，40% 阈值前 1.4 m/s、之后一次性 1.8 倍，实际与模拟一致。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：四类冻结数值/首次波、二倍耐久公式、40% 一次性阈值和速度通过。", "raw/balance/report.json：864 生产配置样本 formal=true、gaps=[]。", "raw/replay/report.json：实际与模型组成/事件一致；raw/visual/enemy-*.png 为当前外观证据。"],
+      "gaps": []
+    },
+    {
+      "id": "AC11",
+      "text": "继承的六枪正式闭环、六右键技能、技能成长、稀有度/图案/构筑栏、练习模式静止复位、六枪排行榜与旧榜保留仍可用；受本次修改的生命周期和持久化没有回归。",
+      "status": "PASS",
+      "proof": ["raw/checks/e2e.txt：38/38 覆盖六枪、技能、清波升级、自然失败、重开、练习复位与排行榜。", "raw/replay/report.json：六枪 lifecycle 和 12 个生产输入/碰撞对局通过。", "raw/visual/report.json：六枪 active-hit/ended、20 图案和三稀有度；unit 全回归通过。"],
+      "gaps": []
+    },
+    {
+      "id": "AC12",
+      "text": "新生产配置完成可复现的 864 局矩阵并满足全部冻结均值、分位数、50 波率、枪间和 FPS 门槛；12 局真实静默配对满足误差门槛，逐局数据/哈希/限制完整，不存在硬性 50 波失败或挑样本。",
+      "status": "PASS",
+      "proof": ["raw/balance/report.json/runs.jsonl/manifest.json：864/864、formal=true、gaps=[]、配置 SHA-256 27980eb37198d94e8e2226863db127aa90b0e8857e62367ca5325e50ce73775c。", "raw/balance/command.txt：382.8 秒；regular 60 FPS 各枪均值 18.21–19.79、P10>=17，30 FPS 合并 18.08，高水平进入 50 波率 0。", "raw/replay/report.json：12/12 PASS，中位差 0、最大 3、50 波判断一致；raw/replay/command.txt：单隐藏静音浏览器顺序运行 490.7 秒。"],
+      "gaps": []
+    },
+    {
+      "id": "AC13",
+      "text": "固定朝向/有限视角、枪口-准星-弹道共享目标点及枪口遮挡、有效游玩时钟、标题/暂停按需绘制与后台停绘均保留；刷新不超过 10/s、实例槽不超过 256、短效不超过 160，压力与 10 次重开没有持续资源增长。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：navigation parity、aim integration、timing、spawn/instance/effect caps 通过。", "raw/checks/e2e.txt：固定瞄准、枪口遮挡、暂停/后台停绘与有效时钟在 38 项中通过。", "raw/resources/report.json：PASS、gaps=[]、maxAlive=20、maxEffects=127，压力和 10 次重开无持续增长。"],
+      "gaps": []
+    },
+    {
+      "id": "AC14",
+      "text": "当前源码通过单 worker 全量单元、TypeScript/生产构建、完整隐藏静音 E2E、资源检查、实际多视口截图/交互审查、Hallmark 六轴 critique 与 58 项 slop test；设计/操作/平衡文档准确，未打包或修改 portable EXE。",
+      "status": "PASS",
+      "proof": ["raw/checks/unit.txt：20 files、175/175；raw/checks/build.txt：tsc+Vite PASS；raw/checks/e2e.txt：38/38。", "raw/resources/report.json：PASS；raw/visual/report.json：170 captures、20/20 icons、10/10 enemies、3/3 rarities、gaps=[]。", "raw/hallmark/slop-review.md：六轴最低 4/5、58 gate 全 No；raw/checks/diff-check.txt：exit=0；README/design/平衡文档同步，未运行 dist:portable。"],
+      "gaps": []
+    }
+  ],
+  "changed_files": ["README.md", "design.md", "tokens.css", ".hallmark/log.json", ".hallmark/preflight.json", "docs/ROGUE-BALANCE-METHOD.md", "docs/ROGUE-SIX-DESIGN.md", "scripts/evaluate-rogue.mjs", "scripts/replay-rogue.mjs", "scripts/rogue-agent.ts", "scripts/rogue-model.ts", "scripts/rogue-replay-browser.ts", "scripts/rogue-replay-checks.ts", "scripts/rogue-resource-checks.ts", "scripts/rogue-visual-checks.mjs", "src/App.tsx", "src/style.css", "src/game/Game.ts", "src/game/audio.ts", "src/game/combat.ts", "src/game/config.ts", "src/game/encounter.ts", "src/game/enemyRules.ts", "src/game/firearm.ts", "src/game/hitFeedback.ts", "src/game/metalSynthesis.ts", "src/game/movement.ts", "src/game/navigation.ts", "src/game/rogue.ts", "src/game/sceneRules.ts", "src/game/skills.ts", "src/game/spawn.ts", "src/game/staticCollision.ts", "src/game/teleport.ts", "src/game/timing.ts", "src/game/upgrades.ts", "src/game/weapons.ts", "src/game/zombies.ts", "src/ui/BuildInventory.tsx", "src/ui/SessionPanels.tsx", "src/ui/SkillHud.tsx", "src/ui/UpgradeIcon.tsx", "src/ui/UpgradePanel.tsx", "src/ui/rogue-tokens.css", "src/ui/rogue.css", "tests/e2e/revision-countdown.spec.ts", "tests/e2e/revision-critical.spec.ts", "tests/e2e/revision-metal.spec.ts", "tests/e2e/revision-preparation-lifecycle.spec.ts", "tests/e2e/rogue-card-layout.spec.ts", "tests/e2e/rogue-idle.spec.ts", "tests/e2e/rogue-presentation.spec.ts", "tests/e2e/rogue-six.spec.ts", "tests/unit/enemy-roles.test.ts", "tests/unit/navigation-parity.test.ts", "tests/unit/revision-core.test.ts", "tests/unit/revision-critical.test.ts", "tests/unit/rogue-aim-integration.test.ts", "tests/unit/rogue-balance.test.ts", "tests/unit/rogue-collision-skills.test.ts", "tests/unit/rogue-six.test.ts"],
+  "commands_for_fresh_verifier": ["& 'C:\\Program Files\\nodejs\\npm.cmd' run test -- --maxWorkers=1", "& 'C:\\Program Files\\nodejs\\npm.cmd' run build", "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:e2e -- --workers=1 --reporter=line --output=<scratch>/e2e", "& 'C:\\Program Files\\nodejs\\npm.cmd' run balance:rogue -- --output <scratch>/rogue-balance.json --assert", "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:rogue:replay -- --output <scratch>/replay --assert", "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:rogue:replay -- --resources-only --output <scratch>/resources --assert", "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:rogue:replay -- --visuals-only --output <scratch>/visual --assert", "git diff --check"],
+  "known_gaps": ["固定概率代理和确定性回放不是真人试玩样本，不能把约 20 波均值外推为所有真人表现。", "静音自动验收不替代扬声器/耳机上的主观音色试听。", "Hallmark 是内部实现审查，不是外部美术认证；fresh verifier 仍需独立目视判断。"]
+}

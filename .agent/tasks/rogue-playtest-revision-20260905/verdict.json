@@ -1,0 +1,44 @@
+{
+  "task_id": "rogue-playtest-revision-20260905",
+  "overall_verdict": "PASS",
+  "criteria": [
+    { "id": "AC1", "status": "PASS", "reason": "Fresh 175/175 unit suite and 864/864 formal matrix passed giant woodland/bad-point rejection, full-radius route parity, long routes and quota retry behavior." },
+    { "id": "AC2", "status": "PASS", "reason": "Fresh unit/E2E/resource assertions passed, and the current 170-capture visual pass plus independent inspection confirmed distinguishable wizard teleport and special-enemy feedback within caps." },
+    { "id": "AC3", "status": "PASS", "reason": "Fresh unit assertions and complete 864-run production matrix passed the staged weak-enemy retirement curve with zero gaps." },
+    { "id": "AC4", "status": "PASS", "reason": "Fresh unit and browser collision checks passed body criticals, critical headshots, independent formulas, previews, patterns and build presentation." },
+    { "id": "AC5", "status": "PASS", "reason": "Fresh single-worker E2E passed all six weapon countdown cases plus pause, blur, settings and lifecycle boundaries; current visual inspection confirmed the lightweight nonblocking HUD." },
+    { "id": "AC6", "status": "PASS", "reason": "Fresh unit and E2E suites passed exact six-weapon reload values, shell reload behavior, weapon switching and skill-conflict lifecycle checks." },
+    { "id": "AC7", "status": "PASS", "reason": "Fresh synthesis unit tests, real WebAudio E2E, mute/volume checks and resource pass succeeded; subjective speaker/headphone timbre remains an explicitly documented limitation." },
+    { "id": "AC8", "status": "PASS", "reason": "Fresh seven-viewport/keyboard/state/reduced-motion assertions passed, and independent Hallmark review of current home, settings and upgrade captures found 0 critical, 0 major and 0 minor findings with all 58 gates No." },
+    { "id": "AC9", "status": "PASS", "reason": "Fresh unit, E2E, replay, resource and visual checks passed the ten-kind roster and charger/howler behavior, appearance, navigation, quota, kill and lifecycle integration." },
+    { "id": "AC10", "status": "PASS", "reason": "Fresh unit assertions, formal matrix, real-scene replay and current special-enemy captures passed frozen first-wave, health, speed and one-shot 40% berserker transition rules." },
+    { "id": "AC11", "status": "PASS", "reason": "Fresh 38/38 E2E and replay lifecycle checks passed all six formal weapon loops, skills, upgrades, natural failure, restart, practice and leaderboard coverage." },
+    { "id": "AC12", "status": "PASS", "reason": "Fresh 864/864 formal matrix had zero gaps; the current sequential real-scene replay passed 12/12 pairs with median completed-wave difference 0, maximum 3 and matching wave-50 classification." },
+    { "id": "AC13", "status": "PASS", "reason": "Fresh unit/E2E/resource/replay checks passed fixed aim, muzzle obstruction, active clocks, idle rendering, spawn/instance/effect caps and restart stability; maxAlive=20 and maxEffects=125 in the verifier resource run." },
+    { "id": "AC14", "status": "PASS", "reason": "Current source passed unit 175/175, production build, hidden single-worker E2E 38/38, formal matrix 864/864, replay 12/12, resources, 170-capture visual inspection, independent Hallmark 58-gate audit and git diff --check; no portable build was run or changed." }
+  ],
+  "commands_run": [
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run test -- --maxWorkers=1 (exit 0; 20 files, 175 tests; iteration-029 verifier scratch)",
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run build (exit 0; iteration-029 verifier scratch)",
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:e2e -- --workers=1 --reporter=line --output=<iteration-029-verify>/e2e (exit 0; 38 passed in 7.7m)",
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run balance:rogue -- --output <iteration-029-verify>/rogue-balance.json --assert (exit 0; 864 runs in 377.4s; gaps=[])",
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:rogue:replay -- --resources-only --output <iteration-029-verify>/resources --assert (exit 0; PASS; maxAlive=20; maxEffects=125)",
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:rogue:replay -- --output <iteration-030-verify>/replay --assert (exit 0; 12/12 PASS; median=0; maximum=3; gaps=[]; 452.8s)",
+    "& 'C:\\Program Files\\nodejs\\npm.cmd' run test:rogue:replay -- --visuals-only --output <iteration-030-verify>/visual --assert (exit 0; 170 captures; 20 icons; 10 enemies; 3 rarities; gaps=[])",
+    "Hallmark 1.1.0 independent screenshot/source audit (six axes >=4; 58/58 gates No; 0 findings)",
+    "git diff --check (exit 0)"
+  ],
+  "artifacts_used": [
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-029-verify/unit.txt",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-029-verify/build.txt",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-029-verify/e2e.txt",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-029-verify/rogue-balance.json",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-029-verify/resources/report.json",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-030-verify/replay/report.json",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-030-verify/visual/visual-captures.json",
+    ".agent/deadline-carl-scratch/rogue-playtest-revision-20260905/iteration-030-verify/auxiliary/hallmark/review.md",
+    "spec.md",
+    "evidence.json",
+    "current production and test source"
+  ]
+}

@@ -1,0 +1,6 @@
+
+> undead-tower@0.1.0 test:rogue:replay
+> node scripts/replay-rogue.mjs --resources-only --output D:\mydoc\React\undead-tower\.agent\deadline-carl-scratch\rogue-playtest-revision-20260905\iteration-028-evidence\resources --assert
+
+Lifecycle: 6 weapons passed
+{"status":"PASS","gaps":[],"maxAlive":20,"maxEffects":127}

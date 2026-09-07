@@ -1,0 +1,62 @@
+
+> undead-tower@0.1.0 balance:rogue
+> node scripts/evaluate-rogue.mjs --output D:\mydoc\React\undead-tower\.agent\deadline-carl-scratch\rogue-playtest-revision-20260905\iteration-027-evidence\rogue-balance.json --assert
+
+Matrix worker 6: 86 runs in 350.6s
+Matrix worker 9: 86 runs in 365.1s
+Matrix worker 4: 86 runs in 371.2s
+Matrix worker 7: 86 runs in 371.3s
+Matrix worker 8: 86 runs in 375.8s
+Matrix worker 5: 86 runs in 377.2s
+Matrix worker 2: 87 runs in 378.4s
+Matrix worker 3: 87 runs in 378.9s
+Matrix worker 0: 87 runs in 381.5s
+Matrix worker 1: 87 runs in 382.3s
+Parallel matrix completed 864 fresh runs with 10 bounded workers
+┌─────────┬────────────┬───────────┬─────┬─────┬────────────────────┬─────┬───────────────┬──────────┐
+│ (index) │ weapon     │ profile   │ fps │ n   │ mean               │ p10 │ entered50Rate │ censored │
+├─────────┼────────────┼───────────┼─────┼─────┼────────────────────┼─────┼───────────────┼──────────┤
+│ 0       │ 'rifle'    │ 'regular' │ 60  │ 24  │ 19.791666666666668 │ 17  │ 0             │ 0        │
+│ 1       │ 'p90'      │ 'regular' │ 60  │ 24  │ 19.541666666666668 │ 17  │ 0             │ 0        │
+│ 2       │ 'pistol'   │ 'regular' │ 60  │ 24  │ 18.666666666666668 │ 17  │ 0             │ 0        │
+│ 3       │ 'revolver' │ 'regular' │ 60  │ 24  │ 19.541666666666668 │ 17  │ 0             │ 0        │
+│ 4       │ 'shotgun'  │ 'regular' │ 60  │ 24  │ 18.208333333333332 │ 17  │ 0             │ 0        │
+│ 5       │ 'sniper'   │ 'regular' │ 60  │ 24  │ 18.333333333333332 │ 17  │ 0             │ 0        │
+│ 6       │ 'all'      │ 'regular' │ 60  │ 144 │ 19.01388888888889  │ 17  │ 0             │ 0        │
+│ 7       │ 'rifle'    │ 'skilled' │ 60  │ 24  │ 24.916666666666668 │ 24  │ 0             │ 0        │
+│ 8       │ 'p90'      │ 'skilled' │ 60  │ 24  │ 22.583333333333332 │ 17  │ 0             │ 0        │
+│ 9       │ 'pistol'   │ 'skilled' │ 60  │ 24  │ 23.375             │ 24  │ 0             │ 0        │
+│ 10      │ 'revolver' │ 'skilled' │ 60  │ 24  │ 22.291666666666668 │ 18  │ 0             │ 0        │
+│ 11      │ 'shotgun'  │ 'skilled' │ 60  │ 24  │ 21.833333333333332 │ 18  │ 0             │ 0        │
+│ 12      │ 'sniper'   │ 'skilled' │ 60  │ 24  │ 20.916666666666668 │ 17  │ 0             │ 0        │
+│ 13      │ 'all'      │ 'skilled' │ 60  │ 144 │ 22.65277777777778  │ 18  │ 0             │ 0        │
+│ 14      │ 'rifle'    │ 'expert'  │ 60  │ 24  │ 27.958333333333332 │ 25  │ 0             │ 0        │
+│ 15      │ 'p90'      │ 'expert'  │ 60  │ 24  │ 23.708333333333332 │ 24  │ 0             │ 0        │
+│ 16      │ 'pistol'   │ 'expert'  │ 60  │ 24  │ 25.166666666666668 │ 24  │ 0             │ 0        │
+│ 17      │ 'revolver' │ 'expert'  │ 60  │ 24  │ 23                 │ 19  │ 0             │ 0        │
+│ 18      │ 'shotgun'  │ 'expert'  │ 60  │ 24  │ 22.708333333333332 │ 17  │ 0             │ 0        │
+│ 19      │ 'sniper'   │ 'expert'  │ 60  │ 24  │ 23.208333333333332 │ 18  │ 0             │ 0        │
+│ 20      │ 'all'      │ 'expert'  │ 60  │ 144 │ 24.291666666666668 │ 22  │ 0             │ 0        │
+│ 21      │ 'rifle'    │ 'regular' │ 30  │ 24  │ 18.833333333333332 │ 17  │ 0             │ 0        │
+│ 22      │ 'p90'      │ 'regular' │ 30  │ 24  │ 18.625             │ 17  │ 0             │ 0        │
+│ 23      │ 'pistol'   │ 'regular' │ 30  │ 24  │ 17.833333333333332 │ 12  │ 0             │ 0        │
+│ 24      │ 'revolver' │ 'regular' │ 30  │ 24  │ 18.625             │ 17  │ 0             │ 0        │
+│ 25      │ 'shotgun'  │ 'regular' │ 30  │ 24  │ 17                 │ 13  │ 0             │ 0        │
+│ 26      │ 'sniper'   │ 'regular' │ 30  │ 24  │ 17.583333333333332 │ 13  │ 0             │ 0        │
+│ 27      │ 'all'      │ 'regular' │ 30  │ 144 │ 18.083333333333332 │ 16  │ 0             │ 0        │
+│ 28      │ 'rifle'    │ 'skilled' │ 30  │ 24  │ 24.25              │ 24  │ 0             │ 0        │
+│ 29      │ 'p90'      │ 'skilled' │ 30  │ 24  │ 22.708333333333332 │ 18  │ 0             │ 0        │
+│ 30      │ 'pistol'   │ 'skilled' │ 30  │ 24  │ 24.041666666666668 │ 24  │ 0             │ 0        │
+│ 31      │ 'revolver' │ 'skilled' │ 30  │ 24  │ 22.416666666666668 │ 18  │ 0             │ 0        │
+│ 32      │ 'shotgun'  │ 'skilled' │ 30  │ 24  │ 21.125             │ 18  │ 0             │ 0        │
+│ 33      │ 'sniper'   │ 'skilled' │ 30  │ 24  │ 20.791666666666668 │ 17  │ 0             │ 0        │
+│ 34      │ 'all'      │ 'skilled' │ 30  │ 144 │ 22.555555555555557 │ 18  │ 0             │ 0        │
+│ 35      │ 'rifle'    │ 'expert'  │ 30  │ 24  │ 25.875             │ 24  │ 0             │ 0        │
+│ 36      │ 'p90'      │ 'expert'  │ 30  │ 24  │ 23.791666666666668 │ 24  │ 0             │ 0        │
+│ 37      │ 'pistol'   │ 'expert'  │ 30  │ 24  │ 23.875             │ 24  │ 0             │ 0        │
+│ 38      │ 'revolver' │ 'expert'  │ 30  │ 24  │ 22.291666666666668 │ 18  │ 0             │ 0        │
+│ 39      │ 'shotgun'  │ 'expert'  │ 30  │ 24  │ 23                 │ 18  │ 0             │ 0        │
+│ 40      │ 'sniper'   │ 'expert'  │ 30  │ 24  │ 23.75              │ 24  │ 0             │ 0        │
+│ 41      │ 'all'      │ 'expert'  │ 30  │ 144 │ 23.76388888888889  │ 22  │ 0             │ 0        │
+└─────────┴────────────┴───────────┴─────┴─────┴────────────────────┴─────┴───────────────┴──────────┘
+Wrote D:\mydoc\React\undead-tower\.agent\deadline-carl-scratch\rogue-playtest-revision-20260905\iteration-027-evidence\rogue-balance.json; 382.8 seconds; 0 gaps

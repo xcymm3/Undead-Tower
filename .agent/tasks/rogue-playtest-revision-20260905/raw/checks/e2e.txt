@@ -1,0 +1,67 @@
+
+> undead-tower@0.1.0 test:e2e
+> node scripts/run-e2e.mjs --workers=1 --reporter=line --output=D:\mydoc\React\undead-tower\.agent\deadline-carl-scratch\rogue-playtest-revision-20260905\iteration-027-evidence\e2e
+
+
+Running 38 tests using 1 worker
+
+
+
+(node:13652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1/38] tests\e2e\armor.spec.ts:4:1 › 十类僵尸模型、命中、护甲脱落与巨人体型
+[2/38] tests\e2e\audio.spec.ts:3:1 › 音量即时生效，静音独立保存，刷新与重开不丢失偏好
+[3/38] tests\e2e\game.spec.ts:11:1 › 首屏加载、真实开火、枪口火光和装填
+[4/38] tests\e2e\game.spec.ts:41:1 › 视角小幅阻尼跟随、不会累积转身，枪管与瞄准点一致
+[5/38] tests\e2e\game.spec.ts:57:1 › 瞄准人形靶头部可命中，倒下后自动复位
+[6/38] tests\e2e\game.spec.ts:89:1 › 暂停、设置和失焦不会误射，重新开始清空训练状态
+[7/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 320px
+[8/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 375px
+[9/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 390px
+[10/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 414px
+[11/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 768px
+[12/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 1280px
+[13/38] tests\e2e\game.spec.ts:116:3 › 多视口首页与设置可用 1440px
+[14/38] tests\e2e\game.spec.ts:131:1 › 标题与暂停静止时停止绘制，游戏恢复后重新绘制
+[15/38] tests\e2e\reload.spec.ts:17:1 › 六种悬浮枪械数字键切换、独立弹量、换弹动画与暂停协调
+[16/38] tests\e2e\reload.spec.ts:59:1 › 半自动不连发，换弹排队切枪、快速改选与切枪暂停不丢失状态
+[17/38] tests\e2e\revision-countdown.spec.ts:4:31 › rifle 准备阶段可以瞄准射击换弹使用技能，暂停后冻结
+[18/38] tests\e2e\revision-countdown.spec.ts:4:31 › p90 准备阶段可以瞄准射击换弹使用技能，暂停后冻结
+[19/38] tests\e2e\revision-countdown.spec.ts:4:31 › pistol 准备阶段可以瞄准射击换弹使用技能，暂停后冻结
+[20/38] tests\e2e\revision-countdown.spec.ts:4:31 › revolver 准备阶段可以瞄准射击换弹使用技能，暂停后冻结
+[21/38] tests\e2e\revision-countdown.spec.ts:4:31 › shotgun 准备阶段可以瞄准射击换弹使用技能，暂停后冻结
+[22/38] tests\e2e\revision-countdown.spec.ts:4:31 › sniper 准备阶段可以瞄准射击换弹使用技能，暂停后冻结
+[23/38] tests\e2e\revision-critical.spec.ts:3:35 › 真实身体碰撞显示暴击，空枪不产生提示
+[24/38] tests\e2e\revision-critical.spec.ts:3:35 › 真实头部碰撞显示暴击爆头，空枪不产生提示
+[25/38] tests\e2e\revision-critical.spec.ts:40:1 › 暴击卡图案、准确预览、键盘选择与构筑在七视口可读
+[26/38] tests\e2e\revision-metal.spec.ts:3:1 › 真实WebAudio铁桶分层缓存、六组上限、静音与结束回收
+[27/38] tests\e2e\revision-preparation-lifecycle.spec.ts:3:1 › 准备阶段设置与后台事件暂停，恢复必须重新按下
+[28/38] tests\e2e\rogue-card-layout.spec.ts:3:1 › 长说明和双指标预览在三视口完整换行
+[29/38] tests\e2e\rogue-idle.spec.ts:3:1 › 标题和暂停按需绘制，后台停止绘制且不增加成绩或技能时间
+[30/38] tests\e2e\rogue-presentation.spec.ts:4:1 › 实际清波图案、三视口、淡出单次确认和持续构筑详情
+[31/38] tests\e2e\rogue-six.spec.ts:5:50 › rifle 正式选择、技能、暂停与清空重开
+[32/38] tests\e2e\rogue-six.spec.ts:5:50 › p90 正式选择、技能、暂停与清空重开
+[33/38] tests\e2e\rogue-six.spec.ts:5:50 › pistol 正式选择、技能、暂停与清空重开
+[34/38] tests\e2e\rogue-six.spec.ts:5:50 › revolver 正式选择、技能、暂停与清空重开
+[35/38] tests\e2e\rogue-six.spec.ts:5:50 › shotgun 正式选择、技能、暂停与清空重开
+[36/38] tests\e2e\rogue-six.spec.ts:5:50 › sniper 正式选择、技能、暂停与清空重开
+[37/38] tests\e2e\survival.spec.ts:12:1 › 肉鸽清波、三选一、高级僵尸、自然失败及独立波数榜
+tests\e2e\survival.spec.ts:12:1 › 肉鸽清波、三选一、高级僵尸、自然失败及独立波数榜
+已通过第 1 波
+
+已通过第 2 波
+
+已通过第 3 波
+
+已通过第 4 波
+
+已通过第 5 波
+
+已通过第 6 波
+
+已通过第 7 波
+
+已通过第 8 波
+
+[38/38] tests\e2e\survival.spec.ts:58:1 › 手枪肉鸽选择页在窄屏可操作，返回练习仍保留六枪
+  38 passed (7.7m)

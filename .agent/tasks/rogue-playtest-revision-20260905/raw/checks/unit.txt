@@ -1,0 +1,13 @@
+
+> undead-tower@0.1.0 test
+> vitest run --maxWorkers=1
+
+
+ RUN  v4.1.11 D:/mydoc/React/undead-tower
+
+
+ Test Files  20 passed (20)
+      Tests  175 passed (175)
+   Start at  19:39:36
+   Duration  18.54s (transform 764ms, setup 0ms, import 1.87s, tests 12.75s, environment 2ms)
+

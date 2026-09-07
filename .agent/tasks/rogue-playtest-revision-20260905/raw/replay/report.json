@@ -1,0 +1,7920 @@
+{
+  "formal": true,
+  "lifecycle": [
+    "rifle: countdown, queued/reloading reject, press edge, pause/resume, blur, restart, full-cooldown hold and release/repress",
+    "p90: countdown, queued/reloading reject, press edge, pause/resume, blur, restart, full-cooldown hold and release/repress",
+    "pistol: countdown, queued/reloading reject, press edge, pause/resume, blur, restart, full-cooldown hold and release/repress",
+    "revolver: countdown, queued/reloading reject, press edge, pause/resume, blur, restart, full-cooldown hold and release/repress",
+    "shotgun: countdown, queued/reloading reject, press edge, pause/resume, blur, restart, full-cooldown hold and release/repress",
+    "sniper: countdown, queued/reloading reject, press edge, pause/resume, blur, restart, full-cooldown hold and release/repress"
+  ],
+  "sourceHashes": {
+    "src/game/Game.ts": "ceda848f0b5007cf67cb103065227e45ccbb72ff89b9521a74d843148810f78f",
+    "src/App.tsx": "8358c4b764313416fa8984d70361925f0fb87698104fd47761260b890132d43f",
+    "scripts/rogue-model.ts": "aff46baf159976e7c0a57774e8a217a3996cf7410fc6ac768864bc112cb66a47",
+    "scripts/rogue-replay-browser.ts": "d8eefe0847aed6dcca9cc0461313ec4a7d248fcb9d537128e5bcb4cc689f9fd8",
+    "scripts/rogue-agent.ts": "3991c24cb06ceaedb4d386136ed11825d08ec5b8bf88c299d291e27ae26df547",
+    "scripts/replay-rogue.mjs": "434ace1c22fa84687ed8501556431fc863c6c95ac42ae6ddf50c2c64faff255a",
+    "scripts/rogue-replay-checks.ts": "6ed03277efa825cd41bc296a7b19a6b49a5b5b8eb7417d8a186598d096334d35",
+    "scripts/rogue-resource-checks.ts": "c3c590785fd3b101bdcd60531b5c9e6cdb2cdcc0b3e6dc371bf44b3654032c27",
+    "src/game/staticCollision.ts": "de81b781ea4bc71c0493a43786bbc7909bbc9bbe817feb52577c6871607c94cb",
+    "src/game/rogue.ts": "d7ddc1cb4a97c09ac33b21d82594001ff322bfd491340b57e1aca51c7f9e3e08",
+    "src/game/config.ts": "cb8918a4126236c15696e9603187ddda14c4449e26361de7d70b671d88403071",
+    "src/game/upgrades.ts": "a49c518db10e281f1cba740c9ef8743402e2cbcc4894a358af420eb682b1e7bc",
+    "src/game/skills.ts": "81c49a379ee9573a39c2b2c2376d90670700f6af1710cc801244f3cbbff29f55",
+    "src/game/combat.ts": "3d24ff93b47e6eac78c6dd25c766a8742a6a7492a402ca48d066e6c5525c32ef",
+    "src/game/encounter.ts": "3d6700a05375dbbf33e757d500759c7ef869266ba8083a6d2bc7e8d6764127ff",
+    "src/game/enemyRules.ts": "f7d132b8f835a1025e7494b9b02b801ae564d75e9ce0d53edb360b6126d41de1",
+    "src/game/movement.ts": "41b535fc54f4f3dfb2139856d36ec62231399f6faf80f1672257e7e19d66c4be",
+    "src/game/navigation.ts": "ba00e226dd3dabf674e8491024dbeef7b8e9ac95b0ea92a2a68841446026e98d",
+    "src/game/spawn.ts": "7b0e9e625ebff1fc085b5e65d7f5927f8ff97b47a3413ec5a3fcc85c82ea1f43",
+    "src/game/sceneRules.ts": "029aa9451c659a3b1f965b661d6c52972821b80e345217fc3238614866e3cce8",
+    "src/game/world.ts": "d4a37cbe073f0c720c5bc6a9d2e76cfcb95ee83b0545cbeba6b7a44d91352fd4",
+    "src/game/geometry.ts": "c99acf2fab331d7b1e14e06ea9d1c1aad72cdd4332aeefe57d4cf00736fae834",
+    "src/game/zombies.ts": "e379cc39bd2b7dcd738852dcbeca411bb17f30ca4b207f1e32b756f896325552",
+    "src/game/firearm.ts": "1370a6bb33ad62ddd33513c0868b096bc56a68916090ec3870f34ec4f2653080",
+    "src/game/arsenal.ts": "1d0f2877864b2941c20787275dbdc1a6dc94b41252f59d642d18e9b3dd455fd3",
+    "src/game/weapons.ts": "e89958304888e549edf70872223bcc7305d86011305de98c2a5c2ef06e50be78",
+    "src/game/teleport.ts": "0fddd3c14ca680094ab241273a4f4837ab01569dbb63c28cb2ba14ae1b89c17a",
+    "src/game/aim.ts": "a1541d6de6d9424054fc67efdae690da9ff0c70bd6c9501534716f9cfda55736",
+    "src/game/timing.ts": "0dea6d03bb2c5ed89bae3ebabc05ebeeaf73999b97ab281ec435f32a6dc22d4b",
+    "src/game/hitFeedback.ts": "328acc9de1a4dabe7ebbbdb3510166c111008d606195a4843ab6b42925e09e54",
+    "src/game/audio.ts": "963d4173a43c4ab0de8a37e9d1ce7c62559ed4876435a1ffbbb37b5d7642b322",
+    "src/game/metalSynthesis.ts": "06f65d6052748c86c0ae67b747783e70e77dad32c2c9bb13b928d8e84df68473"
+  },
+  "configurationSha256": "27980eb37198d94e8e2226863db127aa90b0e8857e62367ca5325e50ce73775c",
+  "pairs": [
+    {
+      "options": {
+        "weapon": "rifle",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "rifle",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 17,
+        "failedWave": 18,
+        "seconds": 442.76455261372195,
+        "clearTime": 428.5833333332722,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 1833,
+        "hits": 1296,
+        "headHits": 549,
+        "criticalHits": 237,
+        "criticalHeadHits": 84,
+        "requestedShots": 1833,
+        "requestedHits": 1309,
+        "requestedHeads": 570,
+        "kills": 279,
+        "waveKills": 5,
+        "skillActivations": 15,
+        "skillTime": 83.01666666666344,
+        "maxAlive": 16,
+        "spawned": {
+          "normal": 65,
+          "cone": 44,
+          "bucket": 36,
+          "football": 49,
+          "giant": 21,
+          "wizard": 26,
+          "skitter": 32,
+          "charger": 12,
+          "howler": 8,
+          "berserker": 2
+        },
+        "killedKinds": {
+          "normal": 63,
+          "cone": 44,
+          "bucket": 36,
+          "football": 47,
+          "giant": 19,
+          "wizard": 24,
+          "skitter": 29,
+          "charger": 10,
+          "howler": 7,
+          "berserker": 0
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 137,
+          "charger-windup": 6,
+          "charger-charge": 3,
+          "charger-impact": 0,
+          "charger-interrupted": 3,
+          "howler-windup": 2,
+          "howler-command": 1,
+          "howler-interrupted": 1,
+          "command-ended": 0,
+          "berserker-rage": 1
+        },
+        "teleportCount": 119,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 0,
+          "rifle_velocity": 1,
+          "rifle_overload": 2,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "rifle_overload",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "rifle_overload",
+              "magazine"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "rifle_overload",
+              "damage",
+              "magazine"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "rifle_overload",
+              "damage",
+              "rifle_velocity"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rifle_velocity",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "rifle_overload",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "rifle_velocity",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "rifle_velocity"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "rifle_overload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "rifle_overload",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "rifle",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 17,
+        "failedWave": 18,
+        "seconds": 442.76455261372195,
+        "clearTime": 428.5833333332722,
+        "failed": true,
+        "censored": false,
+        "shots": 1833,
+        "hits": 1296,
+        "headHits": 549,
+        "criticalHits": 237,
+        "criticalHeadHits": 84,
+        "requestedShots": 1833,
+        "requestedHits": 1309,
+        "requestedHeads": 570,
+        "kills": 279,
+        "skillActivations": 15,
+        "skillTime": 83.01666666666344,
+        "maxAlive": 16,
+        "spawned": {
+          "normal": 65,
+          "cone": 44,
+          "bucket": 36,
+          "football": 49,
+          "giant": 21,
+          "wizard": 26,
+          "skitter": 32,
+          "charger": 12,
+          "howler": 8,
+          "berserker": 2
+        },
+        "killedKinds": {
+          "normal": 63,
+          "cone": 44,
+          "bucket": 36,
+          "football": 47,
+          "giant": 19,
+          "wizard": 24,
+          "skitter": 29,
+          "charger": 10,
+          "howler": 7,
+          "berserker": 0
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 137,
+          "charger-windup": 6,
+          "charger-charge": 3,
+          "charger-impact": 0,
+          "charger-interrupted": 3,
+          "howler-windup": 2,
+          "howler-command": 1,
+          "howler-interrupted": 1,
+          "command-ended": 0,
+          "berserker-rage": 1
+        },
+        "teleportCount": 119,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 0,
+          "rifle_velocity": 1,
+          "rifle_overload": 2,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "rifle_overload",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "rifle_overload",
+              "magazine"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "rifle_overload",
+              "damage",
+              "magazine"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "rifle_overload",
+              "damage",
+              "rifle_velocity"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rifle_velocity",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "rifle_overload",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "rifle_velocity",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "rifle_velocity"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "rifle_overload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "rifle_overload",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 52,
+          "textures": 6
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          237,
+          237
+        ],
+        "criticalHeadHits": [
+          84,
+          84
+        ],
+        "accuracy": [
+          0.707037643207856,
+          0.707037643207856
+        ],
+        "headShare": [
+          0.4236111111111111,
+          0.4236111111111111
+        ],
+        "skillActivations": [
+          15,
+          15
+        ],
+        "skillTime": [
+          83.01666666666344,
+          83.01666666666344
+        ],
+        "spawned": [
+          {
+            "normal": 65,
+            "cone": 44,
+            "bucket": 36,
+            "football": 49,
+            "giant": 21,
+            "wizard": 26,
+            "skitter": 32,
+            "charger": 12,
+            "howler": 8,
+            "berserker": 2
+          },
+          {
+            "normal": 65,
+            "cone": 44,
+            "bucket": 36,
+            "football": 49,
+            "giant": 21,
+            "wizard": 26,
+            "skitter": 32,
+            "charger": 12,
+            "howler": 8,
+            "berserker": 2
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 137,
+            "charger-windup": 6,
+            "charger-charge": 3,
+            "charger-impact": 0,
+            "charger-interrupted": 3,
+            "howler-windup": 2,
+            "howler-command": 1,
+            "howler-interrupted": 1,
+            "command-ended": 0,
+            "berserker-rage": 1
+          },
+          {
+            "skitter-turn": 137,
+            "charger-windup": 6,
+            "charger-charge": 3,
+            "charger-impact": 0,
+            "charger-interrupted": 3,
+            "howler-windup": 2,
+            "howler-command": 1,
+            "howler-interrupted": 1,
+            "command-ended": 0,
+            "berserker-rage": 1
+          }
+        ],
+        "teleportCount": [
+          119,
+          119
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "rifle",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "rifle",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 25,
+        "failedWave": 26,
+        "seconds": 638.9970081218913,
+        "clearTime": 618.4166666664329,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 2291,
+        "hits": 2172,
+        "headHits": 1918,
+        "criticalHits": 234,
+        "criticalHeadHits": 207,
+        "requestedShots": 2291,
+        "requestedHits": 2201,
+        "requestedHeads": 2017,
+        "kills": 465,
+        "waveKills": 11,
+        "skillActivations": 23,
+        "skillTime": 186.6500000000401,
+        "maxAlive": 24,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 35,
+          "wizard": 44,
+          "skitter": 61,
+          "charger": 31,
+          "howler": 24,
+          "berserker": 52
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 34,
+          "wizard": 44,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 41
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 134,
+          "charger-windup": 15,
+          "charger-charge": 5,
+          "charger-impact": 0,
+          "charger-interrupted": 10,
+          "howler-windup": 5,
+          "howler-command": 4,
+          "howler-interrupted": 1,
+          "command-ended": 4,
+          "berserker-rage": 42
+        },
+        "teleportCount": 152,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 2,
+          "rifle_overload": 3,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "rifle_overload",
+              "reload",
+              "duration"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rifle_velocity",
+              "rifle_overload",
+              "critical_chance"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "rifle_overload",
+              "damage",
+              "magazine"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "rifle_velocity",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "rifle_velocity",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "rifle_velocity",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "rifle_velocity"
+            ],
+            "selected": "rifle_velocity"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 25,
+            "choices": [
+              "reload",
+              "magazine",
+              "rifle_velocity"
+            ],
+            "selected": "rifle_velocity"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "rifle",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 25,
+        "failedWave": 26,
+        "seconds": 638.9970081218913,
+        "clearTime": 618.4166666664329,
+        "failed": true,
+        "censored": false,
+        "shots": 2291,
+        "hits": 2172,
+        "headHits": 1918,
+        "criticalHits": 234,
+        "criticalHeadHits": 207,
+        "requestedShots": 2291,
+        "requestedHits": 2201,
+        "requestedHeads": 2017,
+        "kills": 465,
+        "skillActivations": 23,
+        "skillTime": 186.6500000000401,
+        "maxAlive": 24,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 35,
+          "wizard": 44,
+          "skitter": 61,
+          "charger": 31,
+          "howler": 24,
+          "berserker": 52
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 34,
+          "wizard": 44,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 41
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 134,
+          "charger-windup": 15,
+          "charger-charge": 5,
+          "charger-impact": 0,
+          "charger-interrupted": 10,
+          "howler-windup": 5,
+          "howler-command": 4,
+          "howler-interrupted": 1,
+          "command-ended": 4,
+          "berserker-rage": 42
+        },
+        "teleportCount": 152,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 2,
+          "rifle_overload": 3,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "rifle_overload",
+              "reload",
+              "duration"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rifle_velocity",
+              "rifle_overload",
+              "critical_chance"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "rifle_overload",
+              "damage",
+              "magazine"
+            ],
+            "selected": "rifle_overload"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "rifle_velocity",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "rifle_velocity",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "rifle_velocity",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "rifle_velocity"
+            ],
+            "selected": "rifle_velocity"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 25,
+            "choices": [
+              "reload",
+              "magazine",
+              "rifle_velocity"
+            ],
+            "selected": "rifle_velocity"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 52,
+          "textures": 6
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          234,
+          234
+        ],
+        "criticalHeadHits": [
+          207,
+          207
+        ],
+        "accuracy": [
+          0.9480576167612397,
+          0.9480576167612397
+        ],
+        "headShare": [
+          0.8830570902394107,
+          0.8830570902394107
+        ],
+        "skillActivations": [
+          23,
+          23
+        ],
+        "skillTime": [
+          186.6500000000401,
+          186.6500000000401
+        ],
+        "spawned": [
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 76,
+            "giant": 35,
+            "wizard": 44,
+            "skitter": 61,
+            "charger": 31,
+            "howler": 24,
+            "berserker": 52
+          },
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 76,
+            "giant": 35,
+            "wizard": 44,
+            "skitter": 61,
+            "charger": 31,
+            "howler": 24,
+            "berserker": 52
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 134,
+            "charger-windup": 15,
+            "charger-charge": 5,
+            "charger-impact": 0,
+            "charger-interrupted": 10,
+            "howler-windup": 5,
+            "howler-command": 4,
+            "howler-interrupted": 1,
+            "command-ended": 4,
+            "berserker-rage": 42
+          },
+          {
+            "skitter-turn": 134,
+            "charger-windup": 15,
+            "charger-charge": 5,
+            "charger-impact": 0,
+            "charger-interrupted": 10,
+            "howler-windup": 5,
+            "howler-command": 4,
+            "howler-interrupted": 1,
+            "command-ended": 4,
+            "berserker-rage": 42
+          }
+        ],
+        "teleportCount": [
+          152,
+          152
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "p90",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "p90",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 18,
+        "failedWave": 19,
+        "seconds": 505.80703560913526,
+        "clearTime": 490.98333333321546,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 3408,
+        "hits": 2378,
+        "headHits": 1017,
+        "criticalHits": 456,
+        "criticalHeadHits": 171,
+        "requestedShots": 3408,
+        "requestedHits": 2391,
+        "requestedHeads": 1067,
+        "kills": 299,
+        "waveKills": 4,
+        "skillActivations": 17,
+        "skillTime": 97.349999999996,
+        "maxAlive": 19,
+        "spawned": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 36,
+          "charger": 14,
+          "howler": 10,
+          "berserker": 4
+        },
+        "killedKinds": {
+          "normal": 65,
+          "cone": 44,
+          "bucket": 36,
+          "football": 51,
+          "giant": 22,
+          "wizard": 26,
+          "skitter": 32,
+          "charger": 13,
+          "howler": 8,
+          "berserker": 2
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 177,
+          "charger-windup": 11,
+          "charger-charge": 7,
+          "charger-impact": 0,
+          "charger-interrupted": 4,
+          "howler-windup": 5,
+          "howler-command": 5,
+          "howler-interrupted": 0,
+          "command-ended": 4,
+          "berserker-rage": 3
+        },
+        "teleportCount": 226,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 0,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 1,
+          "p90_frost": 3,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "p90_frost",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "p90_frost",
+              "magazine"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "p90_frost",
+              "damage",
+              "magazine"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "p90_frost",
+              "damage",
+              "p90_dense"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "p90_dense",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "p90_frost",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "p90_dense",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "p90_dense"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "p90_frost"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "p90_frost",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "p90_frost",
+              "p90_dense"
+            ],
+            "selected": "p90_frost"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "p90",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 18,
+        "failedWave": 19,
+        "seconds": 505.8070356091358,
+        "clearTime": 490.98333333321546,
+        "failed": true,
+        "censored": false,
+        "shots": 3408,
+        "hits": 2378,
+        "headHits": 1017,
+        "criticalHits": 456,
+        "criticalHeadHits": 171,
+        "requestedShots": 3408,
+        "requestedHits": 2391,
+        "requestedHeads": 1067,
+        "kills": 299,
+        "skillActivations": 17,
+        "skillTime": 97.349999999996,
+        "maxAlive": 19,
+        "spawned": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 36,
+          "charger": 14,
+          "howler": 10,
+          "berserker": 4
+        },
+        "killedKinds": {
+          "normal": 65,
+          "cone": 44,
+          "bucket": 36,
+          "football": 51,
+          "giant": 22,
+          "wizard": 26,
+          "skitter": 32,
+          "charger": 13,
+          "howler": 8,
+          "berserker": 2
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 177,
+          "charger-windup": 11,
+          "charger-charge": 7,
+          "charger-impact": 0,
+          "charger-interrupted": 4,
+          "howler-windup": 5,
+          "howler-command": 5,
+          "howler-interrupted": 0,
+          "command-ended": 4,
+          "berserker-rage": 3
+        },
+        "teleportCount": 226,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 0,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 1,
+          "p90_frost": 3,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "p90_frost",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "p90_frost",
+              "magazine"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "p90_frost",
+              "damage",
+              "magazine"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "p90_frost",
+              "damage",
+              "p90_dense"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "p90_dense",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "p90_frost",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "p90_dense",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "p90_dense"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "p90_frost"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "p90_frost",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "p90_frost",
+              "p90_dense"
+            ],
+            "selected": "p90_frost"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 53,
+          "textures": 7
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          456,
+          456
+        ],
+        "criticalHeadHits": [
+          171,
+          171
+        ],
+        "accuracy": [
+          0.6977699530516432,
+          0.6977699530516432
+        ],
+        "headShare": [
+          0.42767031118587046,
+          0.42767031118587046
+        ],
+        "skillActivations": [
+          17,
+          17
+        ],
+        "skillTime": [
+          97.349999999996,
+          97.349999999996
+        ],
+        "spawned": [
+          {
+            "normal": 67,
+            "cone": 45,
+            "bucket": 37,
+            "football": 53,
+            "giant": 23,
+            "wizard": 28,
+            "skitter": 36,
+            "charger": 14,
+            "howler": 10,
+            "berserker": 4
+          },
+          {
+            "normal": 67,
+            "cone": 45,
+            "bucket": 37,
+            "football": 53,
+            "giant": 23,
+            "wizard": 28,
+            "skitter": 36,
+            "charger": 14,
+            "howler": 10,
+            "berserker": 4
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 177,
+            "charger-windup": 11,
+            "charger-charge": 7,
+            "charger-impact": 0,
+            "charger-interrupted": 4,
+            "howler-windup": 5,
+            "howler-command": 5,
+            "howler-interrupted": 0,
+            "command-ended": 4,
+            "berserker-rage": 3
+          },
+          {
+            "skitter-turn": 177,
+            "charger-windup": 11,
+            "charger-charge": 7,
+            "charger-impact": 0,
+            "charger-interrupted": 4,
+            "howler-windup": 5,
+            "howler-command": 5,
+            "howler-interrupted": 0,
+            "command-ended": 4,
+            "berserker-rage": 3
+          }
+        ],
+        "teleportCount": [
+          226,
+          226
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "p90",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "p90",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 24,
+        "failedWave": 25,
+        "seconds": 636.0070017006739,
+        "clearTime": 617.6999999997669,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 3680,
+        "hits": 3513,
+        "headHits": 3058,
+        "criticalHits": 370,
+        "criticalHeadHits": 331,
+        "requestedShots": 3680,
+        "requestedHits": 3540,
+        "requestedHeads": 3251,
+        "kills": 437,
+        "waveKills": 7,
+        "skillActivations": 27,
+        "skillTime": 219.9833333333998,
+        "maxAlive": 21,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 34,
+          "wizard": 43,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 32
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 33,
+          "wizard": 42,
+          "skitter": 60,
+          "charger": 29,
+          "howler": 22,
+          "berserker": 19
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 231,
+          "charger-windup": 17,
+          "charger-charge": 11,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 9,
+          "howler-command": 9,
+          "howler-interrupted": 0,
+          "command-ended": 11,
+          "berserker-rage": 19
+        },
+        "teleportCount": 271,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 1,
+          "p90_frost": 3,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "p90_frost",
+              "reload",
+              "duration"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "p90_dense",
+              "p90_frost",
+              "critical_chance"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "p90_frost",
+              "damage",
+              "magazine"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "p90_dense",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "p90_dense",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "p90_dense",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "p90_dense"
+            ],
+            "selected": "p90_dense"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "p90",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 24,
+        "failedWave": 25,
+        "seconds": 636.0070017004278,
+        "clearTime": 617.6999999997669,
+        "failed": true,
+        "censored": false,
+        "shots": 3680,
+        "hits": 3513,
+        "headHits": 3058,
+        "criticalHits": 370,
+        "criticalHeadHits": 331,
+        "requestedShots": 3680,
+        "requestedHits": 3540,
+        "requestedHeads": 3251,
+        "kills": 437,
+        "skillActivations": 27,
+        "skillTime": 219.9833333333998,
+        "maxAlive": 21,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 34,
+          "wizard": 43,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 32
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 33,
+          "wizard": 42,
+          "skitter": 60,
+          "charger": 29,
+          "howler": 22,
+          "berserker": 19
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 231,
+          "charger-windup": 17,
+          "charger-charge": 11,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 9,
+          "howler-command": 9,
+          "howler-interrupted": 0,
+          "command-ended": 11,
+          "berserker-rage": 19
+        },
+        "teleportCount": 271,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 1,
+          "p90_frost": 3,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "p90_frost",
+              "reload",
+              "duration"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "p90_dense",
+              "p90_frost",
+              "critical_chance"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "p90_frost",
+              "damage",
+              "magazine"
+            ],
+            "selected": "p90_frost"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "p90_dense",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "p90_dense",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "p90_dense",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "p90_dense"
+            ],
+            "selected": "p90_dense"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 53,
+          "textures": 7
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          370,
+          370
+        ],
+        "criticalHeadHits": [
+          331,
+          331
+        ],
+        "accuracy": [
+          0.9546195652173913,
+          0.9546195652173913
+        ],
+        "headShare": [
+          0.8704810703102761,
+          0.8704810703102761
+        ],
+        "skillActivations": [
+          27,
+          27
+        ],
+        "skillTime": [
+          219.9833333333998,
+          219.9833333333998
+        ],
+        "spawned": [
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 75,
+            "giant": 34,
+            "wizard": 43,
+            "skitter": 60,
+            "charger": 30,
+            "howler": 23,
+            "berserker": 32
+          },
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 75,
+            "giant": 34,
+            "wizard": 43,
+            "skitter": 60,
+            "charger": 30,
+            "howler": 23,
+            "berserker": 32
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 231,
+            "charger-windup": 17,
+            "charger-charge": 11,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 9,
+            "howler-command": 9,
+            "howler-interrupted": 0,
+            "command-ended": 11,
+            "berserker-rage": 19
+          },
+          {
+            "skitter-turn": 231,
+            "charger-windup": 17,
+            "charger-charge": 11,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 9,
+            "howler-command": 9,
+            "howler-interrupted": 0,
+            "command-ended": 11,
+            "berserker-rage": 19
+          }
+        ],
+        "teleportCount": [
+          271,
+          271
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "pistol",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "pistol",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 24,
+        "failedWave": 25,
+        "seconds": 710.7177806605365,
+        "clearTime": 696.5499999996952,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 2150,
+        "hits": 1513,
+        "headHits": 651,
+        "criticalHits": 374,
+        "criticalHeadHits": 158,
+        "requestedShots": 2150,
+        "requestedHits": 1520,
+        "requestedHeads": 669,
+        "kills": 434,
+        "waveKills": 4,
+        "skillActivations": 28,
+        "skillTime": 130.3333333333295,
+        "maxAlive": 20,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 34,
+          "wizard": 43,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 32
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 33,
+          "wizard": 42,
+          "skitter": 59,
+          "charger": 30,
+          "howler": 22,
+          "berserker": 16
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 416,
+          "charger-windup": 32,
+          "charger-charge": 22,
+          "charger-impact": 0,
+          "charger-interrupted": 9,
+          "howler-windup": 21,
+          "howler-command": 20,
+          "howler-interrupted": 1,
+          "command-ended": 34,
+          "berserker-rage": 17
+        },
+        "teleportCount": 87,
+        "levels": {
+          "damage": 3,
+          "rate": 3,
+          "magazine": 2,
+          "reload": 4,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 2,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 2,
+          "pistol_partner": 3,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "pistol_partner",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "pistol_partner",
+              "magazine"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "pistol_partner",
+              "damage",
+              "magazine"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "pistol_partner",
+              "damage",
+              "pistol_match"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "pistol_match",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "pistol_partner",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "pistol_match",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "pistol_match"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "pistol_partner"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "pistol_partner",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "pistol_partner",
+              "pistol_match"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "pistol_match",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "pistol_match",
+              "duration",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "duration",
+              "pistol_match",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "critical_damage",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "duration",
+              "pistol_match",
+              "critical_damage"
+            ],
+            "selected": "pistol_match"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "reload",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "reload"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "pistol",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 24,
+        "failedWave": 25,
+        "seconds": 710.7177806605365,
+        "clearTime": 696.5499999996952,
+        "failed": true,
+        "censored": false,
+        "shots": 2150,
+        "hits": 1513,
+        "headHits": 651,
+        "criticalHits": 374,
+        "criticalHeadHits": 158,
+        "requestedShots": 2150,
+        "requestedHits": 1520,
+        "requestedHeads": 669,
+        "kills": 434,
+        "skillActivations": 28,
+        "skillTime": 130.3333333333295,
+        "maxAlive": 20,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 34,
+          "wizard": 43,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 32
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 33,
+          "wizard": 42,
+          "skitter": 59,
+          "charger": 30,
+          "howler": 22,
+          "berserker": 16
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 416,
+          "charger-windup": 32,
+          "charger-charge": 22,
+          "charger-impact": 0,
+          "charger-interrupted": 9,
+          "howler-windup": 21,
+          "howler-command": 20,
+          "howler-interrupted": 1,
+          "command-ended": 34,
+          "berserker-rage": 17
+        },
+        "teleportCount": 87,
+        "levels": {
+          "damage": 3,
+          "rate": 3,
+          "magazine": 2,
+          "reload": 4,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 2,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 2,
+          "pistol_partner": 3,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "pistol_partner",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "pistol_partner",
+              "magazine"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "pistol_partner",
+              "damage",
+              "magazine"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "pistol_partner",
+              "damage",
+              "pistol_match"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "pistol_match",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "pistol_partner",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "pistol_match",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "pistol_match"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "pistol_partner"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "pistol_partner",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "pistol_partner",
+              "pistol_match"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "pistol_match",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "pistol_match",
+              "duration",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "duration",
+              "pistol_match",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "critical_damage",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "duration",
+              "pistol_match",
+              "critical_damage"
+            ],
+            "selected": "pistol_match"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "reload",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "reload"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 54,
+          "textures": 9
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          374,
+          374
+        ],
+        "criticalHeadHits": [
+          158,
+          158
+        ],
+        "accuracy": [
+          0.7037209302325581,
+          0.7037209302325581
+        ],
+        "headShare": [
+          0.43027098479841375,
+          0.43027098479841375
+        ],
+        "skillActivations": [
+          28,
+          28
+        ],
+        "skillTime": [
+          130.3333333333295,
+          130.3333333333295
+        ],
+        "spawned": [
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 75,
+            "giant": 34,
+            "wizard": 43,
+            "skitter": 60,
+            "charger": 30,
+            "howler": 23,
+            "berserker": 32
+          },
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 75,
+            "giant": 34,
+            "wizard": 43,
+            "skitter": 60,
+            "charger": 30,
+            "howler": 23,
+            "berserker": 32
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 416,
+            "charger-windup": 32,
+            "charger-charge": 22,
+            "charger-impact": 0,
+            "charger-interrupted": 9,
+            "howler-windup": 21,
+            "howler-command": 20,
+            "howler-interrupted": 1,
+            "command-ended": 34,
+            "berserker-rage": 17
+          },
+          {
+            "skitter-turn": 416,
+            "charger-windup": 32,
+            "charger-charge": 22,
+            "charger-impact": 0,
+            "charger-interrupted": 9,
+            "howler-windup": 21,
+            "howler-command": 20,
+            "howler-interrupted": 1,
+            "command-ended": 34,
+            "berserker-rage": 17
+          }
+        ],
+        "teleportCount": [
+          87,
+          87
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "pistol",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "pistol",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 25,
+        "failedWave": 26,
+        "seconds": 686.7507397615886,
+        "clearTime": 665.4333333330568,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 1414,
+        "hits": 1337,
+        "headHits": 1191,
+        "criticalHits": 179,
+        "criticalHeadHits": 167,
+        "requestedShots": 1414,
+        "requestedHits": 1352,
+        "requestedHeads": 1238,
+        "kills": 465,
+        "waveKills": 11,
+        "skillActivations": 28,
+        "skillTime": 189.06666666670952,
+        "maxAlive": 24,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 35,
+          "wizard": 44,
+          "skitter": 61,
+          "charger": 31,
+          "howler": 24,
+          "berserker": 52
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 34,
+          "wizard": 44,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 41
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 225,
+          "charger-windup": 18,
+          "charger-charge": 12,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 8,
+          "howler-command": 8,
+          "howler-interrupted": 0,
+          "command-ended": 10,
+          "berserker-rage": 40
+        },
+        "teleportCount": 80,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 2,
+          "pistol_partner": 3,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "pistol_partner",
+              "reload",
+              "duration"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "pistol_match",
+              "pistol_partner",
+              "critical_chance"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "pistol_partner",
+              "damage",
+              "magazine"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "pistol_match",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "pistol_match",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "pistol_match",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "pistol_match"
+            ],
+            "selected": "pistol_match"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 25,
+            "choices": [
+              "reload",
+              "magazine",
+              "pistol_match"
+            ],
+            "selected": "pistol_match"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "pistol",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 25,
+        "failedWave": 26,
+        "seconds": 686.7507397615886,
+        "clearTime": 665.4333333330568,
+        "failed": true,
+        "censored": false,
+        "shots": 1414,
+        "hits": 1337,
+        "headHits": 1191,
+        "criticalHits": 179,
+        "criticalHeadHits": 167,
+        "requestedShots": 1414,
+        "requestedHits": 1352,
+        "requestedHeads": 1238,
+        "kills": 465,
+        "skillActivations": 28,
+        "skillTime": 189.06666666670952,
+        "maxAlive": 24,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 35,
+          "wizard": 44,
+          "skitter": 61,
+          "charger": 31,
+          "howler": 24,
+          "berserker": 52
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 76,
+          "giant": 34,
+          "wizard": 44,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 41
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 225,
+          "charger-windup": 18,
+          "charger-charge": 12,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 8,
+          "howler-command": 8,
+          "howler-interrupted": 0,
+          "command-ended": 10,
+          "berserker-rage": 40
+        },
+        "teleportCount": 80,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 2,
+          "pistol_partner": 3,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "pistol_partner",
+              "reload",
+              "duration"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "pistol_match",
+              "pistol_partner",
+              "critical_chance"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "pistol_partner",
+              "damage",
+              "magazine"
+            ],
+            "selected": "pistol_partner"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "pistol_match",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "pistol_match",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "pistol_match",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "pistol_match"
+            ],
+            "selected": "pistol_match"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 25,
+            "choices": [
+              "reload",
+              "magazine",
+              "pistol_match"
+            ],
+            "selected": "pistol_match"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 54,
+          "textures": 9
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          179,
+          179
+        ],
+        "criticalHeadHits": [
+          167,
+          167
+        ],
+        "accuracy": [
+          0.9455445544554455,
+          0.9455445544554455
+        ],
+        "headShare": [
+          0.8908002991772626,
+          0.8908002991772626
+        ],
+        "skillActivations": [
+          28,
+          28
+        ],
+        "skillTime": [
+          189.06666666670952,
+          189.06666666670952
+        ],
+        "spawned": [
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 76,
+            "giant": 35,
+            "wizard": 44,
+            "skitter": 61,
+            "charger": 31,
+            "howler": 24,
+            "berserker": 52
+          },
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 76,
+            "giant": 35,
+            "wizard": 44,
+            "skitter": 61,
+            "charger": 31,
+            "howler": 24,
+            "berserker": 52
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 225,
+            "charger-windup": 18,
+            "charger-charge": 12,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 8,
+            "howler-command": 8,
+            "howler-interrupted": 0,
+            "command-ended": 10,
+            "berserker-rage": 40
+          },
+          {
+            "skitter-turn": 225,
+            "charger-windup": 18,
+            "charger-charge": 12,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 8,
+            "howler-command": 8,
+            "howler-interrupted": 0,
+            "command-ended": 10,
+            "berserker-rage": 40
+          }
+        ],
+        "teleportCount": [
+          80,
+          80
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "revolver",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "revolver",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 17,
+        "failedWave": 18,
+        "seconds": 472.575571943732,
+        "clearTime": 451.7833333332511,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 744,
+        "hits": 564,
+        "headHits": 320,
+        "criticalHits": 134,
+        "criticalHeadHits": 85,
+        "requestedShots": 744,
+        "requestedHits": 534,
+        "requestedHeads": 223,
+        "kills": 283,
+        "waveKills": 9,
+        "skillActivations": 16,
+        "skillTime": 79.89999999999694,
+        "maxAlive": 13,
+        "spawned": {
+          "normal": 65,
+          "cone": 44,
+          "bucket": 36,
+          "football": 49,
+          "giant": 21,
+          "wizard": 26,
+          "skitter": 32,
+          "charger": 12,
+          "howler": 8,
+          "berserker": 2
+        },
+        "killedKinds": {
+          "normal": 63,
+          "cone": 44,
+          "bucket": 36,
+          "football": 48,
+          "giant": 19,
+          "wizard": 25,
+          "skitter": 30,
+          "charger": 11,
+          "howler": 7,
+          "berserker": 0
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 167,
+          "charger-windup": 12,
+          "charger-charge": 6,
+          "charger-impact": 0,
+          "charger-interrupted": 5,
+          "howler-windup": 3,
+          "howler-command": 3,
+          "howler-interrupted": 0,
+          "command-ended": 2,
+          "berserker-rage": 1
+        },
+        "teleportCount": 35,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 0,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 1,
+          "revolver_deadeye": 2,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "revolver_deadeye",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "revolver_deadeye",
+              "magazine"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "revolver_deadeye",
+              "damage",
+              "magazine"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "revolver_deadeye",
+              "damage",
+              "revolver_cylinder"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "revolver_cylinder",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "revolver_deadeye",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "revolver_cylinder",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "revolver_cylinder"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "revolver_deadeye"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "revolver_deadeye",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "revolver",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 20,
+        "failedWave": 21,
+        "seconds": 588.8814799084623,
+        "clearTime": 570.9833333331427,
+        "failed": true,
+        "censored": false,
+        "shots": 997,
+        "hits": 760,
+        "headHits": 448,
+        "criticalHits": 217,
+        "criticalHeadHits": 146,
+        "requestedShots": 997,
+        "requestedHits": 707,
+        "requestedHeads": 297,
+        "kills": 347,
+        "skillActivations": 20,
+        "skillTime": 112.96666666666181,
+        "maxAlive": 18,
+        "spawned": {
+          "normal": 70,
+          "cone": 47,
+          "bucket": 37,
+          "football": 61,
+          "giant": 27,
+          "wizard": 33,
+          "skitter": 44,
+          "charger": 20,
+          "howler": 14,
+          "berserker": 8
+        },
+        "killedKinds": {
+          "normal": 70,
+          "cone": 46,
+          "bucket": 37,
+          "football": 59,
+          "giant": 25,
+          "wizard": 31,
+          "skitter": 41,
+          "charger": 17,
+          "howler": 13,
+          "berserker": 8
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 190,
+          "charger-windup": 19,
+          "charger-charge": 10,
+          "charger-impact": 0,
+          "charger-interrupted": 8,
+          "howler-windup": 7,
+          "howler-command": 7,
+          "howler-interrupted": 0,
+          "command-ended": 8,
+          "berserker-rage": 8
+        },
+        "teleportCount": 38,
+        "levels": {
+          "damage": 2,
+          "rate": 3,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 1,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 1,
+          "revolver_deadeye": 3,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "revolver_deadeye",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "revolver_deadeye",
+              "magazine"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "revolver_deadeye",
+              "damage",
+              "magazine"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "revolver_deadeye",
+              "damage",
+              "revolver_cylinder"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "revolver_cylinder",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "revolver_deadeye",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "revolver_cylinder",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "revolver_cylinder"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "revolver_deadeye"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "revolver_deadeye",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "revolver_deadeye",
+              "revolver_cylinder"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "revolver_cylinder",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "revolver_cylinder",
+              "duration",
+              "rate"
+            ],
+            "selected": "rate"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 55,
+          "textures": 10
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          134,
+          217
+        ],
+        "criticalHeadHits": [
+          85,
+          146
+        ],
+        "accuracy": [
+          0.7580645161290323,
+          0.7622868605817452
+        ],
+        "headShare": [
+          0.5673758865248227,
+          0.5894736842105263
+        ],
+        "skillActivations": [
+          16,
+          20
+        ],
+        "skillTime": [
+          79.89999999999694,
+          112.96666666666181
+        ],
+        "spawned": [
+          {
+            "normal": 65,
+            "cone": 44,
+            "bucket": 36,
+            "football": 49,
+            "giant": 21,
+            "wizard": 26,
+            "skitter": 32,
+            "charger": 12,
+            "howler": 8,
+            "berserker": 2
+          },
+          {
+            "normal": 70,
+            "cone": 47,
+            "bucket": 37,
+            "football": 61,
+            "giant": 27,
+            "wizard": 33,
+            "skitter": 44,
+            "charger": 20,
+            "howler": 14,
+            "berserker": 8
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 167,
+            "charger-windup": 12,
+            "charger-charge": 6,
+            "charger-impact": 0,
+            "charger-interrupted": 5,
+            "howler-windup": 3,
+            "howler-command": 3,
+            "howler-interrupted": 0,
+            "command-ended": 2,
+            "berserker-rage": 1
+          },
+          {
+            "skitter-turn": 190,
+            "charger-windup": 19,
+            "charger-charge": 10,
+            "charger-impact": 0,
+            "charger-interrupted": 8,
+            "howler-windup": 7,
+            "howler-command": 7,
+            "howler-interrupted": 0,
+            "command-ended": 8,
+            "berserker-rage": 8
+          }
+        ],
+        "teleportCount": [
+          35,
+          38
+        ]
+      },
+      "completedDifference": 3,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "revolver",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "revolver",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 18,
+        "failedWave": 19,
+        "seconds": 503.55411468239913,
+        "clearTime": 484.24999999988825,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 588,
+        "hits": 565,
+        "headHits": 510,
+        "criticalHits": 148,
+        "criticalHeadHits": 143,
+        "requestedShots": 588,
+        "requestedHits": 560,
+        "requestedHeads": 501,
+        "kills": 307,
+        "waveKills": 12,
+        "skillActivations": 20,
+        "skillTime": 141.1500000000043,
+        "maxAlive": 16,
+        "spawned": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 36,
+          "charger": 14,
+          "howler": 10,
+          "berserker": 4
+        },
+        "killedKinds": {
+          "normal": 66,
+          "cone": 45,
+          "bucket": 36,
+          "football": 53,
+          "giant": 21,
+          "wizard": 27,
+          "skitter": 34,
+          "charger": 14,
+          "howler": 9,
+          "berserker": 2
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 261,
+          "charger-windup": 13,
+          "charger-charge": 5,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 3,
+          "howler-command": 2,
+          "howler-interrupted": 1,
+          "command-ended": 7,
+          "berserker-rage": 3
+        },
+        "teleportCount": 26,
+        "levels": {
+          "damage": 3,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 1,
+          "critical_damage": 2,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 3,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "revolver_deadeye",
+              "reload",
+              "duration"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "revolver_cylinder",
+              "revolver_deadeye",
+              "critical_chance"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "revolver_deadeye",
+              "damage",
+              "magazine"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "revolver_cylinder",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "revolver_cylinder",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "revolver",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 18,
+        "failedWave": 19,
+        "seconds": 503.55411468239913,
+        "clearTime": 484.24999999988825,
+        "failed": true,
+        "censored": false,
+        "shots": 588,
+        "hits": 565,
+        "headHits": 510,
+        "criticalHits": 148,
+        "criticalHeadHits": 143,
+        "requestedShots": 588,
+        "requestedHits": 560,
+        "requestedHeads": 501,
+        "kills": 307,
+        "skillActivations": 20,
+        "skillTime": 141.1500000000043,
+        "maxAlive": 16,
+        "spawned": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 36,
+          "charger": 14,
+          "howler": 10,
+          "berserker": 4
+        },
+        "killedKinds": {
+          "normal": 66,
+          "cone": 45,
+          "bucket": 36,
+          "football": 53,
+          "giant": 21,
+          "wizard": 27,
+          "skitter": 34,
+          "charger": 14,
+          "howler": 9,
+          "berserker": 2
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 261,
+          "charger-windup": 13,
+          "charger-charge": 5,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 3,
+          "howler-command": 2,
+          "howler-interrupted": 1,
+          "command-ended": 7,
+          "berserker-rage": 3
+        },
+        "teleportCount": 26,
+        "levels": {
+          "damage": 3,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 1,
+          "critical_damage": 2,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 3,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "revolver_deadeye",
+              "reload",
+              "duration"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "revolver_cylinder",
+              "revolver_deadeye",
+              "critical_chance"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "revolver_deadeye",
+              "damage",
+              "magazine"
+            ],
+            "selected": "revolver_deadeye"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "revolver_cylinder",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "revolver_cylinder",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 55,
+          "textures": 10
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          148,
+          148
+        ],
+        "criticalHeadHits": [
+          143,
+          143
+        ],
+        "accuracy": [
+          0.9608843537414966,
+          0.9608843537414966
+        ],
+        "headShare": [
+          0.9026548672566371,
+          0.9026548672566371
+        ],
+        "skillActivations": [
+          20,
+          20
+        ],
+        "skillTime": [
+          141.1500000000043,
+          141.1500000000043
+        ],
+        "spawned": [
+          {
+            "normal": 67,
+            "cone": 45,
+            "bucket": 37,
+            "football": 53,
+            "giant": 23,
+            "wizard": 28,
+            "skitter": 36,
+            "charger": 14,
+            "howler": 10,
+            "berserker": 4
+          },
+          {
+            "normal": 67,
+            "cone": 45,
+            "bucket": 37,
+            "football": 53,
+            "giant": 23,
+            "wizard": 28,
+            "skitter": 36,
+            "charger": 14,
+            "howler": 10,
+            "berserker": 4
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 261,
+            "charger-windup": 13,
+            "charger-charge": 5,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 3,
+            "howler-command": 2,
+            "howler-interrupted": 1,
+            "command-ended": 7,
+            "berserker-rage": 3
+          },
+          {
+            "skitter-turn": 261,
+            "charger-windup": 13,
+            "charger-charge": 5,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 3,
+            "howler-command": 2,
+            "howler-interrupted": 1,
+            "command-ended": 7,
+            "berserker-rage": 3
+          }
+        ],
+        "teleportCount": [
+          26,
+          26
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "shotgun",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "shotgun",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 19,
+        "failedWave": 20,
+        "seconds": 597.3906546471808,
+        "clearTime": 565.9333333331473,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 639,
+        "hits": 463,
+        "headHits": 221,
+        "criticalHits": 460,
+        "criticalHeadHits": 157,
+        "requestedShots": 639,
+        "requestedHits": 463,
+        "requestedHeads": 186,
+        "kills": 331,
+        "waveKills": 14,
+        "skillActivations": 25,
+        "skillTime": 121.96666666666134,
+        "maxAlive": 15,
+        "spawned": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 25,
+          "wizard": 30,
+          "skitter": 40,
+          "charger": 17,
+          "howler": 12,
+          "berserker": 6
+        },
+        "killedKinds": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 23,
+          "wizard": 29,
+          "skitter": 38,
+          "charger": 16,
+          "howler": 11,
+          "berserker": 5
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 372,
+          "charger-windup": 18,
+          "charger-charge": 12,
+          "charger-impact": 0,
+          "charger-interrupted": 5,
+          "howler-windup": 7,
+          "howler-command": 6,
+          "howler-interrupted": 1,
+          "command-ended": 6,
+          "berserker-rage": 6
+        },
+        "teleportCount": 22,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 1,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 1,
+          "shotgun_impact": 3,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "shotgun_impact",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "shotgun_impact",
+              "magazine"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "shotgun_impact",
+              "damage",
+              "magazine"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "shotgun_impact",
+              "damage",
+              "shotgun_choke"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "shotgun_choke",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "shotgun_impact",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "shotgun_choke",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "shotgun_choke"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "shotgun_impact"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "shotgun_impact",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "shotgun_impact",
+              "shotgun_choke"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "shotgun_choke",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "shotgun",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 19,
+        "failedWave": 20,
+        "seconds": 597.3906546471808,
+        "clearTime": 565.9333333331473,
+        "failed": true,
+        "censored": false,
+        "shots": 639,
+        "hits": 463,
+        "headHits": 221,
+        "criticalHits": 460,
+        "criticalHeadHits": 157,
+        "requestedShots": 639,
+        "requestedHits": 463,
+        "requestedHeads": 186,
+        "kills": 331,
+        "skillActivations": 25,
+        "skillTime": 121.96666666666134,
+        "maxAlive": 15,
+        "spawned": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 25,
+          "wizard": 30,
+          "skitter": 40,
+          "charger": 17,
+          "howler": 12,
+          "berserker": 6
+        },
+        "killedKinds": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 23,
+          "wizard": 29,
+          "skitter": 38,
+          "charger": 16,
+          "howler": 11,
+          "berserker": 5
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 372,
+          "charger-windup": 18,
+          "charger-charge": 12,
+          "charger-impact": 0,
+          "charger-interrupted": 5,
+          "howler-windup": 7,
+          "howler-command": 6,
+          "howler-interrupted": 1,
+          "command-ended": 6,
+          "berserker-rage": 6
+        },
+        "teleportCount": 22,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 1,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 1,
+          "shotgun_impact": 3,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "shotgun_impact",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "shotgun_impact",
+              "magazine"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "shotgun_impact",
+              "damage",
+              "magazine"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "shotgun_impact",
+              "damage",
+              "shotgun_choke"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "shotgun_choke",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "shotgun_impact",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "shotgun_choke",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "shotgun_choke"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "shotgun_impact"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "shotgun_impact",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "shotgun_impact",
+              "shotgun_choke"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "shotgun_choke",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 56,
+          "textures": 11
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          460,
+          460
+        ],
+        "criticalHeadHits": [
+          157,
+          157
+        ],
+        "accuracy": [
+          0.7245696400625978,
+          0.7245696400625978
+        ],
+        "headShare": [
+          0.4773218142548596,
+          0.4773218142548596
+        ],
+        "skillActivations": [
+          25,
+          25
+        ],
+        "skillTime": [
+          121.96666666666134,
+          121.96666666666134
+        ],
+        "spawned": [
+          {
+            "normal": 69,
+            "cone": 46,
+            "bucket": 37,
+            "football": 57,
+            "giant": 25,
+            "wizard": 30,
+            "skitter": 40,
+            "charger": 17,
+            "howler": 12,
+            "berserker": 6
+          },
+          {
+            "normal": 69,
+            "cone": 46,
+            "bucket": 37,
+            "football": 57,
+            "giant": 25,
+            "wizard": 30,
+            "skitter": 40,
+            "charger": 17,
+            "howler": 12,
+            "berserker": 6
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 372,
+            "charger-windup": 18,
+            "charger-charge": 12,
+            "charger-impact": 0,
+            "charger-interrupted": 5,
+            "howler-windup": 7,
+            "howler-command": 6,
+            "howler-interrupted": 1,
+            "command-ended": 6,
+            "berserker-rage": 6
+          },
+          {
+            "skitter-turn": 372,
+            "charger-windup": 18,
+            "charger-charge": 12,
+            "charger-impact": 0,
+            "charger-interrupted": 5,
+            "howler-windup": 7,
+            "howler-command": 6,
+            "howler-interrupted": 1,
+            "command-ended": 6,
+            "berserker-rage": 6
+          }
+        ],
+        "teleportCount": [
+          22,
+          22
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "shotgun",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "shotgun",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 24,
+        "failedWave": 25,
+        "seconds": 708.9141864984125,
+        "clearTime": 682.0333333330417,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 689,
+        "hits": 659,
+        "headHits": 600,
+        "criticalHits": 241,
+        "criticalHeadHits": 165,
+        "requestedShots": 689,
+        "requestedHits": 659,
+        "requestedHeads": 590,
+        "kills": 442,
+        "waveKills": 12,
+        "skillActivations": 40,
+        "skillTime": 288.9333333333995,
+        "maxAlive": 19,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 34,
+          "wizard": 43,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 32
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 33,
+          "wizard": 42,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 22
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 420,
+          "charger-windup": 29,
+          "charger-charge": 23,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 20,
+          "howler-command": 19,
+          "howler-interrupted": 1,
+          "command-ended": 33,
+          "berserker-rage": 22
+        },
+        "teleportCount": 31,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 1,
+          "shotgun_impact": 3,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "shotgun_impact",
+              "reload",
+              "duration"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "shotgun_choke",
+              "shotgun_impact",
+              "critical_chance"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "shotgun_impact",
+              "damage",
+              "magazine"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "shotgun_choke",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "shotgun_choke",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "shotgun_choke",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "shotgun_choke"
+            ],
+            "selected": "shotgun_choke"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "shotgun",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 24,
+        "failedWave": 25,
+        "seconds": 708.9141864984125,
+        "clearTime": 682.0333333330417,
+        "failed": true,
+        "censored": false,
+        "shots": 689,
+        "hits": 659,
+        "headHits": 600,
+        "criticalHits": 241,
+        "criticalHeadHits": 165,
+        "requestedShots": 689,
+        "requestedHits": 659,
+        "requestedHeads": 590,
+        "kills": 442,
+        "skillActivations": 40,
+        "skillTime": 288.9333333333995,
+        "maxAlive": 19,
+        "spawned": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 34,
+          "wizard": 43,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 32
+        },
+        "killedKinds": {
+          "normal": 72,
+          "cone": 48,
+          "bucket": 37,
+          "football": 75,
+          "giant": 33,
+          "wizard": 42,
+          "skitter": 60,
+          "charger": 30,
+          "howler": 23,
+          "berserker": 22
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 420,
+          "charger-windup": 29,
+          "charger-charge": 23,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 20,
+          "howler-command": 19,
+          "howler-interrupted": 1,
+          "command-ended": 33,
+          "berserker-rage": 22
+        },
+        "teleportCount": 31,
+        "levels": {
+          "damage": 5,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 2,
+          "critical_damage": 4,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 1,
+          "shotgun_impact": 3,
+          "sniper_caliber": 0,
+          "sniper_pierce": 0
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "shotgun_impact",
+              "reload",
+              "duration"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "shotgun_choke",
+              "shotgun_impact",
+              "critical_chance"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "shotgun_impact",
+              "damage",
+              "magazine"
+            ],
+            "selected": "shotgun_impact"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "shotgun_choke",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "shotgun_choke",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "shotgun_choke",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 20,
+            "choices": [
+              "damage",
+              "magazine",
+              "critical_damage"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 21,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 22,
+            "choices": [
+              "damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 23,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "shotgun_choke"
+            ],
+            "selected": "shotgun_choke"
+          },
+          {
+            "wave": 24,
+            "choices": [
+              "critical_chance",
+              "magazine",
+              "reload"
+            ],
+            "selected": "critical_chance"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 56,
+          "textures": 11
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          241,
+          241
+        ],
+        "criticalHeadHits": [
+          165,
+          165
+        ],
+        "accuracy": [
+          0.9564586357039188,
+          0.9564586357039188
+        ],
+        "headShare": [
+          0.9104704097116844,
+          0.9104704097116844
+        ],
+        "skillActivations": [
+          40,
+          40
+        ],
+        "skillTime": [
+          288.9333333333995,
+          288.9333333333995
+        ],
+        "spawned": [
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 75,
+            "giant": 34,
+            "wizard": 43,
+            "skitter": 60,
+            "charger": 30,
+            "howler": 23,
+            "berserker": 32
+          },
+          {
+            "normal": 72,
+            "cone": 48,
+            "bucket": 37,
+            "football": 75,
+            "giant": 34,
+            "wizard": 43,
+            "skitter": 60,
+            "charger": 30,
+            "howler": 23,
+            "berserker": 32
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 420,
+            "charger-windup": 29,
+            "charger-charge": 23,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 20,
+            "howler-command": 19,
+            "howler-interrupted": 1,
+            "command-ended": 33,
+            "berserker-rage": 22
+          },
+          {
+            "skitter-turn": 420,
+            "charger-windup": 29,
+            "charger-charge": 23,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 20,
+            "howler-command": 19,
+            "howler-interrupted": 1,
+            "command-ended": 33,
+            "berserker-rage": 22
+          }
+        ],
+        "teleportCount": [
+          31,
+          31
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "sniper",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "sniper",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 19,
+        "failedWave": 20,
+        "seconds": 564.8247119712554,
+        "clearTime": 542.4499999998353,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 747,
+        "hits": 534,
+        "headHits": 223,
+        "criticalHits": 96,
+        "criticalHeadHits": 32,
+        "requestedShots": 747,
+        "requestedHits": 535,
+        "requestedHeads": 224,
+        "kills": 328,
+        "waveKills": 11,
+        "skillActivations": 20,
+        "skillTime": 115.79999999999495,
+        "maxAlive": 17,
+        "spawned": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 25,
+          "wizard": 30,
+          "skitter": 40,
+          "charger": 17,
+          "howler": 12,
+          "berserker": 6
+        },
+        "killedKinds": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 37,
+          "charger": 16,
+          "howler": 10,
+          "berserker": 5
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 243,
+          "charger-windup": 12,
+          "charger-charge": 8,
+          "charger-impact": 0,
+          "charger-interrupted": 4,
+          "howler-windup": 11,
+          "howler-command": 10,
+          "howler-interrupted": 0,
+          "command-ended": 14,
+          "berserker-rage": 6
+        },
+        "teleportCount": 23,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 1,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 1,
+          "sniper_pierce": 3
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "sniper_pierce",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "sniper_pierce",
+              "magazine"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "sniper_pierce",
+              "damage",
+              "magazine"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "sniper_pierce",
+              "damage",
+              "sniper_caliber"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "sniper_caliber",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "sniper_pierce",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "sniper_caliber",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "sniper_caliber"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "sniper_pierce"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "sniper_pierce",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "sniper_pierce",
+              "sniper_caliber"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "sniper_caliber",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "sniper",
+        "profile": "regular",
+        "seed": 42031,
+        "seedIndex": 0,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "random",
+        "completed": 19,
+        "failedWave": 20,
+        "seconds": 564.8247119712554,
+        "clearTime": 542.4499999998353,
+        "failed": true,
+        "censored": false,
+        "shots": 747,
+        "hits": 534,
+        "headHits": 223,
+        "criticalHits": 96,
+        "criticalHeadHits": 32,
+        "requestedShots": 747,
+        "requestedHits": 535,
+        "requestedHeads": 224,
+        "kills": 328,
+        "skillActivations": 20,
+        "skillTime": 115.79999999999495,
+        "maxAlive": 17,
+        "spawned": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 25,
+          "wizard": 30,
+          "skitter": 40,
+          "charger": 17,
+          "howler": 12,
+          "berserker": 6
+        },
+        "killedKinds": {
+          "normal": 69,
+          "cone": 46,
+          "bucket": 37,
+          "football": 57,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 37,
+          "charger": 16,
+          "howler": 10,
+          "berserker": 5
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 243,
+          "charger-windup": 12,
+          "charger-charge": 8,
+          "charger-impact": 0,
+          "charger-interrupted": 4,
+          "howler-windup": 11,
+          "howler-command": 10,
+          "howler-interrupted": 0,
+          "command-ended": 14,
+          "berserker-rage": 6
+        },
+        "teleportCount": 23,
+        "levels": {
+          "damage": 2,
+          "rate": 2,
+          "magazine": 2,
+          "reload": 3,
+          "critical_chance": 4,
+          "critical_damage": 1,
+          "duration": 0,
+          "cooldown": 1,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 1,
+          "sniper_pierce": 3
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "sniper_pierce",
+              "rate",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "rate",
+              "sniper_pierce",
+              "magazine"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "sniper_pierce",
+              "damage",
+              "magazine"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "magazine",
+              "critical_damage",
+              "cooldown"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "damage",
+              "rate",
+              "duration"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "sniper_pierce",
+              "damage",
+              "sniper_caliber"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "sniper_caliber",
+              "critical_chance",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "rate",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "critical_chance",
+              "reload"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "sniper_pierce",
+              "reload",
+              "rate"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "sniper_caliber",
+              "cooldown",
+              "damage"
+            ],
+            "selected": "sniper_caliber"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "rate",
+              "critical_damage",
+              "duration"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "rate"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "magazine",
+              "duration",
+              "rate"
+            ],
+            "selected": "magazine"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "damage",
+              "reload",
+              "sniper_pierce"
+            ],
+            "selected": "reload"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "sniper_pierce",
+              "rate"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "duration",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "reload",
+              "sniper_pierce",
+              "sniper_caliber"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 19,
+            "choices": [
+              "magazine",
+              "sniper_caliber",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 57,
+          "textures": 12
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          96,
+          96
+        ],
+        "criticalHeadHits": [
+          32,
+          32
+        ],
+        "accuracy": [
+          0.714859437751004,
+          0.714859437751004
+        ],
+        "headShare": [
+          0.41760299625468167,
+          0.41760299625468167
+        ],
+        "skillActivations": [
+          20,
+          20
+        ],
+        "skillTime": [
+          115.79999999999495,
+          115.79999999999495
+        ],
+        "spawned": [
+          {
+            "normal": 69,
+            "cone": 46,
+            "bucket": 37,
+            "football": 57,
+            "giant": 25,
+            "wizard": 30,
+            "skitter": 40,
+            "charger": 17,
+            "howler": 12,
+            "berserker": 6
+          },
+          {
+            "normal": 69,
+            "cone": 46,
+            "bucket": 37,
+            "football": 57,
+            "giant": 25,
+            "wizard": 30,
+            "skitter": 40,
+            "charger": 17,
+            "howler": 12,
+            "berserker": 6
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 243,
+            "charger-windup": 12,
+            "charger-charge": 8,
+            "charger-impact": 0,
+            "charger-interrupted": 4,
+            "howler-windup": 11,
+            "howler-command": 10,
+            "howler-interrupted": 0,
+            "command-ended": 14,
+            "berserker-rage": 6
+          },
+          {
+            "skitter-turn": 243,
+            "charger-windup": 12,
+            "charger-charge": 8,
+            "charger-impact": 0,
+            "charger-interrupted": 4,
+            "howler-windup": 11,
+            "howler-command": 10,
+            "howler-interrupted": 0,
+            "command-ended": 14,
+            "berserker-rage": 6
+          }
+        ],
+        "teleportCount": [
+          23,
+          23
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    },
+    {
+      "options": {
+        "weapon": "sniper",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600
+      },
+      "model": {
+        "weapon": "sniper",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 18,
+        "failedWave": 19,
+        "seconds": 525.7634883902288,
+        "clearTime": 496.5333333332104,
+        "failed": true,
+        "censored": false,
+        "censorReason": null,
+        "shots": 515,
+        "hits": 482,
+        "headHits": 412,
+        "criticalHits": 46,
+        "criticalHeadHits": 37,
+        "requestedShots": 515,
+        "requestedHits": 490,
+        "requestedHeads": 431,
+        "kills": 312,
+        "waveKills": 17,
+        "skillActivations": 20,
+        "skillTime": 154.86666666668185,
+        "maxAlive": 15,
+        "spawned": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 36,
+          "charger": 14,
+          "howler": 10,
+          "berserker": 4
+        },
+        "killedKinds": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 21,
+          "wizard": 28,
+          "skitter": 35,
+          "charger": 14,
+          "howler": 9,
+          "berserker": 3
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 271,
+          "charger-windup": 17,
+          "charger-charge": 11,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 8,
+          "howler-command": 7,
+          "howler-interrupted": 1,
+          "command-ended": 9,
+          "berserker-rage": 4
+        },
+        "teleportCount": 22,
+        "levels": {
+          "damage": 3,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 1,
+          "critical_damage": 2,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 3
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "sniper_pierce",
+              "reload",
+              "duration"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "sniper_caliber",
+              "sniper_pierce",
+              "critical_chance"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "sniper_pierce",
+              "damage",
+              "magazine"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "sniper_caliber",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "sniper_caliber",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ]
+      },
+      "replay": {
+        "weapon": "sniper",
+        "profile": "expert",
+        "seed": 42208,
+        "seedIndex": 1,
+        "fps": 60,
+        "maxWaves": 60,
+        "maxSeconds": 3600,
+        "strategy": "rarity",
+        "completed": 18,
+        "failedWave": 19,
+        "seconds": 525.7634883902288,
+        "clearTime": 496.5333333332104,
+        "failed": true,
+        "censored": false,
+        "shots": 515,
+        "hits": 482,
+        "headHits": 412,
+        "criticalHits": 46,
+        "criticalHeadHits": 37,
+        "requestedShots": 515,
+        "requestedHits": 490,
+        "requestedHeads": 431,
+        "kills": 312,
+        "skillActivations": 20,
+        "skillTime": 154.86666666668185,
+        "maxAlive": 15,
+        "spawned": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 23,
+          "wizard": 28,
+          "skitter": 36,
+          "charger": 14,
+          "howler": 10,
+          "berserker": 4
+        },
+        "killedKinds": {
+          "normal": 67,
+          "cone": 45,
+          "bucket": 37,
+          "football": 53,
+          "giant": 21,
+          "wizard": 28,
+          "skitter": 35,
+          "charger": 14,
+          "howler": 9,
+          "berserker": 3
+        },
+        "enemyEventCounts": {
+          "skitter-turn": 271,
+          "charger-windup": 17,
+          "charger-charge": 11,
+          "charger-impact": 0,
+          "charger-interrupted": 6,
+          "howler-windup": 8,
+          "howler-command": 7,
+          "howler-interrupted": 1,
+          "command-ended": 9,
+          "berserker-rage": 4
+        },
+        "teleportCount": 22,
+        "levels": {
+          "damage": 3,
+          "rate": 1,
+          "magazine": 0,
+          "reload": 0,
+          "critical_chance": 1,
+          "critical_damage": 2,
+          "duration": 4,
+          "cooldown": 4,
+          "rifle_velocity": 0,
+          "rifle_overload": 0,
+          "p90_dense": 0,
+          "p90_frost": 0,
+          "pistol_match": 0,
+          "pistol_partner": 0,
+          "revolver_cylinder": 0,
+          "revolver_deadeye": 0,
+          "shotgun_choke": 0,
+          "shotgun_impact": 0,
+          "sniper_caliber": 0,
+          "sniper_pierce": 3
+        },
+        "upgradeHistory": [
+          {
+            "wave": 1,
+            "choices": [
+              "sniper_pierce",
+              "reload",
+              "duration"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 2,
+            "choices": [
+              "sniper_caliber",
+              "sniper_pierce",
+              "critical_chance"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 3,
+            "choices": [
+              "magazine",
+              "rate",
+              "reload"
+            ],
+            "selected": "rate"
+          },
+          {
+            "wave": 4,
+            "choices": [
+              "damage",
+              "cooldown",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 5,
+            "choices": [
+              "sniper_pierce",
+              "damage",
+              "magazine"
+            ],
+            "selected": "sniper_pierce"
+          },
+          {
+            "wave": 6,
+            "choices": [
+              "reload",
+              "magazine",
+              "critical_chance"
+            ],
+            "selected": "critical_chance"
+          },
+          {
+            "wave": 7,
+            "choices": [
+              "rate",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 8,
+            "choices": [
+              "magazine",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 9,
+            "choices": [
+              "rate",
+              "sniper_caliber",
+              "duration"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 10,
+            "choices": [
+              "magazine",
+              "duration",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 11,
+            "choices": [
+              "critical_damage",
+              "reload",
+              "critical_chance"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 12,
+            "choices": [
+              "critical_damage",
+              "critical_chance",
+              "magazine"
+            ],
+            "selected": "critical_damage"
+          },
+          {
+            "wave": 13,
+            "choices": [
+              "duration",
+              "magazine",
+              "damage"
+            ],
+            "selected": "duration"
+          },
+          {
+            "wave": 14,
+            "choices": [
+              "cooldown",
+              "magazine",
+              "rate"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 15,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 16,
+            "choices": [
+              "critical_chance",
+              "cooldown",
+              "reload"
+            ],
+            "selected": "cooldown"
+          },
+          {
+            "wave": 17,
+            "choices": [
+              "rate",
+              "reload",
+              "damage"
+            ],
+            "selected": "damage"
+          },
+          {
+            "wave": 18,
+            "choices": [
+              "sniper_caliber",
+              "damage",
+              "cooldown"
+            ],
+            "selected": "cooldown"
+          }
+        ],
+        "resources": {
+          "effects": 0,
+          "sceneChildren": 86,
+          "geometries": 57,
+          "textures": 12
+        }
+      },
+      "comparison": {
+        "criticalHits": [
+          46,
+          46
+        ],
+        "criticalHeadHits": [
+          37,
+          37
+        ],
+        "accuracy": [
+          0.9359223300970874,
+          0.9359223300970874
+        ],
+        "headShare": [
+          0.8547717842323651,
+          0.8547717842323651
+        ],
+        "skillActivations": [
+          20,
+          20
+        ],
+        "skillTime": [
+          154.86666666668185,
+          154.86666666668185
+        ],
+        "spawned": [
+          {
+            "normal": 67,
+            "cone": 45,
+            "bucket": 37,
+            "football": 53,
+            "giant": 23,
+            "wizard": 28,
+            "skitter": 36,
+            "charger": 14,
+            "howler": 10,
+            "berserker": 4
+          },
+          {
+            "normal": 67,
+            "cone": 45,
+            "bucket": 37,
+            "football": 53,
+            "giant": 23,
+            "wizard": 28,
+            "skitter": 36,
+            "charger": 14,
+            "howler": 10,
+            "berserker": 4
+          }
+        ],
+        "enemyEventCounts": [
+          {
+            "skitter-turn": 271,
+            "charger-windup": 17,
+            "charger-charge": 11,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 8,
+            "howler-command": 7,
+            "howler-interrupted": 1,
+            "command-ended": 9,
+            "berserker-rage": 4
+          },
+          {
+            "skitter-turn": 271,
+            "charger-windup": 17,
+            "charger-charge": 11,
+            "charger-impact": 0,
+            "charger-interrupted": 6,
+            "howler-windup": 8,
+            "howler-command": 7,
+            "howler-interrupted": 1,
+            "command-ended": 9,
+            "berserker-rage": 4
+          }
+        ],
+        "teleportCount": [
+          22,
+          22
+        ]
+      },
+      "completedDifference": 0,
+      "entered50Agrees": true
+    }
+  ],
+  "median": 0,
+  "maximum": 3,
+  "status": "PASS",
+  "gaps": [],
+  "elapsedSeconds": 490.7334564,
+  "limitations": [
+    "Fixed probabilistic agents, no human samples. Replay uses real bounded pointer inputs, actual animated muzzle and scene collisions; render is sampled every 180 fixed updates.",
+    "Model currently approximates muzzle recoil and camera-to-target intersection. Pair data retain accuracy/head hits, skill counts/time and enemy composition for discrepancy review."
+  ]
+}

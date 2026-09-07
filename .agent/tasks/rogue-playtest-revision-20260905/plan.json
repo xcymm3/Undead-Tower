@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "task_id": "rogue-playtest-revision-20260905",
+  "spec_sha256": "3616d0bfa128ae1cecce4c5aaa81725c7c97fe6f01b8386836c88ce257053979",
+  "items": [
+    {
+      "id": "WI-001",
+      "title": "统一巨人出生与完整路线审查，禁用林地入口并保留失败配额重试",
+      "ac_ids": [
+        "AC1",
+        "AC13"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-002",
+      "title": "用共享伤害公式实现暴击率/暴击伤害、替换旧爆头成长及左轮专属协同",
+      "ac_ids": [
+        "AC4",
+        "AC11"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-003",
+      "title": "将六枪基础装填耗时翻倍并整合成长、逐发装填、动画和技能冲突",
+      "ac_ids": [
+        "AC6",
+        "AC11"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-004",
+      "title": "重构 3 秒准备阶段的输入、玩家机械时钟、敌人/成绩时钟及轻量提示",
+      "ac_ids": [
+        "AC5",
+        "AC13"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-005",
+      "title": "重做分阶段波池，淘汰弱敌并冻结四类新/替代敌人数值与首次波数",
+      "ac_ids": [
+        "AC3",
+        "AC9",
+        "AC10"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-006",
+      "title": "删除持盾/护理规则，实现突进者、号令者及游走/狂暴完整生产行为",
+      "ac_ids": [
+        "AC2",
+        "AC9",
+        "AC10"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-007",
+      "title": "制作四类后期敌人的实例化低多边形外观、触发短效、状态标志与回收",
+      "ac_ids": [
+        "AC2",
+        "AC9",
+        "AC13"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-008",
+      "title": "实现巫师离场/过渡/落地瞬移反馈并保持聚合、落点和生命周期正确",
+      "ac_ids": [
+        "AC2",
+        "AC13"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-009",
+      "title": "替换铁桶分层金属敲击、细微变体、混音/并发管理及音频测试",
+      "ac_ids": [
+        "AC7",
+        "AC14"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-010",
+      "title": "建立 Hallmark app 设计系统与令牌，精简首页/部署和设置界面",
+      "ac_ids": [
+        "AC8",
+        "AC14"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-011",
+      "title": "精简升级/构筑/HUD，接入暴击图案与准确预览、完整状态和流畅动效",
+      "ac_ids": [
+        "AC4",
+        "AC5",
+        "AC8"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-012",
+      "title": "同步生产规则到平衡模型、代理、回放、资源/视觉诊断和机器可读输出",
+      "ac_ids": [
+        "AC4",
+        "AC5",
+        "AC9",
+        "AC10",
+        "AC12"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-013",
+      "title": "扩充巨人长路径、暴击、装填、倒计时、十敌行为/波池、音频与资源单元测试",
+      "ac_ids": [
+        "AC1",
+        "AC2",
+        "AC3",
+        "AC4",
+        "AC5",
+        "AC6",
+        "AC7",
+        "AC9",
+        "AC10",
+        "AC13"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-014",
+      "title": "扩充单 worker 隐藏静音 E2E，覆盖六枪闭环、准备输入、特效状态、特写和持久化",
+      "ac_ids": [
+        "AC2",
+        "AC5",
+        "AC8",
+        "AC9",
+        "AC11",
+        "AC13",
+        "AC14"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-015",
+      "title": "运行并调至完整 864 矩阵和 12 局真实配对满足冻结门槛，保留全部样本和哈希",
+      "ac_ids": [
+        "AC3",
+        "AC4",
+        "AC6",
+        "AC10",
+        "AC12"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "WI-016",
+      "title": "完成 Hallmark 多视口/键盘/slop review、资源压力、全回归和设计/操作/平衡文档",
+      "ac_ids": [
+        "AC7",
+        "AC8",
+        "AC11",
+        "AC13",
+        "AC14"
+      ],
+      "mandatory": true
+    }
+  ]
+}

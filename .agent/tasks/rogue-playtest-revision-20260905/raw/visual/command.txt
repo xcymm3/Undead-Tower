@@ -1,0 +1,11 @@
+
+> undead-tower@0.1.0 test:rogue:replay
+> node scripts/replay-rogue.mjs --visuals-only --output D:\mydoc\React\undead-tower\.agent\deadline-carl-scratch\rogue-playtest-revision-20260905\iteration-028-evidence\visual --assert
+
+Lifecycle: 6 weapons passed
+Visual rifle: 75 captures, 10 icons, 10 enemies
+Visual p90: 94 captures, 12 icons, 10 enemies
+Visual pistol: 113 captures, 14 icons, 10 enemies
+Visual revolver: 132 captures, 16 icons, 10 enemies
+Visual shotgun: 151 captures, 18 icons, 10 enemies
+Visual sniper: 170 captures, 20 icons, 10 enemies
